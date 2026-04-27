@@ -919,7 +919,6 @@
     .btn-complete.completed {
       background: var(--banknote-green);
       color: var(--paper-white);
-      pointer-events: none;
     }
 
     /* ===== PROGRESS MILESTONE ===== */
@@ -1899,11 +1898,15 @@
   document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
     btn.addEventListener('click', function() {
       const key = this.dataset.marks;
-      state.marks[key] = true;
-      this.classList.add('read');
-      this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
-      save();
-      updateProgress();
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
     });
   });
 
@@ -2067,12 +2070,16 @@
 
   // ===== CHALLENGE =====
   function markChallengeDone() {
-    state.challengeDone = true;
+    state.challengeDone = !state.challengeDone;
     const btn = document.getElementById('challenge-done-btn');
-    btn.classList.add('read');
-    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
-    save();
-    updateProgress();
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I had the hard conversation</span>`;
+    }
+    save(); updateProgress();
   }
 
   function applyChallenge() {
@@ -2087,10 +2094,15 @@
 
   // ===== MODULE COMPLETE =====
   function completeModule() {
-    state.moduleComplete = true;
+    state.moduleComplete = !state.moduleComplete;
     const btn = document.getElementById('complete-btn');
-    btn.classList.add('completed');
-    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
     save();
   }
 
