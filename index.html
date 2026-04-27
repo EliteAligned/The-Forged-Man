@@ -784,9 +784,7 @@
 
     MODULES.forEach(mod => {
       const { status, progress } = getModuleStatus(mod);
-      const card   = document.getElementById(`card-${mod.n}`);
-      const badge  = document.getElementById(`badge-${mod.n}`);
-      const bar    = document.getElementById(`bar-${mod.n}`);
+      let card = document.getElementById(`card-${mod.n}`);
 
       if (!card) return;
 
@@ -794,6 +792,34 @@
       const isBuilt = mod.n <= 2;
 
       if (!isBuilt) return; // leave locked cards alone
+
+      // Convert <div> to <a> so the card is navigable
+      if (card.tagName === 'DIV') {
+        const a = document.createElement('a');
+        a.id = card.id;
+        a.className = card.className;
+        a.href = `module-${mod.n}.html`;
+        a.innerHTML = `<div class="complete-mark"><svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>` + card.innerHTML;
+        card.parentNode.replaceChild(a, card);
+        card = a;
+        // Ensure badge has its id
+        const badgeEl = card.querySelector('.status-badge');
+        if (badgeEl) badgeEl.id = `badge-${mod.n}`;
+        // Add progress bar before footer if missing
+        if (!card.querySelector('.card-progress-bar')) {
+          const pb = document.createElement('div');
+          pb.className = 'card-progress-bar';
+          pb.innerHTML = `<div class="card-progress-fill" id="bar-${mod.n}" style="width:0%"></div>`;
+          const footer = card.querySelector('.card-footer');
+          if (footer) card.insertBefore(pb, footer);
+        }
+        // Fix the CTA text
+        const cta = card.querySelector('.card-cta');
+        if (cta) cta.innerHTML = 'Begin <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      }
+
+      const badge = document.getElementById(`badge-${mod.n}`);
+      const bar   = document.getElementById(`bar-${mod.n}`);
 
       // Apply status classes
       card.classList.remove('available', 'in-progress', 'complete', 'locked');
