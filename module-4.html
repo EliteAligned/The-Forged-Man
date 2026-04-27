@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 4: The Blueprint — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '04'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== VALUES AUDIT ===== */
+    .values-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sg-border); align-items: start; }
+    .values-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .values-col-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+    .values-col-label.stated { color: var(--banknote-green); }
+    .values-col-label.evidenced { color: var(--red); }
+    .values-field { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 10px 14px; outline: none; transition: border-color 0.2s; resize: none; min-height: 70px; line-height: 1.55; }
+    .values-field:focus { border-color: var(--banknote-green); }
+    .values-field::placeholder { color: var(--security-gray); font-size: 0.82rem; }
+    .values-gap { margin-top: 10px; }
+    .values-gap label { display: block; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 5px; }
+    .values-gap textarea { width: 100%; background: rgba(107,43,43,0.04); border: 1px solid rgba(107,43,43,0.2); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.85rem; padding: 10px 14px; outline: none; resize: none; min-height: 60px; line-height: 1.55; transition: border-color 0.2s; }
+    .values-gap textarea:focus { border-color: var(--red); }
+    .values-gap textarea::placeholder { color: var(--security-gray); font-size: 0.8rem; }
+    .values-row-num { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: rgba(11,107,77,0.1); line-height: 1; margin-bottom: 12px; }
+
+    /* ===== CHARACTER BLUEPRINT ===== */
+    .trait-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .trait-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .trait-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .trait-tab:hover:not(.active) { color: var(--deep-vault); }
+    .trait-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .trait-tab.filled .tab-dot { opacity: 1; }
+    .trait-panel { display: none; padding: 24px 0 0; }
+    .trait-panel.active { display: block; }
+    .trait-field { margin-bottom: 16px; }
+    .trait-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .trait-field textarea, .trait-field input[type="text"] { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .trait-field textarea:focus, .trait-field input[type="text"]:focus { border-color: var(--banknote-green); }
+    .trait-field textarea::placeholder, .trait-field input[type="text"]::placeholder { color: var(--security-gray); }
+    .alignment-slider-wrap { margin-top: 8px; }
+    .alignment-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .align-btn { padding: 6px 12px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .align-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .align-btn.selected { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+    .align-btn.selected-low { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .trait-tabs, .alignment-btns, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .values-field, .values-gap textarea, .trait-field textarea, .trait-field input[type="text"] { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .trait-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+      .values-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+      .values-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 04 — The Blueprint</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Identity Architecture</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Values Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> Character Blueprint</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 04 of 16 — Pillar I: Identity</p>
+    <h1>The <span>Blueprint</span></h1>
+    <p class="hero-tagline">"Most men build their lives. Very few design them."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>6–8 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 design exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Default Life</h2>
+    <p class="section-sub">Most men don't choose their life. They inherit it, drift into it, or build it in reaction to other people.</p>
+
+    <p>The first three modules were about subtraction. You took stock of where you actually are. You looked at the beliefs that were installed in you before you could evaluate them. You mapped the performance you've been maintaining and the parts of yourself you've been hiding.</p>
+    <p>That work matters. But subtraction on its own is not a direction.</p>
+    <p>You can strip every inherited belief, drop every mask, and still have no idea what you're building toward. Clarity about what you're <em>not</em> is not the same as clarity about what you <em>are</em>. <strong>A man who has torn down the old structure but hasn't drawn a new blueprint is just standing in rubble.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>Most men's lives are shaped by default — the path of least resistance, the thing that was available, the expectations of the people around them, the version of success their culture handed them. They didn't design the structure. They just built what was in front of them.</p>
+    <p>There's nothing shameful about this. Nobody handed you a course on deliberate identity construction at sixteen. You were just trying to survive your circumstances and find your footing.</p>
+    <p>But you're here now. Which means the question is no longer what happened — it's <strong>what you're going to build from here, and whether you're going to choose it on purpose.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Someone Else's Blueprint</h2>
+    <p class="section-sub">The uncomfortable reality about whose definition of a good life you're living.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #4</p>
+      <p>"Most men live someone else's definition of a good life. They build toward a blueprint they never drew."</p>
+    </div>
+
+    <p>Ask most men what they want from their life. They'll tell you: success, freedom, respect, a good family, financial security. Ask them where those definitions came from — what success means specifically, what freedom looks like in practice, what counts as respect — and they go quiet.</p>
+    <p>The definitions are inherited. The goals are handed down. The metrics they're chasing were written by someone else — a father, a culture, a status game, an industry that profits from their ambition being pointed in a particular direction.</p>
+    <p><strong>This isn't a conspiracy. It's just what happens when you build a life without a blueprint of your own.</strong></p>
+
+    <h3>The tell-tale signs you're living someone else's blueprint</h3>
+    <p>You achieve something significant and feel nothing — or feel hollow after the initial rush. The win landed, but it didn't satisfy, because you were never sure it was your win to begin with. You find yourself chasing the next thing before you've even stopped to decide if you wanted the last thing.</p>
+    <p>Or: you feel a persistent sense of living someone else's life — like you're the right person in the wrong film. Like you're competent and capable and somehow completely misaligned. Everything is technically fine and it feels like nothing.</p>
+
+    <div class="callout warning">
+      <strong>The expensive version:</strong> A man who builds for twenty years toward someone else's definition of success and then arrives — and finds it means nothing to him — has paid the most expensive price available. That's not a cautionary tale. For many men, it's the plan.
+    </div>
+
+    <p>This module is about drawing your own blueprint. Not the idealistic version — not a fantasy — but a genuine, examined, chosen definition of the man you're building and what you're building toward.</p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Identity Architecture</h2>
+    <p class="section-sub">How to build a self deliberately instead of inheriting one by default.</p>
+
+    <p>Architecture requires two things before anything gets built: a vision of what you're making, and an honest assessment of what you're working with. The same is true of identity.</p>
+    <p>You've already done the assessment work — three modules of it. Now comes the design.</p>
+
+    <h3>Values: the load-bearing walls</h3>
+    <p>Values are not a list of virtues you admire. They're the principles that actually determine your decisions under pressure. You can say you value honesty and still lie when the stakes are high enough. You can say you value health and still sacrifice sleep consistently for two years. <strong>Your real values are revealed by what you do when it costs you something.</strong></p>
+    <p>Most men have never distinguished between their stated values — the ones they'd write on a job application or tell their children — and their evidenced values, the ones their actual decisions prove. The gap between those two lists is one of the most important things a man can know about himself.</p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">Stated vs. Evidenced Values</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;"><strong style="color:var(--deep-vault)">Stated value:</strong> what you say you value, believe you value, or want to value.<br><strong style="color:var(--deep-vault)">Evidenced value:</strong> what your actual decisions, calendar, finances, and attention reveal you value. The evidence doesn't lie. If you spend twelve hours a day on your business and two minutes a day with your children, your evidenced value is clear — regardless of what you say.</p>
+    </div>
+
+    <h3>Character: who you are in the doing</h3>
+    <p>Character is not who you are when everything is going well. It's the specific qualities that show up — or don't — when things are hard, when you're tired, when no one is watching, when the cost is real. Character is revealed under pressure, not designed under comfort.</p>
+    <p>But you can design <em>toward</em> character. You can decide, deliberately, what kind of man you want to be — and then build the conditions, habits, and practices that grow those qualities. You can name the traits that matter to you, define what they actually look like in behavior (not just in sentiment), and hold yourself to those standards.</p>
+
+    <h3>Vision: what you're building toward</h3>
+    <p>Vision is not a five-year plan. It's a direction. A sense of what matters enough to organize your life around. It answers the question: in twenty years, what does a life well-lived look like for a man like you?</p>
+    <p>Not the fantasy version. Not the Instagram version. The honest version — the things that, when you're seventy and looking back, you will actually have cared about. The relationships, the work, the experiences, the man you were to other people.</p>
+
+    <div class="callout">
+      <strong>These three elements connect:</strong> your values determine what you protect. Your character determines how you move through the world. Your vision determines where you're going. A life built without all three is a life built by default.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">This is the module where vague answers are most tempting. "I value family and freedom" tells you nothing. Get specific.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Default — If you change nothing about how you're living right now, where does your current trajectory lead? Be specific. What does your life look like at 35, 45, 55? What kind of man does the current version of you become?</p>
+      <p class="card-hint">This is not a question about fear — it's a question about honesty. Don't soften it with optimism. What does the actual data of your current choices, habits, and direction point toward?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"If I extrapolate my current daily habits and decisions forward by 10 years, I will be..."</p>
+        <p>"The man I'm building toward by default — without intervention — looks like..."</p>
+        <p>"The part of that picture that bothers me most is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Values Gap — Name three things you say you value. Now look at where your time, money, and attention actually go in an average week. What do your decisions reveal you actually value? Where is the gap biggest?</p>
+      <p class="card-hint">Don't defend the gap — map it. "I say I value health but I average five hours of sleep and skip the gym twice a week" is a valid answer. Seeing the gap clearly is the beginning of closing it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"I say I value [X] but my actual decisions show I prioritise..."</p>
+        <p>"If someone tracked my calendar and spending this week, they would conclude I value..."</p>
+        <p>"The biggest gap between what I say and what I do is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Character — What kind of man do you want to be known as — not for what you've achieved, but for who you are? Name five character traits. Then name the hardest one to actually live consistently. Why is it the hardest?</p>
+      <p class="card-hint">Don't list aspirational virtues — list the specific traits that matter to you as a man. The ones you would be proud to be identified by at your worst moment, not just your best. The ones you want to have actually lived, not just intended.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The five traits I want to be genuinely known for are..."</p>
+        <p>"The hardest one to consistently live is [X] because..."</p>
+        <p>"The trait I most consistently fail at is... and what usually causes the failure is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Vision — If no one's opinion mattered and you knew you wouldn't fail, what would you actually build? Not what you think you should want — what you genuinely want. For your work, your relationships, your impact, your experience of being alive.</p>
+      <p class="card-hint">Notice the voice that says "that's not realistic" or "that's selfish" or "I shouldn't want that." That's not wisdom — that's the inherited OS from Module 2 doing its job. Write what you actually want before you edit it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"If I let myself want what I actually want, the life I would build looks like..."</p>
+        <p>"The version of my life I'd be proud of at 70 — looking back — would include..."</p>
+        <p>"The thing I want that I've been afraid to say out loud is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Gap — What is the honest distance between the man you are right now and the man you're choosing to become? What is the single biggest thing keeping you where you are — not an external circumstance, but an internal one?</p>
+      <p class="card-hint">The external obstacles are real. But this question is asking about the internal one — the belief, habit, pattern, or fear that is most responsible for the gap. Name it precisely.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The honest gap between who I am and who I'm choosing to become is..."</p>
+        <p>"The internal thing keeping me where I am — not the external circumstances — is..."</p>
+        <p>"If I removed that one internal blocker, the first thing that would change is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- VALUES AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Values Audit</h2>
+    <p class="section-sub">For each of five life areas, write your stated value and what your actual decisions reveal you value. Then name the gap and what closing it would require.</p>
+
+    <div class="callout">
+      <strong>The rule:</strong> look at your last 30 days — your calendar, your spending, your attention, your choices under pressure. That data is more honest than anything you'll write from memory.
+    </div>
+
+    <div class="card" style="margin-top:28px;" id="values-audit-card">
+      <!-- Built by JS -->
+    </div>
+  </section>
+
+  <!-- CHARACTER BLUEPRINT -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Character Blueprint</h2>
+    <p class="section-sub">Define five character traits you are choosing to build. For each: name it, define what it looks like in action, define what violating it looks like, and rate your current alignment.</p>
+
+    <div class="callout">
+      These are not aspirations — they are standards. A standard is something you hold yourself to when it costs you. Write the behavioral definition, not the sentiment.
+    </div>
+
+    <div class="card" style="padding:0; margin-top:28px;">
+      <div class="trait-tabs" id="trait-tabs">
+        <button class="trait-tab active" onclick="switchTrait(0)">Trait 1 <span class="tab-dot"></span></button>
+        <button class="trait-tab" onclick="switchTrait(1)">Trait 2 <span class="tab-dot"></span></button>
+        <button class="trait-tab" onclick="switchTrait(2)">Trait 3 <span class="tab-dot"></span></button>
+        <button class="trait-tab" onclick="switchTrait(3)">Trait 4 <span class="tab-dot"></span></button>
+        <button class="trait-tab" onclick="switchTrait(4)">Trait 5 <span class="tab-dot"></span></button>
+      </div>
+      <div id="trait-panels" style="padding:0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, find one decision where your blueprint guides you — and take it.</p>
+
+    <div class="belief-display">
+      "I am not who I've been. I am who I'm building."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that lands hardest — specific to the man you're choosing to become, not a general statement.</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Application Journal</p>
+      <p class="card-hint">Each day, note one decision where you chose the blueprint over the default — or one moment where you caught yourself slipping back and corrected it.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: I chose my blueprint over the default when...&#10;Day 2: The moment I caught myself drifting was...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Commitments Audit</h2>
+    <p class="section-sub">Do this before you move to Module 5. No substitutes.</p>
+
+    <div class="truth-block">
+      <p>This week, audit your calendar and your finances against your stated values. The numbers don't lie.</p>
+    </div>
+
+    <p>Pull up your calendar for the last two weeks. Pull up your bank or spending app for the last thirty days. Look at where your time and money actually went — with the specificity that comes from data, not memory.</p>
+    <p>Then compare it against the values you named in this module. Be precise: what percentage of your waking hours went toward the things you said matter most? What did your spending reveal about your actual priorities?</p>
+    <p>You are not doing this to feel bad. You are doing this because <strong>a man who has no idea where his time and money go has no idea what he's actually building.</strong> You can't design a life you can't see.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">The Time Audit</p>
+      <p class="card-hint">Where did your hours actually go in the last two weeks? Be specific — not "work and family" but the actual breakdown, including time spent passively (scrolling, TV, doing nothing).</p>
+      <textarea class="journal-area" id="challenge-time" placeholder="Last two weeks: my time actually went to...&#10;&#10;The biggest surprise was...&#10;&#10;The category I want to change most is..." rows="8" oninput="autoSave('challenge-time', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-time-count">0 characters</span><span class="save-indicator" id="challenge-time-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">The Money Audit</p>
+      <p class="card-hint">Last 30 days: where did your money actually go? What do the categories reveal about what you're evidencing as important? What does a man living your stated values spend money on — and does that match?</p>
+      <textarea class="journal-area" id="challenge-money" placeholder="Last 30 days: my money actually went to...&#10;&#10;What this reveals about my evidenced values is...&#10;&#10;One spending category I'm changing this month is..." rows="7" oninput="autoSave('challenge-money', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-money-count">0 characters</span><span class="save-indicator" id="challenge-money-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I completed the Commitments Audit</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. The Character Blueprint only counts if you defined behavioral standards, not sentiments.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I identified the gap between my stated values and my evidenced values — specifically, with data from my actual decisions.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I built a Character Blueprint with five traits, each with a behavioral definition and current alignment rating.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I wrote an honest answer to the Vision question — not the curated version, the actual one, including what I've been afraid to want.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Commitments Audit — looked at actual calendar and spending data, not memory.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can state, in one sentence, the internal blocker most responsible for the gap between who I am and who I'm building.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 4. Selected for the design and values theme — not inspiration, not motivation. Clarity tools.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">The 7 Habits of Highly Effective People — Stephen Covey (Habit 2)</p>
+        <p class="resource-desc">Read Habit 2 specifically: "Begin with the End in Mind." The funeral eulogy exercise. The personal mission statement. This is the practical methodology behind the Blueprint concept in this module — values-based design rather than urgency-based reaction. Dense but essential.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Courage to Be Disliked — Kishimi &amp; Koga</p>
+        <p class="resource-desc">A Socratic dialogue on Adlerian psychology — the argument that all unhappiness comes from interpersonal relationships, and that living someone else's blueprint is a choice you keep making. The concept of "life tasks" and separating your tasks from others' tasks is directly relevant to designing your own values.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Meditations — Marcus Aurelius (Books II &amp; III)</p>
+        <p class="resource-desc">The daily character examination of a Roman Emperor. Not philosophy as theory — philosophy as daily practice. Books II and III specifically on the discipline of the will, the distinction between what is and isn't in your control, and building character through deliberate repetition rather than good intentions.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Viktor Frankl — "Why to Believe in Others" (TED Talk)</p>
+        <p class="resource-desc">Frankl on the importance of holding a high vision of who a man can become — and the danger of confirming people in their mediocrity. His concept of meaning as the primary driver of human action is the philosophical backbone of the Vision section in this module.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Pillar I Complete</h2>
+    <p class="complete-sub">You've done the identity work. You know where you came from, what you've been performing, and who you're choosing to build. Pillar II starts now.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m4';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    valuesAudit: Array.from({length:5}, () => ({ stated:'', evidenced:'', gap:'' })),
+    traits: Array.from({length:5}, () => ({ name:'', inAction:'', violation:'', alignment:0 }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'belief-version','belief-decisions',
+    'challenge-time','challenge-money'
+  ];
+
+  const VALUES_AREAS = ['Work & Career','Relationships','Health & Body','Money & Resources','Personal Growth'];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.valuesAudit || state.valuesAudit.length !== 5) state.valuesAudit = Array.from({length:5}, () => ({ stated:'', evidenced:'', gap:'' }));
+        if (!state.traits || state.traits.length !== 5) state.traits = Array.from({length:5}, () => ({ name:'', inAction:'', violation:'', alignment:0 }));
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const vFilled = state.valuesAudit.filter(v => v.stated.trim().length > 3 && v.evidenced.trim().length > 3).length;
+    pts += Math.min(10, vFilled * 2);
+    const tFilled = state.traits.filter(t => t.name.trim().length > 2 && t.inAction.trim().length > 10).length;
+    pts += Math.min(10, tFilled * 2);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const ct = document.getElementById('challenge-time'); if (ct && ct.value.trim().length > 20) pts += 4;
+    const cm = document.getElementById('challenge-money'); if (cm && cm.value.trim().length > 20) pts += 3;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== VALUES AUDIT =====
+  function buildValuesAudit() {
+    const card = document.getElementById('values-audit-card');
+    card.innerHTML = '';
+    VALUES_AREAS.forEach((area, i) => {
+      const v = state.valuesAudit[i];
+      const row = document.createElement('div');
+      row.innerHTML = `
+        <div class="values-row-num">0${i+1}</div>
+        <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--deep-vault);margin-bottom:14px;">${area}</p>
+        <div class="values-row">
+          <div>
+            <div class="values-col-label stated">What I say I value</div>
+            <textarea class="values-field" rows="3" placeholder='e.g. "Building a business that gives me autonomy"' oninput="updateValueField(${i},'stated',this.value)">${v.stated}</textarea>
+          </div>
+          <div>
+            <div class="values-col-label evidenced">What my decisions reveal</div>
+            <textarea class="values-field" rows="3" placeholder='e.g. "Staying in a comfortable job because it pays well"' oninput="updateValueField(${i},'evidenced',this.value)">${v.evidenced}</textarea>
+          </div>
+        </div>
+        <div class="values-gap">
+          <label>The gap — and what closing it would require</label>
+          <textarea rows="2" placeholder="The gap is... closing it would require me to..." oninput="updateValueField(${i},'gap',this.value)">${v.gap}</textarea>
+        </div>
+        ${i < VALUES_AREAS.length - 1 ? '<div style="margin:24px 0;height:1px;background:var(--sg-border);"></div>' : ''}`;
+      card.appendChild(row);
+    });
+  }
+
+  function updateValueField(idx, field, value) {
+    state.valuesAudit[idx][field] = value;
+    save(); updateProgress();
+  }
+
+  // ===== CHARACTER BLUEPRINT =====
+  let currentTrait = 0;
+
+  function buildTraitPanels() {
+    const container = document.getElementById('trait-panels');
+    container.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const t = state.traits[i];
+      const panel = document.createElement('div');
+      panel.className = 'trait-panel' + (i === 0 ? ' active' : '');
+      panel.id = `traitp-${i}`;
+      panel.innerHTML = `
+        <div class="trait-field">
+          <label>Name the trait</label>
+          <input type="text" placeholder='e.g. "Disciplined", "Honest", "Courageous"' value="${t.name}" oninput="updateTrait(${i},'name',this.value)">
+        </div>
+        <div class="trait-field">
+          <label>What it looks like in action — specific behaviors</label>
+          <textarea rows="3" placeholder="This trait looks like: I do X when Y happens. I don't do Z regardless of the cost. Specifically..." oninput="updateTrait(${i},'inAction',this.value)">${t.inAction}</textarea>
+        </div>
+        <div class="trait-field">
+          <label>What violating it looks like — your specific failure mode</label>
+          <textarea rows="3" placeholder="I violate this trait when... The specific trigger is usually... It looks like..." oninput="updateTrait(${i},'violation',this.value)">${t.violation}</textarea>
+        </div>
+        <div class="trait-field">
+          <label>Current alignment — how consistently do you actually live this right now?</label>
+          <div class="alignment-btns" data-trait="${i}">
+            ${[1,2,3,4,5,6,7,8,9,10].map(n => `<button class="align-btn ${t.alignment===n ? (n<=4?'selected-low':'selected') : ''}" onclick="setAlignment(${i},${n},this)">${n}</button>`).join('')}
+          </div>
+          <p style="font-size:0.75rem;color:var(--security-gray);margin-top:8px;">1 = rarely live this &nbsp;|&nbsp; 10 = live this consistently</p>
+        </div>`;
+      container.appendChild(panel);
+    }
+    updateTraitTabIndicators();
+  }
+
+  function switchTrait(idx) {
+    currentTrait = idx;
+    document.querySelectorAll('.trait-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.trait-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateTrait(idx, field, value) {
+    state.traits[idx][field] = value;
+    if (field === 'name') {
+      const tab = document.querySelectorAll('.trait-tab')[idx];
+      if (tab) tab.childNodes[0].textContent = (value.trim() || `Trait ${idx+1}`) + ' ';
+    }
+    save(); updateTraitTabIndicators(); updateProgress();
+  }
+
+  function setAlignment(traitIdx, value, btn) {
+    state.traits[traitIdx].alignment = value;
+    const wrap = btn.closest('.alignment-btns');
+    wrap.querySelectorAll('.align-btn').forEach((b, i) => {
+      b.classList.remove('selected','selected-low');
+      if (i + 1 === value) b.classList.add(value <= 4 ? 'selected-low' : 'selected');
+    });
+    save(); updateProgress();
+  }
+
+  function updateTraitTabIndicators() {
+    document.querySelectorAll('.trait-tab').forEach((tab, i) => {
+      tab.classList.toggle('filled', !!(state.traits[i].name.trim()));
+    });
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Audit completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I completed the Commitments Audit</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You described a life you want but didn't do the design work. The Values Audit and Character Blueprint only count if you used real data and wrote behavioral standards. Go back and be specific.";
+    else if (total <= 20) msg = "Good foundation. You have a blueprint now — rough in places, but real. Pillar II is about strategy and power. That work will be harder without a clear identity underneath it.";
+    else msg = "You did this properly. The gap between stated and evidenced values is mapped. The character traits have behavioral definitions. You know what you're building. That changes everything from here.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.valuesAudit.filter(v => v.stated.trim().length>3 && v.evidenced.trim().length>3).length >= 4,
+      exercise: state.traits.filter(t => t.name.trim().length>2 && t.inAction.trim().length>10).length >= 4,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.trait-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.trait-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 4: THE BLUEPRINT\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Default'],['r2','Q2 — The Values Gap'],['r3','Q3 — The Character'],['r4','Q4 — The Vision'],['r5','Q5 — The Gap']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE VALUES AUDIT\n${ln('-',30)}\n\n`;
+    VALUES_AREAS.forEach((area, i) => {
+      const v = state.valuesAudit[i];
+      out += `${area}\n`;
+      out += `  What I say I value: ${v.stated||'(not filled)'}\n`;
+      out += `  What my decisions reveal: ${v.evidenced||'(not filled)'}\n`;
+      out += `  The gap and what closing it requires: ${v.gap||'(not filled)'}\n\n`;
+    });
+
+    out += `CHARACTER BLUEPRINT\n${ln('-',30)}\n\n`;
+    state.traits.forEach((t, i) => {
+      out += `Trait ${i+1}: ${t.name||'(not named)'}\n`;
+      out += `  In action: ${t.inAction||'(not defined)'}\n`;
+      out += `  Violation looks like: ${t.violation||'(not defined)'}\n`;
+      out += `  Current alignment: ${t.alignment>0?t.alignment+'/10':'not rated'}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Application Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `WEEKLY CHALLENGE — THE COMMITMENTS AUDIT\n${ln('-',30)}\n\nTime Audit:\n${val('challenge-time')}\n\nMoney Audit:\n${val('challenge-money')}\nCompleted: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Identified stated vs. evidenced values gap with data','Built Character Blueprint with behavioral standards','Wrote honest Vision answer including what I want to want','Completed Commitments Audit with real data','Can state the primary internal blocker in one sentence'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-4-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildValuesAudit();
+    buildTraitPanels();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Audit completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
