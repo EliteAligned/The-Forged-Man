@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Forged Man — Course Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --deep-vault:     #0A0F0D;
+      --deep-vault-2:   #111815;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.3);
+      --gold-foil:      #D4AF37;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper-white);
+      color: var(--deep-vault);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ===== HERO ===== */
+    #hero {
+      background: var(--deep-vault);
+      padding: 72px 48px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: 'TFM';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-display);
+      font-size: 18rem;
+      font-weight: 700;
+      color: rgba(247,245,239,0.025);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-inner { max-width: 1100px; margin: 0 auto; }
+
+    .hero-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-foil);
+      margin-bottom: 16px;
+    }
+
+    #hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      color: var(--paper-white);
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    #hero h1 span { color: var(--banknote-green); }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(247,245,239,0.5);
+      margin-bottom: 48px;
+    }
+
+    /* ===== COURSE PROGRESS ===== */
+    .course-progress {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .progress-stat {
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .progress-stat-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold-foil);
+      line-height: 1;
+    }
+
+    .progress-stat-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--security-gray);
+      margin-top: 4px;
+    }
+
+    .progress-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(247,245,239,0.1);
+    }
+
+    .progress-bar-wrap { flex: 1; min-width: 200px; }
+
+    .progress-bar-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--security-gray);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-track {
+      height: 4px;
+      background: rgba(247,245,239,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-hover), var(--banknote-green));
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    #content { max-width: 1100px; margin: 0 auto; padding: 64px 48px; }
+
+    /* ===== PILLAR HEADER ===== */
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 56px 0 24px;
+    }
+
+    .pillar-header:first-child { margin-top: 0; }
+
+    .pillar-number {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--paper-white);
+      background: var(--banknote-green);
+      padding: 4px 10px;
+      letter-spacing: 0.08em;
+      flex-shrink: 0;
+    }
+
+    .pillar-title {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--security-gray);
+    }
+
+    .pillar-line { flex: 1; height: 1px; background: var(--sg-border); }
+
+    /* ===== MODULE GRID ===== */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* ===== MODULE CARD ===== */
+    .module-card {
+      background: var(--paper-white);
+      border: 1px solid var(--sg-border);
+      padding: 24px;
+      position: relative;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .module-card.available:hover {
+      border-color: var(--banknote-green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(11,107,77,0.1);
+    }
+
+    .module-card.complete {
+      border-color: rgba(11,107,77,0.3);
+      background: rgba(230,244,238,0.5);
+    }
+
+    .module-card.complete:hover {
+      border-color: var(--banknote-green);
+      transform: translateY(-2px);
+    }
+
+    .module-card.in-progress {
+      border-color: rgba(11,107,77,0.4);
+      border-left: 3px solid var(--banknote-green);
+    }
+
+    .module-card.in-progress:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(11,107,77,0.1);
+    }
+
+    .module-card.locked {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* Card top row */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .module-number {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--banknote-green);
+    }
+
+    .module-card.locked .module-number { color: var(--security-gray); }
+
+    /* Status badge */
+    .status-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .badge-complete {
+      background: rgba(11,107,77,0.12);
+      color: var(--banknote-green);
+      border: 1px solid rgba(11,107,77,0.25);
+    }
+
+    .badge-progress {
+      background: rgba(212,175,55,0.1);
+      color: var(--gold-foil);
+      border: 1px solid rgba(212,175,55,0.3);
+    }
+
+    .badge-available {
+      background: transparent;
+      color: var(--security-gray);
+      border: 1px solid var(--sg-border);
+    }
+
+    .badge-locked {
+      background: transparent;
+      color: var(--security-gray);
+      border: 1px solid var(--sg-border);
+    }
+
+    /* Card title */
+    .module-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--deep-vault);
+      line-height: 1.3;
+    }
+
+    .module-card.locked .module-title { color: var(--security-gray); }
+
+    /* Card description */
+    .module-desc {
+      font-size: 0.82rem;
+      color: var(--security-gray);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    /* Card footer */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid var(--sg-border);
+      margin-top: auto;
+    }
+
+    .card-meta {
+      font-size: 0.72rem;
+      color: var(--security-gray);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-meta svg { flex-shrink: 0; }
+
+    .card-cta {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--banknote-green);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .module-card.locked .card-cta { color: var(--security-gray); }
+
+    /* Module progress bar (within card) */
+    .card-progress-bar {
+      height: 2px;
+      background: var(--sg-border);
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .card-progress-fill {
+      height: 100%;
+      background: var(--banknote-green);
+      transition: width 0.4s;
+    }
+
+    /* Complete checkmark overlay */
+    .complete-mark {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 22px;
+      height: 22px;
+      background: var(--banknote-green);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .module-card.complete .complete-mark { display: flex; }
+
+    /* ===== FOOTER ===== */
+    #footer {
+      background: var(--deep-vault);
+      padding: 32px 48px;
+      text-align: center;
+    }
+
+    .footer-inner { max-width: 1100px; margin: 0 auto; }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--paper-white);
+      margin-bottom: 6px;
+    }
+
+    .footer-sub {
+      font-size: 0.75rem;
+      color: var(--security-gray);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      #hero { padding: 48px 24px; }
+      #content { padding: 40px 24px; }
+      #hero::before { display: none; }
+      .module-grid { grid-template-columns: 1fr; }
+      .course-progress { gap: 12px; }
+    }
+
+    /* ===== SCROLL ANIM ===== */
+    .pillar-block {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .pillar-block.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Elite Aligned — Full Course</p>
+    <h1>The <span>Forged</span> Man</h1>
+    <p class="hero-tagline">"Iron doesn't forge itself."</p>
+
+    <div class="course-progress">
+      <div class="progress-stat">
+        <div class="progress-stat-number" id="stat-complete">0</div>
+        <div class="progress-stat-label">Complete</div>
+      </div>
+      <div class="progress-divider"></div>
+      <div class="progress-stat">
+        <div class="progress-stat-number" id="stat-progress">0</div>
+        <div class="progress-stat-label">In Progress</div>
+      </div>
+      <div class="progress-divider"></div>
+      <div class="progress-stat">
+        <div class="progress-stat-number">16</div>
+        <div class="progress-stat-label">Total Modules</div>
+      </div>
+      <div class="progress-divider"></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-label">Overall Progress</div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<main id="content">
+
+  <!-- PILLAR I -->
+  <div class="pillar-block" id="pillar-1">
+    <div class="pillar-header">
+      <span class="pillar-number">Pillar I</span>
+      <span class="pillar-title">Identity</span>
+      <div class="pillar-line"></div>
+    </div>
+    <div class="module-grid">
+
+      <a class="module-card available" href="module-1.html" id="card-1">
+        <div class="complete-mark">
+          <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="card-top">
+          <span class="module-number">Module 01</span>
+          <span class="status-badge badge-available" id="badge-1">Available</span>
+        </div>
+        <div class="module-title">The Audit</div>
+        <div class="module-desc">Stop living in the story. Start living in the truth. Map the gap between who you say you are and who your actions prove you are.</div>
+        <div class="card-progress-bar"><div class="card-progress-fill" id="bar-1" style="width:0%"></div></div>
+        <div class="card-footer">
+          <span class="card-meta">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            8–10 hours
+          </span>
+          <span class="card-cta">Begin <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </div>
+      </a>
+
+      <div class="module-card locked" id="card-2">
+        <div class="card-top">
+          <span class="module-number">Module 02</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">The Origin</div>
+        <div class="module-desc">Most of your beliefs were installed by people who never examined their own. Trace every core belief back to its source and decide what to keep.</div>
+        <div class="card-footer">
+          <span class="card-meta">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            6–8 hours
+          </span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-3">
+        <div class="card-top">
+          <span class="module-number">Module 03</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">The Mask</div>
+        <div class="module-desc">The version of you that people approve of is your cage. Learn to distinguish the man you perform from the man you are.</div>
+        <div class="card-footer">
+          <span class="card-meta">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            6–8 hours
+          </span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PILLAR II -->
+  <div class="pillar-block" id="pillar-2">
+    <div class="pillar-header">
+      <span class="pillar-number">Pillar II</span>
+      <span class="pillar-title">Mind</span>
+      <div class="pillar-line"></div>
+    </div>
+    <div class="module-grid">
+
+      <div class="module-card locked" id="card-4">
+        <div class="card-top">
+          <span class="module-number">Module 04</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Critical Thinking as Survival</div>
+        <div class="module-desc">Most of what you believe was designed to make someone else money or keep someone else in power. Learn to interrogate everything.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-5">
+        <div class="card-top">
+          <span class="module-number">Module 05</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Information vs. Intelligence</div>
+        <div class="module-desc">Consuming more content is making you less capable. Learn the difference between knowing and understanding — and how to actually use what you read.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-6">
+        <div class="card-top">
+          <span class="module-number">Module 06</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Emotional Intelligence Without Weakness</div>
+        <div class="module-desc">Suppressing emotions doesn't make you strong. Not understanding them makes you easy to manipulate. Learn to use emotion as data, not directive.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PILLAR III -->
+  <div class="pillar-block" id="pillar-3">
+    <div class="pillar-header">
+      <span class="pillar-number">Pillar III</span>
+      <span class="pillar-title">Discipline</span>
+      <div class="pillar-line"></div>
+    </div>
+    <div class="module-grid">
+
+      <div class="module-card locked" id="card-7">
+        <div class="card-top">
+          <span class="module-number">Module 07</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">The Architecture of a Controlled Life</div>
+        <div class="module-desc">You don't have a motivation problem. You have a systems problem. Build the structure that makes discipline the default, not the exception.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7–9 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-8">
+        <div class="card-top">
+          <span class="module-number">Module 08</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">The Body as Signal</div>
+        <div class="module-desc">How you treat your body is how you treat everything else. Physical discipline isn't about aesthetics — it's proof of concept for all other discipline.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-9">
+        <div class="card-top">
+          <span class="module-number">Module 09</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Doing Hard Things on Purpose</div>
+        <div class="module-desc">Comfort is the enemy of capability. Learn to deliberately seek difficulty — and use voluntary hardship to build a resilience that nothing else can create.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PILLAR IV -->
+  <div class="pillar-block" id="pillar-4">
+    <div class="pillar-header">
+      <span class="pillar-number">Pillar IV</span>
+      <span class="pillar-title">Power</span>
+      <div class="pillar-line"></div>
+    </div>
+    <div class="module-grid">
+
+      <div class="module-card locked" id="card-10">
+        <div class="card-top">
+          <span class="module-number">Module 10</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">How the World Actually Works</div>
+        <div class="module-desc">The world runs on incentives, not intentions. Ignoring this makes you permanently reactive. Learn to map what actually moves people — and use it.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7–9 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-11">
+        <div class="card-top">
+          <span class="module-number">Module 11</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Reputation, Perception & Reality</div>
+        <div class="module-desc">You will be judged by your appearance, your associations, and your consistency — before your character gets a hearing. Learn to control what you signal.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-12">
+        <div class="card-top">
+          <span class="module-number">Module 12</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Conflict, Allies & Enemies</div>
+        <div class="module-desc">Avoiding conflict doesn't eliminate it — it just means you lose without a fight. Learn to map your relationships honestly and navigate conflict with precision.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-13">
+        <div class="card-top">
+          <span class="module-number">Module 13</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Money, Independence & Leverage</div>
+        <div class="module-desc">Financial dependence is the most common form of slavery in the modern world. Build the stack that makes you genuinely free — not just comfortable.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7–9 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PILLAR V -->
+  <div class="pillar-block" id="pillar-5">
+    <div class="pillar-header">
+      <span class="pillar-number">Pillar V</span>
+      <span class="pillar-title">Legacy</span>
+      <div class="pillar-line"></div>
+    </div>
+    <div class="module-grid">
+
+      <div class="module-card locked" id="card-14">
+        <div class="card-top">
+          <span class="module-number">Module 14</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Mission vs. Goals</div>
+        <div class="module-desc">Goals are what you want. Mission is what you're for. Most men have the first and lack the second. Find the direction that governs every decision.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>6–8 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-15">
+        <div class="card-top">
+          <span class="module-number">Module 15</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">Leading Men</div>
+        <div class="module-desc">You cannot lead others until you have a record of leading yourself. Build the authority that is earned — not demanded, not performed.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7–9 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+      <div class="module-card locked" id="card-16">
+        <div class="card-top">
+          <span class="module-number">Module 16</span>
+          <span class="status-badge badge-locked">Coming Soon</span>
+        </div>
+        <div class="module-title">The Forged Man</div>
+        <div class="module-desc">Capstone. No lecture. Just reckoning. The full audit, your personal code, and the question that every module has been building toward — answered by you.</div>
+        <div class="card-footer">
+          <span class="card-meta"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>8–10 hours</span>
+          <span class="card-cta">Locked</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer id="footer">
+  <div class="footer-inner">
+    <p class="footer-brand">The Forged Man</p>
+    <p class="footer-sub">An Elite Aligned program. Your progress saves automatically to this browser.</p>
+  </div>
+</footer>
+
+<script>
+  // ===== MODULE DEFINITIONS =====
+  // Maps module number to its localStorage key and file
+  const MODULES = Array.from({ length: 16 }, (_, i) => ({
+    n: i + 1,
+    key: `tfm_m${i + 1}`,
+    file: `module-${i + 1}.html`
+  }));
+
+  // ===== READ MODULE STATUS =====
+  function getModuleStatus(mod) {
+    try {
+      const raw = localStorage.getItem(mod.key);
+      if (!raw) return { status: 'available', progress: 0 };
+      const data = JSON.parse(raw);
+      if (data.state && data.state.moduleComplete) return { status: 'complete', progress: 100 };
+
+      // Estimate progress: count non-empty text fields + section marks
+      let filled = 0, total = 14;
+      if (data.texts) {
+        Object.values(data.texts).forEach(v => { if (v && v.trim().length > 10) filled++; });
+      }
+      if (data.state && data.state.marks) {
+        Object.values(data.state.marks).forEach(v => { if (v) filled++; total++; });
+      }
+      const pct = Math.min(99, Math.round((filled / total) * 100));
+      if (filled > 0) return { status: 'in-progress', progress: pct };
+      return { status: 'available', progress: 0 };
+    } catch (e) {
+      return { status: 'available', progress: 0 };
+    }
+  }
+
+  // ===== UPDATE DASHBOARD =====
+  function updateDashboard() {
+    let completeCount = 0;
+    let inProgressCount = 0;
+
+    MODULES.forEach(mod => {
+      const { status, progress } = getModuleStatus(mod);
+      const card   = document.getElementById(`card-${mod.n}`);
+      const badge  = document.getElementById(`badge-${mod.n}`);
+      const bar    = document.getElementById(`bar-${mod.n}`);
+
+      if (!card) return;
+
+      // Only Module 1 is available; rest stay locked until their file is built
+      const isBuilt = mod.n === 1;
+
+      if (!isBuilt) return; // leave locked cards alone
+
+      // Apply status classes
+      card.classList.remove('available', 'in-progress', 'complete', 'locked');
+
+      if (status === 'complete') {
+        card.classList.add('complete');
+        completeCount++;
+        if (badge) { badge.textContent = 'Complete'; badge.className = 'status-badge badge-complete'; }
+        const cta = card.querySelector('.card-cta');
+        if (cta) cta.innerHTML = 'Review <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      } else if (status === 'in-progress') {
+        card.classList.add('in-progress');
+        inProgressCount++;
+        if (badge) { badge.textContent = 'In Progress'; badge.className = 'status-badge badge-progress'; }
+        if (bar) bar.style.width = progress + '%';
+        const cta = card.querySelector('.card-cta');
+        if (cta) cta.innerHTML = 'Continue <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+      } else {
+        card.classList.add('available');
+      }
+    });
+
+    // Update hero stats
+    document.getElementById('stat-complete').textContent  = completeCount;
+    document.getElementById('stat-progress').textContent  = inProgressCount;
+    const overallPct = Math.round((completeCount / 16) * 100);
+    document.getElementById('overall-bar').style.width    = overallPct + '%';
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.pillar-block').forEach(el => obs.observe(el));
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    updateDashboard();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
