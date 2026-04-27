@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1: The Audit — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* EA Brand Colours */
+      --paper-white: #F7F5EF;
+      --mint-tint: #E6F4EE;
+      --mint-dark: #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover: #085A3F;
+      --green-light: #0D7A58;
+      --deep-vault: #0A0F0D;
+      --deep-vault-surface: #111815;
+      --security-gray: #8A9490;
+      --security-gray-light: rgba(138,148,144,0.2);
+      --security-gray-border: rgba(138,148,144,0.35);
+      --gold-foil: #D4AF37;
+      --gold-foil-dark: #B8941E;
+
+      /* Semantic aliases */
+      --bg: var(--paper-white);
+      --surface1: var(--paper-white);
+      --surface2: var(--mint-tint);
+      --surface3: var(--mint-dark);
+      --border: var(--security-gray-border);
+      --border-light: rgba(138,148,144,0.5);
+      --text: var(--deep-vault);
+      --text-secondary: #2E3B36;
+      --text-muted: var(--security-gray);
+
+      /* Legacy aliases kept for JS compatibility */
+      --gold: var(--banknote-green);
+      --gold-light: var(--green-light);
+      --gold-dim: var(--green-hover);
+      --green: var(--banknote-green);
+      --green-light: var(--green-light);
+      --red: #6B2B2B;
+      --red-light: #9B3A3A;
+
+      --sidebar-w: 260px;
+      --header-h: 60px;
+
+      /* Typography */
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    #top-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: var(--deep-vault);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    #top-header .course-label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--paper-white);
+      white-space: nowrap;
+    }
+
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+
+    #top-header .module-label {
+      font-size: 0.78rem;
+      color: var(--security-gray);
+      white-space: nowrap;
+      font-family: var(--font-body);
+    }
+
+    #progress-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    #progress-bar-track {
+      flex: 1;
+      height: 3px;
+      background: var(--border-light);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-hover), var(--banknote-green));
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    #progress-pct {
+      font-size: 0.75rem;
+      color: var(--gold-foil);
+      font-weight: 600;
+      min-width: 36px;
+      text-align: right;
+      font-family: var(--font-body);
+    }
+
+    #menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    #menu-toggle svg { display: block; }
+
+    /* ===== SIDEBAR ===== */
+    #sidebar {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      width: var(--sidebar-w);
+      height: calc(100vh - var(--header-h));
+      background: var(--surface1);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 24px 0;
+      z-index: 90;
+      transition: transform 0.3s ease;
+    }
+
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+    .nav-section-label {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 20px 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-family: var(--font-body);
+    }
+
+    .nav-item:hover { background: var(--mint-tint); color: var(--text); }
+
+    .nav-item.active {
+      background: rgba(11,107,77,0.08);
+      border-left-color: var(--banknote-green);
+      color: var(--banknote-green);
+    }
+
+    .nav-item.done { color: var(--text-secondary); }
+
+    .nav-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid var(--security-gray-border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .nav-item.done .nav-dot {
+      background: var(--banknote-green);
+      border-color: var(--banknote-green);
+    }
+
+    .nav-item.done .nav-dot::after {
+      content: '';
+      display: block;
+      width: 5px; height: 3px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    /* ===== MAIN CONTENT ===== */
+    #main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      min-height: calc(100vh - var(--header-h));
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 72px 64px;
+      max-width: 860px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section.visible { opacity: 1; transform: translateY(0); }
+
+    .section + .section { border-top: 1px solid var(--border); }
+
+    /* ===== HERO ===== */
+    #hero {
+      padding: 96px 64px 80px;
+      background: var(--deep-vault);
+      border-bottom: none;
+      position: relative;
+      overflow: hidden;
+      opacity: 1;
+      transform: none;
+    }
+
+    #hero::before {
+      content: '01';
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-display);
+      font-size: 14rem;
+      font-weight: 700;
+      color: rgba(247,245,239,0.03);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .module-tag {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-foil);
+      margin-bottom: 16px;
+    }
+
+    #hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--paper-white);
+      margin-bottom: 16px;
+    }
+
+    #hero h1 span { color: var(--banknote-green); }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+      color: rgba(247,245,239,0.55);
+      font-style: italic;
+      margin-bottom: 40px;
+      font-family: var(--font-display);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: rgba(247,245,239,0.45);
+    }
+
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold-foil);
+      color: var(--deep-vault);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 10px 0;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover { color: var(--text); }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-tag {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--banknote-green);
+      margin-bottom: 10px;
+    }
+
+    .section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--deep-vault);
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 36px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section h3 {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--banknote-green);
+      margin: 32px 0 12px;
+    }
+
+    .section p { margin-bottom: 16px; color: var(--text-secondary); font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+
+    .section p strong { color: var(--text); font-weight: 600; }
+
+    /* ===== QUOTE BLOCK ===== */
+    .truth-block {
+      margin: 32px 0;
+      padding: 28px 32px;
+      background: var(--deep-vault);
+      border-left: 4px solid var(--banknote-green);
+      position: relative;
+    }
+
+    .truth-block p {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--paper-white);
+      line-height: 1.45;
+      font-style: normal;
+      margin-bottom: 0;
+    }
+
+    .truth-label {
+      font-size: 0.63rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-foil);
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-family: var(--font-body);
+    }
+
+    /* ===== CALLOUT ===== */
+    .callout {
+      margin: 24px 0;
+      padding: 20px 24px;
+      background: var(--mint-tint);
+      border: 1px solid var(--security-gray-border);
+      border-left: 3px solid var(--banknote-green);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .callout.red {
+      background: rgba(107,43,43,0.06);
+      border-color: rgba(107,43,43,0.25);
+      border-left-color: var(--red);
+    }
+
+    /* ===== INTERACTIVE CARDS ===== */
+    .card {
+      background: var(--surface1);
+      border: 1px solid var(--border);
+      padding: 28px;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--banknote-green);
+    }
+
+    .card-number {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: rgba(11,107,77,0.12);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-question {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .card-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    /* ===== TEXTAREA ===== */
+    .journal-area {
+      width: 100%;
+      background: var(--paper-white);
+      border: 1px solid var(--security-gray-border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      padding: 16px;
+      resize: vertical;
+      min-height: 140px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--text-muted); }
+
+    .field-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .char-count { font-size: 0.72rem; color: var(--text-muted); }
+
+    .save-indicator {
+      font-size: 0.72rem;
+      color: var(--banknote-green);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-indicator.show { opacity: 1; }
+
+    /* ===== STARTER PROMPTS ===== */
+    .starter-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--banknote-green);
+      font-size: 0.78rem;
+      padding: 0;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+      font-family: var(--font-body);
+      opacity: 0.7;
+    }
+
+    .starter-toggle:hover { opacity: 1; }
+
+    .starter-prompts {
+      display: none;
+      background: var(--mint-tint);
+      border: 1px solid var(--security-gray-border);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .starter-prompts.open { display: block; }
+
+    .starter-prompts p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== LEDGER ===== */
+    .ledger-section {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    .ledger-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .ledger-label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--banknote-green);
+      margin-bottom: 4px;
+    }
+
+    .ledger-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    /* ===== ORIGIN TRACE ===== */
+    .belief-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .belief-tab {
+      padding: 10px 20px;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .belief-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .belief-tab:hover:not(.active) { color: var(--text-secondary); }
+
+    .belief-tab .tab-check {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: var(--banknote-green);
+      border-radius: 50%;
+      margin-left: 6px;
+      vertical-align: middle;
+      opacity: 0;
+    }
+
+    .belief-tab.filled .tab-check { opacity: 1; }
+
+    .belief-panel { display: none; padding: 24px 0 0; }
+    .belief-panel.active { display: block; }
+
+    .belief-field { margin-bottom: 18px; }
+
+    .belief-field label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .belief-field textarea,
+    .belief-field input {
+      width: 100%;
+      background: var(--paper-white);
+      border: 1px solid var(--security-gray-border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      padding: 12px 14px;
+      outline: none;
+      resize: vertical;
+      line-height: 1.6;
+      transition: border-color 0.2s;
+    }
+
+    .belief-field textarea:focus,
+    .belief-field input:focus { border-color: var(--banknote-green); }
+
+    .belief-field textarea::placeholder,
+    .belief-field input::placeholder { color: var(--text-muted); }
+
+    .category-selector { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .cat-btn {
+      padding: 8px 18px;
+      background: var(--paper-white);
+      border: 1px solid var(--security-gray-border);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .cat-btn:hover { border-color: var(--security-gray); color: var(--text); }
+    .cat-btn.active-keep { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+    .cat-btn.active-question { background: rgba(212,175,55,0.1); border-color: var(--gold-foil); color: var(--gold-foil-dark); }
+    .cat-btn.active-replace { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+
+    .replacement-field { display: none; margin-top: 14px; }
+    .replacement-field.show { display: block; }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--paper-white);
+      padding: 28px 32px;
+      background: var(--deep-vault);
+      border-left: 4px solid var(--banknote-green);
+      margin-bottom: 24px;
+    }
+
+    .day-tracker { margin: 24px 0; }
+
+    .day-tracker-label {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .day-item { text-align: center; }
+
+    .day-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .day-check {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--paper-white);
+      border: 1px solid var(--security-gray-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1rem;
+      color: transparent;
+    }
+
+    .day-check.checked {
+      background: var(--banknote-green);
+      border-color: var(--banknote-green);
+      color: var(--paper-white);
+    }
+
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    /* ===== SELF ASSESSMENT ===== */
+    .assessment-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .assessment-item:last-child { border-bottom: none; }
+
+    .assessment-text { flex: 1; font-size: 0.9rem; color: var(--text-secondary); padding-top: 6px; }
+
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .score-btn {
+      width: 36px; height: 36px;
+      background: var(--paper-white);
+      border: 1px solid var(--security-gray-border);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .score-btn:hover { border-color: var(--security-gray); color: var(--text); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+
+    .assessment-result {
+      margin-top: 28px;
+      padding: 28px 32px;
+      background: var(--deep-vault);
+      border: none;
+      display: none;
+    }
+
+    .assessment-result.show { display: block; }
+
+    .result-score {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--gold-foil);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .result-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--security-gray);
+      margin-bottom: 14px;
+      font-family: var(--font-body);
+    }
+
+    .result-message { font-size: 0.9rem; color: var(--text-secondary); }
+
+    /* ===== RESOURCES ===== */
+    .resource-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+
+    .resource-item:last-child { border-bottom: none; }
+
+    .resource-tag {
+      font-family: var(--font-body);
+      font-size: 0.63rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      background: var(--mint-tint);
+      border: 1px solid var(--banknote-green);
+      color: var(--banknote-green);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ===== COMPLETE CTA ===== */
+    #complete-section {
+      padding: 80px 64px;
+      text-align: center;
+      background: var(--deep-vault);
+      border-top: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .forge-score-display {
+      margin-bottom: 40px;
+    }
+
+    .forge-score-number {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--gold-foil);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .forge-score-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--security-gray);
+      font-family: var(--font-body);
+    }
+
+    .complete-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--paper-white);
+      margin-bottom: 12px;
+    }
+
+    .complete-sub {
+      font-size: 0.95rem;
+      color: rgba(247,245,239,0.5);
+      margin-bottom: 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-complete {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold-foil);
+      color: var(--deep-vault);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-complete:hover { background: #BF9B28; }
+
+    .btn-complete.completed {
+      background: var(--banknote-green);
+      color: var(--paper-white);
+      pointer-events: none;
+    }
+
+    /* ===== PROGRESS MILESTONE ===== */
+    .milestone-bar {
+      display: flex;
+      gap: 0;
+      margin: 32px 0;
+      overflow: hidden;
+    }
+
+    .milestone-step {
+      flex: 1;
+      height: 4px;
+      background: var(--border-light);
+      transition: background 0.4s;
+    }
+
+    .milestone-step.filled { background: var(--banknote-green); }
+
+    /* ===== MARK READ ===== */
+    .mark-read-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--security-gray-border);
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 9px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 32px;
+    }
+
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mark-read-btn.read {
+      background: rgba(11,107,77,0.08);
+      border-color: var(--banknote-green);
+      color: var(--banknote-green);
+    }
+
+    /* ===== SECTION DIVIDER ===== */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 40px 0;
+    }
+
+    .ornament-line { flex: 1; height: 1px; background: var(--security-gray-border); }
+    .ornament-diamond {
+      width: 8px; height: 8px;
+      background: var(--banknote-green);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+
+      #sidebar {
+        transform: translateX(-100%);
+      }
+
+      #sidebar.open { transform: translateX(0); }
+
+      #main { margin-left: 0; }
+
+      .section, #hero, #complete-section { padding: 48px 24px; }
+
+      #hero h1 { font-size: 2.2rem; }
+
+      #hero::before { font-size: 8rem; opacity: 0.5; }
+
+      .day-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+
+      .assessment-item { flex-direction: column; gap: 10px; }
+
+      .hero-meta { gap: 16px; }
+
+      .belief-tab { padding: 10px 14px; }
+    }
+
+    /* ===== UTILITY ===== */
+    .mt-4 { margin-top: 16px; }
+    .mt-6 { margin-top: 24px; }
+    .mt-8 { margin-top: 32px; }
+    .text-gold { color: var(--banknote-green); }
+    .text-muted { color: var(--text-muted); }
+
+    .read-progress-dots {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .rpd { width: 6px; height: 6px; border-radius: 50%; background: var(--security-gray-border); }
+    .rpd.done { background: var(--banknote-green); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--paper-white); }
+    ::-webkit-scrollbar-thumb { background: var(--security-gray-border); border-radius: 3px; }
+
+    /* complete section secondary btn override — sits on deep vault bg */
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    /* result message on dark bg */
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); }
+
+    /* animated number */
+    @keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .count-up { animation: countUp 0.4s ease forwards; }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="top-header">
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 01 — The Audit</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track">
+      <div id="progress-bar-fill"></div>
+    </div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+</header>
+
+<!-- ===== SIDEBAR ===== -->
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook">
+    <span class="nav-dot"></span> Opening
+  </a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth">
+    <span class="nav-dot"></span> The Hard Truth
+  </a>
+  <a class="nav-item" href="#lesson" data-section="lesson">
+    <span class="nav-dot"></span> The Gap
+  </a>
+
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection">
+    <span class="nav-dot"></span> Reflection Questions
+  </a>
+  <a class="nav-item" href="#system" data-section="system">
+    <span class="nav-dot"></span> The Honest Ledger
+  </a>
+  <a class="nav-item" href="#exercise" data-section="exercise">
+    <span class="nav-dot"></span> Origin Trace
+  </a>
+  <a class="nav-item" href="#belief" data-section="belief">
+    <span class="nav-dot"></span> Belief Install
+  </a>
+  <a class="nav-item" href="#challenge" data-section="challenge">
+    <span class="nav-dot"></span> Weekly Challenge
+  </a>
+
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment">
+    <span class="nav-dot"></span> Self-Assessment
+  </a>
+  <a class="nav-item" href="#resources" data-section="resources">
+    <span class="nav-dot"></span> Resources
+  </a>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 01 of 16</p>
+    <h1>The <span>Audit</span></h1>
+    <p class="hero-tagline">"Stop living in the story. Start living in the truth."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>8–10 hours to complete</span>
+      </div>
+      <div class="hero-meta-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>5 reflection questions</span>
+      </div>
+      <div class="hero-meta-item">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span>3 practical exercises</span>
+      </div>
+    </div>
+    <a href="#hook" class="btn-primary">
+      Begin Module
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </section>
+
+  <!-- OPENING / HOOK -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>Before We Start</h2>
+    <p class="section-sub">A direct word from your instructor.</p>
+
+    <p>Let me ask you something nobody ever asks directly.</p>
+    <p><strong>Who are you — when there's no one watching?</strong></p>
+    <p>Not who you tell people you are. Not the version of yourself you post, perform, or project. Not the man you <em>plan</em> to become someday.</p>
+    <p>Right now. Today. When the door is closed and the phone is down and nobody is grading you.</p>
+    <p>Who shows up?</p>
+    <p>Most men have never seriously answered that question. Not because they're dishonest — but because they've never been taught to look. They've been handed a story about themselves — by their family, their friends, their culture — and they've been living inside that story ever since, mistaking it for identity.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>This module is about ending that. Not to destroy you. Not to shame you. But because a man who doesn't know what he's actually working with cannot build anything real.</p>
+    <p>A contractor who lies to himself about the materials he has doesn't build a house. He builds a collapse waiting to happen.</p>
+    <p><strong>You are the contractor. This is the site assessment.</strong></p>
+    <p>This module will be uncomfortable. That's not an accident. The men who stay comfortable stay the same. The men who look directly at what needs to change — and then do something about it — become something different.</p>
+    <p>That's why you're here. So let's get to work.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>You Are What You Do</h2>
+    <p class="section-sub">Not what you intend. Not what you feel. What you actually do.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #1</p>
+      <p>"You are not who you think you are. You are what you repeatedly do, avoid, and tolerate."</p>
+    </div>
+
+    <p>Read that again. Slowly.</p>
+    <p>Your identity isn't your intentions. It isn't the person you imagine yourself to be in your best moments. It's the pattern — the consistent, repeated behavior when life is ordinary and nothing is forcing you to perform.</p>
+
+    <h3>Here's how this plays out in real life</h3>
+    <p>A man says he values his health. But he hasn't trained in three weeks, he's sleeping four hours a night, and he eats garbage when he's stressed. What does he actually value? <strong>Comfort.</strong> The idea of health without the cost of it.</p>
+    <p>A man says he values honesty. But he tells people what they want to hear, avoids difficult conversations, and edits his opinions based on who's in the room. What does he actually value? <strong>Approval.</strong></p>
+    <p>A man says he values ambition. But he spends four hours a day scrolling, avoids hard work until a deadline forces him, and hasn't started the thing he keeps saying he's going to start. What does he actually value? <strong>Stimulation without effort.</strong></p>
+
+    <div class="callout">
+      None of this makes these men bad. It makes them <em>unexamined</em>. And unexamined men do not build the lives they want. They drift into the lives they deserved by default.
+    </div>
+
+    <p>The first act of becoming a Forged Man is brutal, honest accounting. Not self-hatred. Not shame. <strong>Accounting.</strong> The same way you'd look at a bank statement — without emotion, with full attention, and with the intention to change what needs changing.</p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- THE GAP -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>The Gap</h2>
+    <p class="section-sub">Understanding the distance between who you say you are and who you prove you are.</p>
+
+    <p>There are two versions of every man:</p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">The Stated Self</p>
+      <p style="margin:8px 0 0; color: var(--text-secondary); font-size: 0.9rem;">Who you say you are. Who you believe yourself to be. The identity you present to the world and to yourself.</p>
+    </div>
+
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <p class="card-title">The Demonstrated Self</p>
+      <p style="margin:8px 0 0; color: var(--text-secondary); font-size: 0.9rem;">Who your actions prove you to be, day after day, in the ordinary moments when nobody's watching and nothing's at stake.</p>
+    </div>
+
+    <p>The distance between those two versions is called <strong>The Gap</strong>. Every man has one. The size of it determines almost everything about his life.</p>
+
+    <h3>What a small gap looks like</h3>
+    <p>Your actions match your values. When you say something matters to you, your behavior reflects it. People around you feel the consistency. <em>You</em> feel it too — as a quiet confidence that doesn't need to announce itself. You don't need people to believe you're disciplined because your actions already prove it.</p>
+
+    <h3>What a large gap looks like</h3>
+    <p>Your actions and your identity are in constant low-grade conflict. This creates a specific kind of exhaustion — not physical tiredness, but the drain of maintaining a story that doesn't match reality. Men with large Gaps are always slightly on edge, always slightly defensive, always needing external validation because the internal accounting doesn't add up.</p>
+
+    <div class="callout red">
+      <strong>Most men protect their Gap instead of closing it.</strong> They find evidence for the Stated Self. They explain away the Demonstrated Self. They surround themselves with people who agree with their story. They get angry when someone points at the Gap — because the Gap is where the ego lives.
+    </div>
+
+    <p>The work of this module — and honestly, the work of this entire course — is closing that Gap. Not perfectly. Not overnight. But deliberately, honestly, and without excuses.</p>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION QUESTIONS -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">These are not rhetorical. Get honest. Write your actual answers — not the version that sounds good. The quality of what you build in this course is directly proportional to the honesty you put here.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header">
+        <p class="card-title">Question 01</p>
+        <span class="card-number">01</span>
+      </div>
+      <p class="card-question">The Mirror Test — If someone followed you around for one week, filming everything — every decision, every hour, every conversation — and handed you the footage, would you be proud of what you saw?</p>
+      <p class="card-hint">Not proud in a performed way. Actually proud. Would the man on the screen match the man you believe yourself to be? If not — where specifically would the footage embarrass you?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The part of the footage I'd fast-forward through would be..."</p>
+        <p>"In my daily life, the biggest gap between who I perform and who I am is..."</p>
+        <p>"If I'm being completely honest, I know I've been avoiding..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="6" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="r1-count">0 characters</span>
+        <span class="save-indicator" id="r1-saved">Saved</span>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header">
+        <p class="card-title">Question 02</p>
+        <span class="card-number">02</span>
+      </div>
+      <p class="card-question">Values vs. Actions — List three things you tell people (or tell yourself) you value most. For each one: what did you actually do in the last 30 days that proves it's a real value — not just something you claim?</p>
+      <p class="card-hint">If you struggle to find evidence — that value isn't a value yet. It's an aspiration. That's okay. But call it what it is.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"I say I value [X], and in the last 30 days I proved it by..."</p>
+        <p>"I say I value [Y], but if I'm honest, my actions have shown that I actually value..."</p>
+        <p>"The value I claim most loudly but live least consistently is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="r2-count">0 characters</span>
+        <span class="save-indicator" id="r2-saved">Saved</span>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header">
+        <p class="card-title">Question 03</p>
+        <span class="card-number">03</span>
+      </div>
+      <p class="card-question">The Tolerance Audit — What have you been tolerating in your life that you know — if you're honest — you shouldn't be?</p>
+      <p class="card-hint">A draining relationship. A habit costing you. A standard you've let slip. A situation you keep avoiding. Your own behavior in a specific area. Name three things. Don't explain or justify yet — just name them.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The situation I've been tolerating the longest without addressing it is..."</p>
+        <p>"The person in my life I've been managing instead of being honest with is..."</p>
+        <p>"The version of myself I keep tolerating — even though I know it needs to stop — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="6" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="r3-count">0 characters</span>
+        <span class="save-indicator" id="r3-saved">Saved</span>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header">
+        <p class="card-title">Question 04</p>
+        <span class="card-number">04</span>
+      </div>
+      <p class="card-question">The Oldest Story — What is the oldest story you tell about yourself that might not be true anymore?</p>
+      <p class="card-hint">"I'm not good with money." "I'm not a morning person." "I've always been..." — where did that story come from? Who told it to you first? Have you ever actually tested it, or have you just been living inside it?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The oldest story I tell about myself is... and it came from..."</p>
+        <p>"I've never actually tested whether [story] is true — I've just assumed it because..."</p>
+        <p>"If that story turned out to be false, the evidence would probably be..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="6" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="r4-count">0 characters</span>
+        <span class="save-indicator" id="r4-saved">Saved</span>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header">
+        <p class="card-title">Question 05</p>
+        <span class="card-number">05</span>
+      </div>
+      <p class="card-question">The Character Witness — Think of three people who truly know you — not who like you, who know you. People who have seen you under pressure, seen you at your worst. What would they say are your three biggest strengths — and your three biggest weaknesses?</p>
+      <p class="card-hint">Do those weaknesses surprise you — or have you always known they were there and just avoided looking at them directly?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The three people who know me best would say my biggest strengths are..."</p>
+        <p>"They would also say — if they were being completely honest — that I struggle with..."</p>
+        <p>"The weakness that doesn't surprise me, but that I've been avoiding dealing with, is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="r5-count">0 characters</span>
+        <span class="save-indicator" id="r5-saved">Saved</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE LEDGER -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Weekly Honest Ledger</h2>
+    <p class="section-sub">Your primary tracking tool — not for feelings, for actions. Run this every Sunday. 15–20 minutes. Alone. Honest.</p>
+
+    <div class="callout">
+      <strong>Why this works:</strong> You cannot change what you don't track. Most men operate on vague impressions of themselves — "I did pretty well this week." That vagueness is where the Gap hides. The Ledger makes it specific. Specific is where change lives.
+    </div>
+
+    <div class="card" style="margin-top: 28px;">
+      <div class="ledger-section">
+        <p class="ledger-label">Section 1 — The Wins</p>
+        <p class="ledger-desc">What did I actually do this week that I'm genuinely proud of? List 3–5 specific actions — not feelings, not intentions. Actions. Be precise. "Woke at 5:30 every day" not "felt motivated."</p>
+        <textarea class="journal-area" id="ledger-wins" placeholder="1. &#10;2. &#10;3. " rows="5" oninput="autoSave('ledger-wins', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer">
+          <span class="char-count" id="ledger-wins-count">0 characters</span>
+          <span class="save-indicator" id="ledger-wins-saved">Saved</span>
+        </div>
+      </div>
+
+      <div class="ledger-section">
+        <p class="ledger-label">Section 2 — The Losses</p>
+        <p class="ledger-desc">Where did my actions not match my stated values this week? List 3–5 specific failures. Be brutal. No explanations yet — just the facts.</p>
+        <textarea class="journal-area" id="ledger-losses" placeholder="1. &#10;2. &#10;3. " rows="5" oninput="autoSave('ledger-losses', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer">
+          <span class="char-count" id="ledger-losses-count">0 characters</span>
+          <span class="save-indicator" id="ledger-losses-saved">Saved</span>
+        </div>
+      </div>
+
+      <div class="ledger-section">
+        <p class="ledger-label">Section 3 — The Tolerations</p>
+        <p class="ledger-desc">What did I allow this week that I know I shouldn't be allowing? 1–3 things. Could be external (a situation) or internal (a behavior).</p>
+        <textarea class="journal-area" id="ledger-tolerations" placeholder="1. &#10;2. &#10;3. " rows="4" oninput="autoSave('ledger-tolerations', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer">
+          <span class="char-count" id="ledger-tolerations-count">0 characters</span>
+          <span class="save-indicator" id="ledger-tolerations-saved">Saved</span>
+        </div>
+      </div>
+
+      <div class="ledger-section">
+        <p class="ledger-label">Section 4 — The Pattern</p>
+        <p class="ledger-desc">Looking at the last 2–3 weeks — what pattern is emerging? Individual weeks are noise. Patterns are signal. "Every week I list procrastination. This is not a bad week. This is a habit."</p>
+        <textarea class="journal-area" id="ledger-pattern" placeholder="The pattern I'm starting to notice is..." rows="4" oninput="autoSave('ledger-pattern', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer">
+          <span class="char-count" id="ledger-pattern-count">0 characters</span>
+          <span class="save-indicator" id="ledger-pattern-saved">Saved</span>
+        </div>
+      </div>
+
+      <div class="ledger-section">
+        <p class="ledger-label">Section 5 — The One Thing</p>
+        <p class="ledger-desc">Based on everything above — what is the single most important thing I need to address this week? Not five things. One. Write it as a commitment: "This week I will ___ because ___."</p>
+        <textarea class="journal-area" id="ledger-one" placeholder="This week I will... because..." rows="3" oninput="autoSave('ledger-one', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer">
+          <span class="char-count" id="ledger-one-count">0 characters</span>
+          <span class="save-indicator" id="ledger-one-saved">Saved</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORIGIN TRACE -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Origin Trace</h2>
+    <p class="section-sub">One-time exercise. Set aside 45–60 minutes. No distractions. This is the work that changes what you build on.</p>
+
+    <p>You're going to identify five core beliefs you hold about yourself — the deep ones that feel like facts, not opinions. Then you're going to trace where they came from, test whether they're actually true, and decide what to do with each one.</p>
+
+    <div class="callout" style="margin-bottom: 28px;">
+      <strong>Examples of core beliefs:</strong> "I'm not smart enough to succeed at a high level." / "I'm someone people rely on." / "I'm not disciplined." / "I'm better than most people at reading situations." / "I don't deserve good things until I earn them."
+    </div>
+
+    <div class="card" style="padding: 0;">
+      <div class="belief-tabs" id="belief-tabs">
+        <button class="belief-tab active" onclick="switchBelief(0)">Belief 1 <span class="tab-check"></span></button>
+        <button class="belief-tab" onclick="switchBelief(1)">Belief 2 <span class="tab-check"></span></button>
+        <button class="belief-tab" onclick="switchBelief(2)">Belief 3 <span class="tab-check"></span></button>
+        <button class="belief-tab" onclick="switchBelief(3)">Belief 4 <span class="tab-check"></span></button>
+        <button class="belief-tab" onclick="switchBelief(4)">Belief 5 <span class="tab-check"></span></button>
+      </div>
+
+      <div id="belief-panels" style="padding: 0 24px 28px;">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Not a mantra. Not an affirmation. A functional operating principle that changes how you make decisions.</p>
+
+    <div class="belief-display">
+      "I am what I do — not what I intend, not what I feel, not what I say. My actions are my identity. Everything else is a story."
+    </div>
+
+    <h3>How to install it</h3>
+    <p>Write it by hand every morning for seven days. Each day, identify one decision where this principle applies — and apply it. At the end of the week, note in your Ledger whether your actions were more consistent with who you say you are.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom: 12px;">Write your own version of this belief</p>
+      <p class="card-hint">Rewrite it in your own words — the words that land hardest for you personally. The belief should feel slightly uncomfortable when you write it because it's calling you forward.</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words, this belief means..." rows="4" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="belief-version-count">0 characters</span>
+        <span class="save-indicator" id="belief-version-saved">Saved</span>
+      </div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker — Check off each day you wrote the belief and applied it</p>
+      <div class="day-grid" id="day-grid">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom: 12px;">Daily Decision Journal</p>
+      <p class="card-hint">Each day, briefly note one decision where you applied (or failed to apply) this belief. This is where the install happens — not in the reading, in the doing.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: Today I applied this belief when I...&#10;Day 2: Today I caught myself about to...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="belief-decisions-count">0 characters</span>
+        <span class="save-indicator" id="belief-decisions-saved">Saved</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Hard Conversation</h2>
+    <p class="section-sub">This is non-negotiable. The challenge is part of the module, not optional. Do it before you move to Module 2.</p>
+
+    <div class="truth-block">
+      <p>This week, you will have one conversation you have been avoiding.</p>
+    </div>
+
+    <p>It could be with a parent, a friend, a partner, a boss. Someone you owe an honest word to, or someone you've been managing instead of engaging.</p>
+    <p>The conversation must be real. It must be about something that actually matters. And it must come from your Demonstrated Self — no performance, no editing yourself for the reaction, no managing how you're perceived. Just the truth, said clearly, said with respect.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom: 12px;">Prepare — Who is the conversation with, and what needs to be said?</p>
+      <p class="card-hint">Write it out before you have it. Name the person. Name what you need to say. What are you afraid they'll say back? What have you been managing around that you should just address directly?</p>
+      <textarea class="journal-area" id="challenge-prep" placeholder="The conversation I've been avoiding is with... The thing that needs to be said is..." rows="6" oninput="autoSave('challenge-prep', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="challenge-prep-count">0 characters</span>
+        <span class="save-indicator" id="challenge-prep-saved">Saved</span>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom: 12px;">After — Reflect on how it went</p>
+      <p class="card-hint">What did you say? What did you hold back? What did the conversation reveal about your Gap? How did it feel before, during, and after?</p>
+      <textarea class="journal-area" id="challenge-reflect" placeholder="The conversation happened. Here's what I said, what I avoided, and what I learned about myself..." rows="7" oninput="autoSave('challenge-reflect', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer">
+        <span class="char-count" id="challenge-reflect-count">0 characters</span>
+        <span class="save-indicator" id="challenge-reflect-saved">Saved</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; align-items: center; gap: 16px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()" data-done="false">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I had the hard conversation</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- SELF ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5 on each item. Be honest. This is private. Grade yourself too easy and you only cheat yourself.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Honest Ledger this week with real honesty — not surface-level answers.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button>
+          <button class="score-btn" onclick="setScore(0,2)">2</button>
+          <button class="score-btn" onclick="setScore(0,3)">3</button>
+          <button class="score-btn" onclick="setScore(0,4)">4</button>
+          <button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Origin Trace for all five beliefs — including tracing where they came from and deciding what to do with each one.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button>
+          <button class="score-btn" onclick="setScore(1,2)">2</button>
+          <button class="score-btn" onclick="setScore(1,3)">3</button>
+          <button class="score-btn" onclick="setScore(1,4)">4</button>
+          <button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I had the hard conversation — the real one, not a safer substitute.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button>
+          <button class="score-btn" onclick="setScore(2,2)">2</button>
+          <button class="score-btn" onclick="setScore(2,3)">3</button>
+          <button class="score-btn" onclick="setScore(2,4)">4</button>
+          <button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can clearly name at least two specific areas where my Gap is largest — and I'm not softening them.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button>
+          <button class="score-btn" onclick="setScore(3,2)">2</button>
+          <button class="score-btn" onclick="setScore(3,3)">3</button>
+          <button class="score-btn" onclick="setScore(3,4)">4</button>
+          <button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I have written my belief replacement for at least one belief in the REPLACE category from the Origin Trace.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button>
+          <button class="score-btn" onclick="setScore(4,2)">2</button>
+          <button class="score-btn" onclick="setScore(4,3)">3</button>
+          <button class="score-btn" onclick="setScore(4,4)">4</button>
+          <button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 1. Each chosen to reinforce a specific insight from this module — not just for knowledge, but for application.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">Man's Search for Meaning — Viktor Frankl</p>
+        <p class="resource-desc">On the gap between what happens to you and how you choose to respond. The foundational text for understanding that your identity lives in your responses, not your circumstances.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Meditations — Marcus Aurelius (Books I–III)</p>
+        <p class="resource-desc">A Roman emperor's private journal — written for no audience — on self-honesty as a daily practice. Books I–III specifically on examining your own character without mercy or flattery.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Six Pillars of Self-Esteem — Nathaniel Branden (Ch. 3–5)</p>
+        <p class="resource-desc">Chapters 3–5 on "living consciously." The most direct writing on what it actually means to see yourself clearly — and why most people build their lives on a comfortable blur instead.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Robert Cialdini — Commitment and Consistency (Lecture)</p>
+        <p class="resource-desc">On how humans construct identity through behavioral commitment and why we defend our self-image even when it no longer serves us. Foundational psychology for understanding The Gap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You looked at yourself honestly. That's harder than it sounds, and most men never do it. Carry what you found into Module 2.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div style="margin-top: 24px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m1';
+
+  // ===== STATE =====
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false, false, false, false, false, false, false],
+    beliefs: Array.from({length: 5}, () => ({
+      belief: '', source: '', when: '', tested: '', contradicts: '', category: '', replacement: ''
+    }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'ledger-wins','ledger-losses','ledger-tolerations','ledger-pattern','ledger-one',
+    'belief-version','belief-decisions',
+    'challenge-prep','challenge-reflect'
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) data.texts[id] = el.value;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.beliefs || state.beliefs.length !== 5) {
+          state.beliefs = Array.from({length: 5}, () => ({
+            belief: '', source: '', when: '', tested: '', contradicts: '', category: '', replacement: ''
+          }));
+        }
+        if (!state.days || state.days.length !== 7) {
+          state.days = [false, false, false, false, false, false, false];
+        }
+      }
+      if (data.texts) {
+        TEXT_FIELDS.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && data.texts[id]) {
+            el.value = data.texts[id];
+            updateCharCount(el);
+          }
+        });
+      }
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) {
+        ind.classList.add('show');
+        setTimeout(() => ind.classList.remove('show'), 1500);
+      }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let points = 0;
+    const max = 100;
+
+    // Reading marks (3 x 5pts = 15)
+    if (state.marks.hook) points += 5;
+    if (state.marks.hardtruth) points += 5;
+    if (state.marks.lesson) points += 5;
+
+    // Reflection questions (5 x 5pts = 25)
+    ['r1','r2','r3','r4','r5'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value.trim().length > 30) points += 5;
+    });
+
+    // Ledger (5 x 2pts = 10)
+    ['ledger-wins','ledger-losses','ledger-tolerations','ledger-pattern','ledger-one'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value.trim().length > 10) points += 2;
+    });
+
+    // Origin trace (5 beliefs x 3pts = 15)
+    state.beliefs.forEach(b => {
+      if (b.belief.trim().length > 5 && b.category) points += 3;
+    });
+
+    // Belief install (version + days = 10)
+    const bv = document.getElementById('belief-version');
+    if (bv && bv.value.trim().length > 10) points += 5;
+    const daysChecked = state.days.filter(Boolean).length;
+    points += Math.min(5, Math.floor(daysChecked / 7 * 5));
+
+    // Challenge (10pts)
+    const cp = document.getElementById('challenge-prep');
+    const cr = document.getElementById('challenge-reflect');
+    if (cp && cp.value.trim().length > 20) points += 4;
+    if (cr && cr.value.trim().length > 20) points += 4;
+    if (state.challengeDone) points += 2;
+
+    // Assessment (1pt each score set = 5)
+    state.scores.forEach(s => { if (s > 0) points += 1; });
+
+    return Math.min(100, Math.round(points / max * 100));
+  }
+
+  function calcForgeScore() {
+    let score = 0;
+    const assessTotal = state.scores.reduce((a, b) => a + b, 0);
+    const pct = calcProgress();
+    score = Math.round((pct * 0.6) + (assessTotal / 25 * 40));
+    return Math.min(100, score);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  // ===== CHAR COUNT =====
+  function updateCharCount(el) {
+    const count = el.value.length;
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = count + ' character' + (count === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = true;
+      this.classList.add('read');
+      this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      save();
+      updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== SELF ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => {
+      btn.classList.toggle('selected', i + 1 === value);
+    });
+    save();
+    updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a, b) => a + b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const resultEl = document.getElementById('assessment-result');
+    if (!allSet) { resultEl.classList.remove('show'); return; }
+
+    resultEl.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+
+    let msg = '';
+    if (total < 15) {
+      msg = "You did the reading but not the work. The reading is worthless without the work. Go back. Do the exercises. Then come back and re-score yourself honestly.";
+    } else if (total <= 20) {
+      msg = "You engaged honestly. That's where the real work starts. Carry that into Module 2 — the next module builds directly on what you found here.";
+    } else {
+      msg = "You either worked hard or you graded yourself too easy. The tell is the Hard Conversation. Did you actually have it — the real one, not a safer substitute? If yes, you've earned this. Move to Module 2.";
+    }
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  function applyScores() {
+    state.scores.forEach((s, i) => {
+      if (s > 0) setScore(i, s);
+    });
+  }
+
+  // ===== BELIEF TABS =====
+  let currentBelief = 0;
+
+  function buildBeliefPanels() {
+    const container = document.getElementById('belief-panels');
+    container.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const b = state.beliefs[i];
+      const panel = document.createElement('div');
+      panel.className = 'belief-panel' + (i === 0 ? ' active' : '');
+      panel.id = `bp-${i}`;
+      panel.innerHTML = `
+        <div class="belief-field">
+          <label>State the belief</label>
+          <textarea rows="2" placeholder='e.g. "I am not disciplined enough to succeed at a high level."' oninput="updateBelief(${i}, 'belief', this.value)">${b.belief}</textarea>
+        </div>
+        <div class="belief-field">
+          <label>Where did it come from? Who told you this — directly or indirectly?</label>
+          <textarea rows="2" placeholder="A parent, a teacher, a failure, a repeated experience..." oninput="updateBelief(${i}, 'source', this.value)">${b.source}</textarea>
+        </div>
+        <div class="belief-field">
+          <label>When did you first start believing this, and have you ever actually tested it?</label>
+          <textarea rows="2" placeholder="I first believed this when... I have / haven't tested it because..." oninput="updateBelief(${i}, 'when', this.value)">${b.when}</textarea>
+        </div>
+        <div class="belief-field">
+          <label>Is there evidence that contradicts this belief that you've been ignoring?</label>
+          <textarea rows="2" placeholder="Evidence that suggests this belief might not be fully true..." oninput="updateBelief(${i}, 'contradicts', this.value)">${b.contradicts}</textarea>
+        </div>
+        <div class="belief-field">
+          <label>Sort this belief</label>
+          <div class="category-selector">
+            <button class="cat-btn ${b.category === 'KEEP' ? 'active-keep' : ''}" onclick="setCategory(${i}, 'KEEP', this)">KEEP — Accurate & tested</button>
+            <button class="cat-btn ${b.category === 'QUESTION' ? 'active-question' : ''}" onclick="setCategory(${i}, 'QUESTION', this)">QUESTION — Not sure yet</button>
+            <button class="cat-btn ${b.category === 'REPLACE' ? 'active-replace' : ''}" onclick="setCategory(${i}, 'REPLACE', this)">REPLACE — Not mine anymore</button>
+          </div>
+          <div class="replacement-field ${b.category === 'REPLACE' ? 'show' : ''}" id="rep-${i}">
+            <label style="margin-top: 16px; display: block;">Write the replacement belief — the direction you're moving toward</label>
+            <textarea rows="2" placeholder='e.g. "Discipline is a skill I am building. Every time I follow through, I train it."' oninput="updateBelief(${i}, 'replacement', this.value)">${b.replacement}</textarea>
+          </div>
+        </div>
+      `;
+      container.appendChild(panel);
+    }
+    updateBeliefTabIndicators();
+  }
+
+  function switchBelief(idx) {
+    currentBelief = idx;
+    document.querySelectorAll('.belief-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.belief-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateBelief(idx, field, value) {
+    state.beliefs[idx][field] = value;
+    save();
+    updateBeliefTabIndicators();
+    updateProgress();
+  }
+
+  function setCategory(idx, cat, btn) {
+    state.beliefs[idx].category = cat;
+    const panel = document.getElementById(`bp-${idx}`);
+    panel.querySelectorAll('.cat-btn').forEach(b => {
+      b.classList.remove('active-keep', 'active-question', 'active-replace');
+    });
+    btn.classList.add(`active-${cat.toLowerCase()}`);
+    const repField = document.getElementById(`rep-${idx}`);
+    if (repField) repField.classList.toggle('show', cat === 'REPLACE');
+    save();
+    updateBeliefTabIndicators();
+    updateProgress();
+  }
+
+  function updateBeliefTabIndicators() {
+    document.querySelectorAll('.belief-tab').forEach((tab, i) => {
+      const b = state.beliefs[i];
+      const filled = b.belief.trim().length > 3 && b.category;
+      tab.classList.toggle('filled', !!filled);
+    });
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `
+        <div class="day-label">${day}</div>
+        <div class="day-check ${state.days[i] ? 'checked' : ''}" onclick="toggleDay(${i}, this)">✓</div>
+      `;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save();
+    updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = true;
+    const btn = document.getElementById('challenge-done-btn');
+    btn.classList.add('read');
+    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    save();
+    updateProgress();
+  }
+
+  function applyChallenge() {
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+      }
+    }
+  }
+
+  // ===== MODULE COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = true;
+    const btn = document.getElementById('complete-btn');
+    btn.classList.add('completed');
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    save();
+  }
+
+  function applyModuleComplete() {
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) {
+        btn.classList.add('completed');
+        btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+      }
+    }
+  }
+
+  // ===== RESET =====
+  function resetAll() {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+
+  // ===== SIDEBAR NAV =====
+  function updateSidebarState() {
+    const sections = ['hook','hard-truth','lesson','reflection','system','exercise','belief','challenge','assessment','resources'];
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e = document.getElementById(id); return e && e.value.trim().length > 30; }).length === 5,
+      system: ['ledger-wins','ledger-losses','ledger-tolerations','ledger-pattern','ledger-one'].filter(id => { const e = document.getElementById(id); return e && e.value.trim().length > 10; }).length === 5,
+      exercise: state.beliefs.filter(b => b.belief.trim().length > 3 && b.category).length === 5,
+      belief: (() => { const bv = document.getElementById('belief-version'); return bv && bv.value.trim().length > 10 && state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      item.classList.toggle('done', !!completionMap[sec]);
+    });
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const sectionEls = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sectionEls.forEach(el => observer.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupScrollAnimations() {
+    const animObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          animObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.section').forEach(el => animObserver.observe(el));
+  }
+
+  // ===== MOBILE MENU =====
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  document.getElementById('main').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+  });
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildBeliefPanels();
+    buildDayTracker();
+    applyMarks();
+    applyScores();
+    applyChallenge();
+    applyModuleComplete();
+    updateProgress();
+    setupScrollSpy();
+    setupScrollAnimations();
+
+    // Restore belief tab state
+    document.querySelectorAll('.belief-tab').forEach((tab, i) => {
+      tab.addEventListener('click', () => switchBelief(i));
+    });
+  });
+</script>
+</body>
+</html>
