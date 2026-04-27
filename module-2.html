@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2: The Origin — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    /* ===== HEADER ===== */
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    /* ===== SIDEBAR ===== */
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    /* ===== MAIN ===== */
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    /* ===== SECTIONS ===== */
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    /* ===== HERO ===== */
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '02'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    /* ===== TYPOGRAPHY ===== */
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    /* ===== BLOCKS ===== */
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* ===== CARDS ===== */
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    /* ===== JOURNAL ===== */
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    /* ===== STARTER PROMPTS ===== */
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== OS MAP TABS ===== */
+    .os-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .os-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .os-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .os-tab:hover:not(.active) { color: var(--deep-vault); }
+    .os-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .os-tab.filled .tab-dot { opacity: 1; }
+    .os-panel { display: none; padding: 24px 0 0; }
+    .os-panel.active { display: block; }
+    .os-field { margin-bottom: 16px; }
+    .os-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .os-field textarea, .os-field input { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .os-field textarea:focus, .os-field input:focus { border-color: var(--banknote-green); }
+    .os-field textarea::placeholder, .os-field input::placeholder { color: var(--security-gray); }
+    .inheritance-toggle { display: flex; gap: 8px; margin-top: 6px; }
+    .inh-btn { padding: 6px 16px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.08em; }
+    .inh-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .inh-btn.active-inherited { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+    .inh-btn.active-chosen { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    /* ===== AUTOPSY ===== */
+    .autopsy-step { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sg-border); }
+    .autopsy-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .autopsy-label { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 4px; }
+    .autopsy-desc { font-size: 0.8rem; color: var(--security-gray); margin-bottom: 10px; font-style: italic; }
+    .verdict-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+    .verdict-btn { padding: 8px 18px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .verdict-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .verdict-btn.active-keep { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+    .verdict-btn.active-update { background: rgba(212,175,55,0.1); border-color: var(--gold-foil); color: var(--gold-foil-dark); }
+    .verdict-btn.active-delete { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    /* ===== ASSESSMENT ===== */
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    /* ===== RESOURCES ===== */
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    /* ===== COMPLETE ===== */
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); pointer-events: none; }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    /* ===== EXPORT ===== */
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    /* ===== MARK READ ===== */
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    /* ===== UTILITY ===== */
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    /* ===== PRINT ===== */
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .os-tabs, .verdict-selector, .inheritance-toggle, .day-grid, .field-footer, #progress-wrap { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .os-field textarea, .os-field input { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .os-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 02 — The Origin</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> The Operating System</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Belief Autopsy</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The OS Map</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 02 of 16 — Pillar I: Identity</p>
+    <h1>The <span>Origin</span></h1>
+    <p class="hero-tagline">"You are not who you are. You are who you were trained to be."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>6–8 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 practical exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Software You Didn't Choose</h2>
+    <p class="section-sub">Before we go any further, there's something you need to understand about how you work.</p>
+
+    <p>Right now, as you read this, you are running an operating system.</p>
+    <p>Not on a device. <strong>In your mind.</strong> A set of deep, mostly invisible programs that determine how you see yourself, how you interpret other people, what you believe you deserve, what you think is possible, and what you do when no one is watching.</p>
+    <p>Here's the part that will bother you if you sit with it: <strong>you didn't write most of it.</strong></p>
+    <p>The software was written before you had any say in the matter. Mostly between the ages of zero and twelve, by people who were also running unexamined code they'd inherited from their parents, who inherited it from theirs. It was written by every teacher who told you what you were capable of. Every moment your father showed you what a man looks like. Every time you failed publicly and drew a conclusion about yourself. Every message your culture sent about what success means, what strength looks like, what you owe and what you're owed.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>Most men never look at this code. They just run it — and then wonder why they keep getting the same outcomes. Why the same patterns keep appearing in their relationships, their work, their self-talk.</p>
+    <p>This module is about opening the hood.</p>
+    <p>Not to blame anyone. Not to explain away your choices. But because a man who doesn't understand what's running in the background will never fully be in control of what runs in the foreground.</p>
+    <p><strong>You cannot upgrade code you don't know exists.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Inherited Code</h2>
+    <p class="section-sub">The uncomfortable reality about where your beliefs actually come from.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #2</p>
+      <p>"Most of your beliefs were installed by people who never examined their own. You are not running your life — you are running their unfinished code."</p>
+    </div>
+
+    <p>Think about the people who had the most influence over your early life. Your parents. Your first teachers. The community you grew up in. The culture around you.</p>
+    <p>Now ask yourself honestly: <strong>how many of those people had done the deep work of examining their own beliefs?</strong> How many of them had sat down and asked, "Do I actually believe this — or was I told to believe this?" How many had tested their assumptions, traced their fears back to their origins, or deliberately chosen the values they operated from?</p>
+    <p>Most hadn't. Most were doing exactly what you're doing now — running the code they were given, passing it on without knowing they were passing it on.</p>
+
+    <h3>Why this matters right now</h3>
+    <p>Unexamined code doesn't just sit there quietly. It <em>runs</em>. It shapes the voice in your head that tells you whether you're good enough. It determines how you react when someone challenges you. It decides, at a level below conscious thought, whether you feel like you deserve good things — or whether you need to earn them first, or whether you'll sabotage them when they arrive.</p>
+
+    <div class="callout">
+      This isn't about blame. The people who installed this code weren't villains. They were doing their best with what they had. But understanding where the code came from is the first step to deciding whether to keep running it.
+    </div>
+
+    <p>The question isn't who put it there. The question is: <strong>now that you know it's there, what are you going to do about it?</strong></p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>The Operating System</h2>
+    <p class="section-sub">How beliefs form, where they live, and why most men never see them.</p>
+
+    <p>Your beliefs about yourself and the world aren't random. They're structured — a system of interconnected assumptions that filters every experience you have. Call it an operating system.</p>
+    <p>The OS runs in the background. You don't see it the way you see a conscious thought. You just experience its outputs — your automatic reactions, your emotional responses, the things you assume without thinking, the ceilings you hit without knowing you installed them.</p>
+
+    <h3>How the OS gets written</h3>
+    <p>The core of the OS is written early. Research consistently shows that the beliefs formed between birth and about twelve years old are the most durable and the hardest to overwrite — precisely because they were formed before you had the critical thinking tools to evaluate them.</p>
+    <p>A child doesn't think, "I wonder if Dad's reaction to my failure tells me something about how he was raised." A child thinks: <strong>"I failed. I am not good enough."</strong> The belief is installed instantly, filed as fact, and rarely revisited.</p>
+    <p>By the time you're old enough to question it, it doesn't feel like a belief anymore. It feels like <em>reality</em>.</p>
+
+    <h3>Inherited vs. chosen beliefs</h3>
+    <p>Here's the distinction that changes everything:</p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">Inherited belief</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">A belief you accepted from an authority figure, cultural message, or early experience — before you had the capacity or the information to evaluate it. You didn't choose it. It chose you.</p>
+    </div>
+
+    <div class="card" style="border-left: 3px solid var(--gold-foil);">
+      <p class="card-title">Chosen belief</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">A belief you arrived at through your own examination — you looked at the evidence, tested it against your experience, weighed it against alternatives, and decided: this is what I actually believe. You own it.</p>
+    </div>
+
+    <p>Most men, if they're honest, have mostly inherited beliefs and very few chosen ones. They've never had the conversation with themselves that turns an inherited belief into a chosen one — or discards it entirely.</p>
+
+    <div class="callout warning">
+      <strong>The trap:</strong> Inherited beliefs feel just as real as chosen ones — often more so, because they were installed before you could critically evaluate them. Feeling certain about something is not the same as having tested it.
+    </div>
+
+    <h3>What choosing actually looks like</h3>
+    <p>Choosing a belief doesn't mean deciding you can believe anything you want. It means doing the work: tracing where it came from, testing it against evidence and experience, and making a deliberate decision to keep it, update it, or discard it.</p>
+    <p>That process — running a belief through examination — is what this module is about. It's what the exercises here are designed to do. By the end, you'll have a clearer picture of what's running in your OS, where it came from, and which parts you actually want to keep.</p>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Write your actual answers. Don't filter for the version that sounds self-aware — write what's true. The value is entirely in your honesty.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Programmer — Who had the most influence over what you believe about yourself, about men, about what's possible for you? What did they believe — about success, struggle, worth, and what life is?</p>
+      <p class="card-hint">Don't just name them. Describe the beliefs they held and lived out. What did they show you, not just tell you? What did they never say out loud but communicate constantly?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The person who wrote the most code in my OS was... and what they believed about men was..."</p>
+        <p>"They never said it directly, but the message I received growing up was..."</p>
+        <p>"The belief they passed on that I've never questioned until now is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Installation Moment — Can you identify a specific moment when one of your core beliefs was installed? What happened? Who was there? What conclusion did you draw — and did that conclusion actually follow from what happened?</p>
+      <p class="card-hint">It doesn't have to be dramatic. Sometimes the most powerful installations are the quiet ones — a parent's reaction to your failure, a teacher's offhand comment, a moment of public humiliation.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"A specific moment I can trace a core belief back to is..."</p>
+        <p>"When that happened, the conclusion I drew about myself was..."</p>
+        <p>"Looking back now, that conclusion was / wasn't actually justified because..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Unexamined Code — Name three beliefs you currently hold that you have never actually tested. Where did each one come from? What would it look like to test it?</p>
+      <p class="card-hint">Look for beliefs that feel like facts — things you've never thought to question because they just seem obviously true. Those are the ones most worth examining.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"A belief I hold that I've never tested is... and it came from..."</p>
+        <p>"I've always assumed [X] but if I actually tested it, I would need to..."</p>
+        <p>"The belief that shapes the most decisions in my daily life without me noticing is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Cost — What has an unexamined belief cost you? Be specific. A relationship, an opportunity, years of your life spent pursuing something that wasn't actually yours to want.</p>
+      <p class="card-hint">This is the question most men avoid because the honest answer is painful. Sit with it. The cost is real whether you name it or not.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The belief that has cost me the most is... and the cost has looked like..."</p>
+        <p>"I have been chasing [X] my whole life, and I'm not sure it's actually what I want — it might be what I was told to want by..."</p>
+        <p>"The relationship / opportunity I lost because of an unexamined belief was..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Update — If you could rewrite one belief right now — not a fantasy, a realistic update based on what you actually know and have experienced — what would it be, and what would change if you actually lived from that updated belief?</p>
+      <p class="card-hint">The update doesn't have to be a total reversal. Sometimes it's a refinement: "I'm not disciplined" becomes "Discipline is something I'm building, not something I either have or don't."</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The belief I most want to update is... and the updated version would be..."</p>
+        <p>"If I actually lived from that updated belief, the first thing that would change is..."</p>
+        <p>"The reason I haven't updated this belief yet is probably..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- BELIEF AUTOPSY -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Belief Autopsy</h2>
+    <p class="section-sub">A five-step process for examining any belief. Run this whenever you catch yourself acting on something you've never tested. Pick one belief now and run it through.</p>
+
+    <div class="callout">
+      <strong>How to use this:</strong> Pick one belief — ideally a powerful one, the kind that shapes major decisions. Run it through all five steps without defending it. The goal is clarity, not comfort.
+    </div>
+
+    <div class="card" style="margin-top: 28px;">
+      <div class="autopsy-step">
+        <p class="autopsy-label">Step 1 — State it precisely</p>
+        <p class="autopsy-desc">Write the belief as a clear statement. Not vague — precise. "I'm not good enough" is too vague. "I am not the kind of person who succeeds at business" is a belief you can examine.</p>
+        <textarea class="journal-area" id="autopsy-1" placeholder='Write the belief as a clear, specific statement. e.g. "I am not capable of earning real money on my own terms."' rows="3" oninput="autoSave('autopsy-1', this.value); updateCharCount(this)" style="min-height:80px;"></textarea>
+        <div class="field-footer"><span class="char-count" id="autopsy-1-count">0 characters</span><span class="save-indicator" id="autopsy-1-saved">Saved</span></div>
+      </div>
+
+      <div class="autopsy-step">
+        <p class="autopsy-label">Step 2 — Identify the installer</p>
+        <p class="autopsy-desc">Who or what put this belief there? Name the source as specifically as you can — a person, an event, a pattern of experiences, a cultural message.</p>
+        <textarea class="journal-area" id="autopsy-2" placeholder="This belief came from..." rows="3" oninput="autoSave('autopsy-2', this.value); updateCharCount(this)" style="min-height:80px;"></textarea>
+        <div class="field-footer"><span class="char-count" id="autopsy-2-count">0 characters</span><span class="save-indicator" id="autopsy-2-saved">Saved</span></div>
+      </div>
+
+      <div class="autopsy-step">
+        <p class="autopsy-label">Step 3 — Test it against evidence</p>
+        <p class="autopsy-desc">What is the actual evidence for this belief? What is the evidence against it? What evidence have you been ignoring or discounting?</p>
+        <textarea class="journal-area" id="autopsy-3" placeholder="Evidence FOR this belief:&#10;&#10;Evidence AGAINST this belief (be honest about what you've been ignoring):" rows="6" oninput="autoSave('autopsy-3', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="autopsy-3-count">0 characters</span><span class="save-indicator" id="autopsy-3-saved">Saved</span></div>
+      </div>
+
+      <div class="autopsy-step">
+        <p class="autopsy-label">Step 4 — Assess the function</p>
+        <p class="autopsy-desc">What does this belief do for you? Does it protect you from something? Justify something? Limit something? Is it serving you — or is it costing you more than it provides?</p>
+        <textarea class="journal-area" id="autopsy-4" placeholder="This belief is serving me by...&#10;&#10;This belief is costing me by..." rows="5" oninput="autoSave('autopsy-4', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="autopsy-4-count">0 characters</span><span class="save-indicator" id="autopsy-4-saved">Saved</span></div>
+      </div>
+
+      <div class="autopsy-step">
+        <p class="autopsy-label">Step 5 — Verdict</p>
+        <p class="autopsy-desc">Based on the evidence and function — what do you decide to do with this belief?</p>
+        <div class="verdict-selector">
+          <button class="verdict-btn" onclick="setVerdict('keep', this)">KEEP — it's accurate and useful</button>
+          <button class="verdict-btn" onclick="setVerdict('update', this)">UPDATE — the core is right but needs refining</button>
+          <button class="verdict-btn" onclick="setVerdict('delete', this)">DELETE — it's not mine and it's not true</button>
+        </div>
+        <div id="verdict-update-field" style="display:none; margin-top:14px;">
+          <textarea class="journal-area" id="autopsy-update" placeholder="Write the updated belief — the more accurate version you're choosing to operate from..." rows="3" oninput="autoSave('autopsy-update', this.value)" style="min-height:80px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OS MAP -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The OS Map</h2>
+    <p class="section-sub">Map your operating beliefs across five life categories. For each one, write the belief, mark whether it's inherited or chosen, and identify where it came from. This is your OS in writing.</p>
+
+    <div class="callout">
+      Don't overthink what to write. The first answer is usually the most honest. These are the beliefs that are already running — you're just making them visible.
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="os-tabs" id="os-tabs">
+        <button class="os-tab active" onclick="switchOS(0)">Self-Worth <span class="tab-dot"></span></button>
+        <button class="os-tab" onclick="switchOS(1)">Money <span class="tab-dot"></span></button>
+        <button class="os-tab" onclick="switchOS(2)">Men <span class="tab-dot"></span></button>
+        <button class="os-tab" onclick="switchOS(3)">Relationships <span class="tab-dot"></span></button>
+        <button class="os-tab" onclick="switchOS(4)">The World <span class="tab-dot"></span></button>
+      </div>
+      <div id="os-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, find one moment where this belief applies — and apply it.</p>
+
+    <div class="belief-display">
+      "This is not just who I am. This is who I was trained to be. I choose what I keep."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in your own words — the phrasing that lands hardest for you specifically.</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Application Journal</p>
+      <p class="card-hint">Each day, note one moment where you caught an inherited belief running — and chose to examine it instead of just following it.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: Today I caught myself...&#10;Day 2: The inherited belief that showed up was...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Source Conversation</h2>
+    <p class="section-sub">Do this before you move to Module 3. No substitutes.</p>
+
+    <div class="truth-block">
+      <p>This week, you will have a curious conversation with someone who had major influence over your beliefs growing up.</p>
+    </div>
+
+    <p>This is not a confrontation. This is not a therapy session. This is a <em>curiosity conversation</em> — you asking someone you know well about where their own beliefs came from.</p>
+    <p>It could be a parent, an older sibling, a relative, a mentor. Ask them: what did their parents believe about success? About men? About what's possible? What messages did they grow up with that they've never questioned?</p>
+    <p>You are not going to challenge their answers. You are going to listen. What you discover about how their code was written will tell you more about your own OS than almost anything else you could do this week.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Prepare — Who will you talk to, and what will you ask?</p>
+      <p class="card-hint">Write out 3–4 genuine questions you want to ask. Not leading questions — curious ones. You want to understand how they were shaped, not confirm what you already think.</p>
+      <textarea class="journal-area" id="challenge-prep" placeholder="I will talk to...&#10;&#10;The questions I want to ask are:&#10;1. &#10;2. &#10;3. " rows="8" oninput="autoSave('challenge-prep', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-prep-count">0 characters</span><span class="save-indicator" id="challenge-prep-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">After — What did you learn?</p>
+      <p class="card-hint">What surprised you? What confirmed something you already suspected? What did you learn about their OS — and what does that tell you about how yours was written?</p>
+      <textarea class="journal-area" id="challenge-reflect" placeholder="What surprised me most was...&#10;&#10;What I learned about my own OS from this conversation was..." rows="7" oninput="autoSave('challenge-reflect', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-reflect-count">0 characters</span><span class="save-indicator" id="challenge-reflect-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I had the Source Conversation</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. Be honest. Grading yourself too easy only cheats the next 14 modules.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Belief Autopsy fully — all five steps, on a belief that actually matters, without defending it.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I mapped all five OS categories and identified at least one inherited belief in each one.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can name at least three beliefs I hold that I have never tested — and I know where each one came from.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I had the Source Conversation — a genuine one, with someone who actually shaped my OS.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I wrote my version of the belief install and tracked at least five days of application.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 2. Each chosen specifically for the OS theme — not motivational, not theoretical. Practical depth.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">The Body Keeps the Score — Bessel van der Kolk</p>
+        <p class="resource-desc">On how early experience is encoded not just in beliefs but in the body itself. The most credible scientific account of how the past continues to run as present — and what it takes to actually update it.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Atomic Habits — James Clear (Chapters 1–3)</p>
+        <p class="resource-desc">Chapters 1–3 specifically on identity-based habits. The argument that behavior flows from belief about identity — and that changing behavior requires updating the story you tell about who you are.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Untethered Soul — Michael Singer (Ch. 1–5)</p>
+        <p class="resource-desc">On learning to observe your own mental patterns — the voice in your head, the automatic reactions — as events you can witness rather than rules you must follow. Unusual and genuinely useful.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Bruce Lipton — The Biology of Belief (Lecture)</p>
+        <p class="resource-desc">A cellular biologist's case that beliefs shape biology — and that the subconscious programs running from early childhood govern 95% of our behaviour. Provocative, backed by research, and directly relevant to this module.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You looked at the code. Most men never do. What you do with what you found is Module 3.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m2';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    verdict: '',
+    osCategories: Array.from({length:5}, () => ({ b1:'', b1type:'', b1source:'', b2:'', b2type:'', b2source:'' }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'autopsy-1','autopsy-2','autopsy-3','autopsy-4','autopsy-update',
+    'belief-version','belief-decisions',
+    'challenge-prep','challenge-reflect'
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.osCategories || state.osCategories.length !== 5) state.osCategories = Array.from({length:5}, () => ({ b1:'', b1type:'', b1source:'', b2:'', b2type:'', b2source:'' }));
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    ['autopsy-1','autopsy-2','autopsy-3','autopsy-4'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 10) pts += 3; });
+    if (state.verdict) pts += 4;
+    const osFields = state.osCategories.filter(c => c.b1.trim().length > 3 || c.b2.trim().length > 3).length;
+    pts += Math.min(10, osFields * 2);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const cp = document.getElementById('challenge-prep'); if (cp && cp.value.trim().length > 20) pts += 4;
+    const cr = document.getElementById('challenge-reflect'); if (cr && cr.value.trim().length > 20) pts += 4;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      state.marks[this.dataset.marks] = true;
+      this.classList.add('read');
+      this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== VERDICT =====
+  function setVerdict(v, btn) {
+    state.verdict = v;
+    document.querySelectorAll('.verdict-btn').forEach(b => b.classList.remove('active-keep','active-update','active-delete'));
+    btn.classList.add(`active-${v}`);
+    document.getElementById('verdict-update-field').style.display = (v === 'update' || v === 'delete') ? 'block' : 'none';
+    const ta = document.getElementById('autopsy-update');
+    if (v === 'delete') ta.placeholder = 'Write the belief you are choosing instead...';
+    else ta.placeholder = 'Write the updated, more accurate version of this belief...';
+    save(); updateProgress();
+  }
+
+  function applyVerdict() {
+    if (!state.verdict) return;
+    document.querySelectorAll('.verdict-btn').forEach(btn => {
+      if (btn.textContent.toLowerCase().startsWith(state.verdict)) btn.classList.add(`active-${state.verdict}`);
+    });
+    if (state.verdict === 'update' || state.verdict === 'delete') document.getElementById('verdict-update-field').style.display = 'block';
+  }
+
+  // ===== OS MAP =====
+  let currentOS = 0;
+  const OS_CATS = [
+    { name: 'Self-Worth', prompt1: 'e.g. "I have to earn the right to feel good about myself."', prompt2: 'e.g. "I am only as valuable as what I produce."' },
+    { name: 'Money', prompt1: 'e.g. "Money is something other people understand but not me."', prompt2: 'e.g. "Rich people are lucky or corrupt."' },
+    { name: 'Men', prompt1: 'e.g. "Real men don\'t ask for help."', prompt2: 'e.g. "Showing emotion is weakness."' },
+    { name: 'Relationships', prompt1: 'e.g. "People always leave eventually."', prompt2: 'e.g. "I have to manage how I come across or people won\'t like me."' },
+    { name: 'The World', prompt1: 'e.g. "Life is something that happens to you, not something you control."', prompt2: 'e.g. "Most people can\'t be trusted."' }
+  ];
+
+  function buildOSPanels() {
+    const container = document.getElementById('os-panels');
+    container.innerHTML = '';
+    OS_CATS.forEach((cat, i) => {
+      const c = state.osCategories[i];
+      const panel = document.createElement('div');
+      panel.className = 'os-panel' + (i === 0 ? ' active' : '');
+      panel.id = `osp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">Write two beliefs you currently hold about <strong style="color:var(--deep-vault)">${cat.name}</strong>. Mark each as inherited or chosen and name the source.</p>
+        <div style="background:var(--mint-tint);border:1px solid var(--sg-border);padding:20px;margin-bottom:16px;">
+          <p style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--banknote-green);margin-bottom:12px;">Belief 1</p>
+          <div class="os-field"><label>The belief</label><textarea rows="2" placeholder="${cat.prompt1}" oninput="updateOSField(${i},'b1',this.value)">${c.b1}</textarea></div>
+          <div class="os-field"><label>Inherited or Chosen?</label>
+            <div class="inheritance-toggle">
+              <button class="inh-btn ${c.b1type==='inherited'?'active-inherited':''}" onclick="setInheritance(${i},'b1type','inherited',this)">Inherited</button>
+              <button class="inh-btn ${c.b1type==='chosen'?'active-chosen':''}" onclick="setInheritance(${i},'b1type','chosen',this)">Chosen</button>
+            </div>
+          </div>
+          <div class="os-field"><label>Where did it come from?</label><input type="text" placeholder="Source: person, experience, culture..." oninput="updateOSField(${i},'b1source',this.value)" value="${c.b1source}"></div>
+        </div>
+        <div style="background:var(--mint-tint);border:1px solid var(--sg-border);padding:20px;">
+          <p style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--banknote-green);margin-bottom:12px;">Belief 2</p>
+          <div class="os-field"><label>The belief</label><textarea rows="2" placeholder="${cat.prompt2}" oninput="updateOSField(${i},'b2',this.value)">${c.b2}</textarea></div>
+          <div class="os-field"><label>Inherited or Chosen?</label>
+            <div class="inheritance-toggle">
+              <button class="inh-btn ${c.b2type==='inherited'?'active-inherited':''}" onclick="setInheritance(${i},'b2type','inherited',this)">Inherited</button>
+              <button class="inh-btn ${c.b2type==='chosen'?'active-chosen':''}" onclick="setInheritance(${i},'b2type','chosen',this)">Chosen</button>
+            </div>
+          </div>
+          <div class="os-field"><label>Where did it come from?</label><input type="text" placeholder="Source: person, experience, culture..." oninput="updateOSField(${i},'b2source',this.value)" value="${c.b2source}"></div>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateOSTabIndicators();
+  }
+
+  function switchOS(idx) {
+    currentOS = idx;
+    document.querySelectorAll('.os-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.os-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateOSField(catIdx, field, value) {
+    state.osCategories[catIdx][field] = value;
+    save(); updateOSTabIndicators(); updateProgress();
+  }
+
+  function setInheritance(catIdx, field, value, btn) {
+    state.osCategories[catIdx][field] = value;
+    const wrap = btn.closest('.inheritance-toggle');
+    wrap.querySelectorAll('.inh-btn').forEach(b => b.classList.remove('active-inherited','active-chosen'));
+    btn.classList.add(value === 'inherited' ? 'active-inherited' : 'active-chosen');
+    save(); updateProgress();
+  }
+
+  function updateOSTabIndicators() {
+    document.querySelectorAll('.os-tab').forEach((tab, i) => {
+      const c = state.osCategories[i];
+      tab.classList.toggle('filled', !!(c.b1.trim() || c.b2.trim()));
+    });
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = true;
+    const btn = document.getElementById('challenge-done-btn');
+    btn.classList.add('read');
+    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You read the module but didn't do the work. Go back. Run the Belief Autopsy on a belief that actually scares you. Have the Source Conversation. Then re-score.";
+    else if (total <= 20) msg = "Solid work. You've started looking at code most men never examine. That awareness is the foundation. Carry it into Module 3.";
+    else msg = "You went deep. That's rare. Check your score on the Source Conversation — if that one's a 5, you're ready to move. If not, go have the real conversation first.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = true;
+    const btn = document.getElementById('complete-btn');
+    btn.classList.add('completed');
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook, 'hard-truth': state.marks.hardtruth, lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: ['autopsy-1','autopsy-2','autopsy-3','autopsy-4'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>10; }).length >= 3 && !!state.verdict,
+      exercise: state.osCategories.filter(c => c.b1.trim().length>3).length >= 4,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.os-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.os-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 2: THE ORIGIN\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Programmer'],['r2','Q2 — The Installation Moment'],['r3','Q3 — The Unexamined Code'],['r4','Q4 — The Cost'],['r5','Q5 — The Update']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE BELIEF AUTOPSY\n${ln('-',30)}\n\n`;
+    [['autopsy-1','The belief'],['autopsy-2','The installer'],['autopsy-3','Evidence'],['autopsy-4','Function']].forEach(([id,label]) => {
+      out += `${label}:\n${val(id)}\n\n`;
+    });
+    out += `Verdict: ${state.verdict || '(not selected)'}\n`;
+    if (state.verdict !== 'keep') out += `Updated/Replacement belief:\n${val('autopsy-update')}\n`;
+    out += '\n';
+
+    out += `THE OS MAP\n${ln('-',30)}\n\n`;
+    OS_CATS.forEach((cat, i) => {
+      const c = state.osCategories[i];
+      out += `${cat.name}\n`;
+      out += `  Belief 1: ${c.b1||'(not filled)'} — ${c.b1type||'not marked'} — Source: ${c.b1source||'not named'}\n`;
+      out += `  Belief 2: ${c.b2||'(not filled)'} — ${c.b2type||'not marked'} — Source: ${c.b2source||'not named'}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Application Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `WEEKLY CHALLENGE — THE SOURCE CONVERSATION\n${ln('-',30)}\n\nPreparation:\n${val('challenge-prep')}\n\nReflection:\n${val('challenge-reflect')}\nCompleted: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Completed the Belief Autopsy fully','Mapped all 5 OS categories','Can name 3 untested beliefs + sources','Had the Source Conversation','Belief install — 5+ days applied'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-2-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildOSPanels();
+    buildDayTracker();
+    applyMarks();
+    applyVerdict();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
