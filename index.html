@@ -790,8 +790,8 @@
 
       if (!card) return;
 
-      // Only Module 1 is available; rest stay locked until their file is built
-      const isBuilt = mod.n === 1;
+      // Unlock modules as their files are built and uploaded
+      const isBuilt = mod.n <= 2;
 
       if (!isBuilt) return; // leave locked cards alone
 
