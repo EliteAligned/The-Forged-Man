@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 3: The Mask — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    /* ===== HEADER ===== */
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    /* ===== SIDEBAR ===== */
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    /* ===== MAIN ===== */
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    /* ===== SECTIONS ===== */
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    /* ===== HERO ===== */
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '03'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    /* ===== TYPOGRAPHY ===== */
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    /* ===== BLOCKS ===== */
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* ===== CARDS ===== */
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    /* ===== JOURNAL ===== */
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    /* ===== STARTER PROMPTS ===== */
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== MASK AUDIT TABS ===== */
+    .mask-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .mask-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .mask-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .mask-tab:hover:not(.active) { color: var(--deep-vault); }
+    .mask-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .mask-tab.filled .tab-dot { opacity: 1; }
+    .mask-panel { display: none; padding: 24px 0 0; }
+    .mask-panel.active { display: block; }
+    .mask-field { margin-bottom: 16px; }
+    .mask-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .mask-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .mask-field textarea:focus { border-color: var(--banknote-green); }
+    .mask-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== SHADOW EXERCISE ===== */
+    .shadow-step { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sg-border); }
+    .shadow-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .shadow-label { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 4px; }
+    .shadow-desc { font-size: 0.8rem; color: var(--security-gray); margin-bottom: 10px; font-style: italic; }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    /* ===== ASSESSMENT ===== */
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    /* ===== RESOURCES ===== */
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    /* ===== COMPLETE ===== */
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); pointer-events: none; }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    /* ===== EXPORT ===== */
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    /* ===== MARK READ ===== */
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    /* ===== UTILITY ===== */
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    /* ===== PRINT ===== */
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .mask-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .mask-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .mask-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 03 — The Mask</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> The Three Selves</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Mask Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> Shadow Confrontation</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 03 of 16 — Pillar I: Identity</p>
+    <h1>The <span>Mask</span></h1>
+    <p class="hero-tagline">"The version of you that everyone approves of is your cage."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 identity exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Performance Never Stops</h2>
+    <p class="section-sub">You've been doing it so long you've forgotten it isn't you.</p>
+
+    <p>Watch a man in a meeting. Watch him at a bar with his friends. Watch him on a first date. Watch him with his father.</p>
+    <p>Now ask yourself: is he the same person in all four situations?</p>
+    <p>He isn't. Nobody is. The question isn't whether you wear different faces in different rooms — the question is <strong>whether you know which face is actually yours.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>Most men develop their masks early, and for good reason. You learned, at some point, that certain parts of yourself were not safe to show. Maybe you cried and were told you were weak. Maybe you were excited about something and were mocked for it. Maybe you had a need and showing it got you hurt. So you covered it. You learned the performance that kept you safe, or accepted, or respected.</p>
+    <p>The mask worked. That's why it stayed.</p>
+    <p>But a mask that starts as armour has a way of becoming a prison. You wear it long enough, and one day you look in the mirror and you can't find the face underneath. You've been so busy managing how you appear that you've lost track of what you actually are.</p>
+    <p><strong>That's the trap this module is about.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Armour That Became a Prison</h2>
+    <p class="section-sub">The cost of performing a version of yourself that isn't real.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #3</p>
+      <p>"Every mask you wear is a vote against yourself. The longer you wear it, the more you forget your actual face."</p>
+    </div>
+
+    <p>Here is the brutal math of the mask: <strong>every time you present a version of yourself designed to get approval, you are telling yourself — below the level of conscious thought — that the real version isn't acceptable.</strong></p>
+    <p>Not once. Every time. And the message compounds.</p>
+    <p>Men who have worn masks for long enough develop a particular kind of loneliness — the loneliness of being surrounded by people who like you but don't actually know you. Who you are to them is a construction. Their approval doesn't land, because somewhere you know they're approving a performance. The real you is still unmet, unvalidated, untouched.</p>
+
+    <h3>The approval addiction</h3>
+    <p>The mask is almost always built around approval. You learn, early, what version of you gets liked, respected, left alone, or taken care of. You build toward that. You become fluent in the performance.</p>
+    <p>But approval-seeking has a structural problem: it requires constant maintenance, and the approval never actually satisfies. Because you know, underneath, that the thing being approved isn't real. So you need more of it. The hunger for validation grows as your real self becomes more invisible.</p>
+
+    <div class="callout warning">
+      <strong>The tell:</strong> If being disliked or rejected feels like a threat to your survival — not just uncomfortable, but <em>dangerous</em> — your mask has become load-bearing. You've built your sense of safety around the performance continuing.
+    </div>
+
+    <p>The mask doesn't make you fake. It makes you tired. Managing the gap between who you are and who you're performing takes enormous energy — energy that could be going into building an actual life.</p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>The Three Selves</h2>
+    <p class="section-sub">Understanding what you're actually dealing with when you look in the mirror.</p>
+
+    <p>To work with this intelligently, you need a map. There are three layers operating in every man, and most men have never distinguished between them.</p>
+
+    <h3>The Persona — the face you present</h3>
+    <p>The Persona is the version of you that you manage and perform. It's not entirely fake — it contains real parts of you — but it's curated. It's the face you put on for work, for social situations, for the people whose approval you want.</p>
+    <p>The Persona is useful. You need different registers for different contexts. The problem isn't having a Persona — the problem is <strong>mistaking the Persona for the whole self.</strong></p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">The Persona</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">The face you manage. Built for social function. Contains real elements, but is curated and selective. Performs strength, competence, or likability depending on context. Becomes a problem when you forget it's a performance.</p>
+    </div>
+
+    <h3>The Shadow — what you've rejected</h3>
+    <p>Carl Jung called it the Shadow: everything you've decided is unacceptable and buried. Not the parts you're working on — the parts you've disowned. Emotions you consider weakness. Desires you consider shameful. Qualities in yourself you judge most harshly — often the same ones you judge most harshly in other people.</p>
+    <p>The Shadow doesn't disappear when you bury it. It leaks — in overreactions, in sudden anger at things that shouldn't matter that much, in the specific things that other people do that make you disproportionately furious. <strong>What you judge loudest in others is almost always a map to your Shadow.</strong></p>
+
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <p class="card-title">The Shadow</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">What you've disowned. Buried because it felt unacceptable — too vulnerable, too weak, too shameful, too much. It didn't disappear. It went underground and now runs you from below the surface, showing up as overreactions, projections, and the specific qualities in others you can't tolerate.</p>
+    </div>
+
+    <h3>The Core — what's actually there</h3>
+    <p>Beneath the Persona and underneath the Shadow is the actual self — the observer that watches both. It's not a fixed thing. It's not a destination you arrive at. It's more like a quality of presence: the capacity to be exactly what you are, in this moment, without managing it.</p>
+    <p>Most men have never spent time there. The gap between the Persona and the Core is where a life of quiet quiet desperation lives.</p>
+
+    <div class="card" style="border-left: 3px solid var(--gold-foil);">
+      <p class="card-title">The Core</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">What's left when the performance stops. Not perfect, not invulnerable — but real. Capable of being known. The self that can connect genuinely because it isn't hiding. Access to this is the goal, not a destination you lock in but a place you return to.</p>
+    </div>
+
+    <div class="callout" style="margin-top:32px;">
+      <strong>The goal of this module</strong> is not to demolish the Persona — context-appropriate behaviour is just intelligence. The goal is to know the difference between adapting intelligently and hiding compulsively. And to start bringing what's in the Shadow back into consciousness before it runs your life from underground.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Write what's actually true. This is the module where the temptation to look self-aware is highest — resist it. Write the unfiltered version.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Audience — Who are you performing for, and what does the performance look like? What do you show, what do you hide, and what would happen if the people in your life saw what you're hiding?</p>
+      <p class="card-hint">Name specific people or groups — not "people in general." What is the version of you that you present to your friends? Your family? Your colleagues? What does each audience get, and what do they never see?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The version of me that [specific person/group] sees is... what they never see is..."</p>
+        <p>"The thing I work hardest to hide from the people around me is..."</p>
+        <p>"If someone who knew me well were asked to describe me, they would never mention..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Origin of the Mask — When did you first learn that a part of yourself wasn't safe to show? What happened, who was there, and what did you conclude about that part of yourself from that moment?</p>
+      <p class="card-hint">This is usually an early memory — childhood or early adolescence. A moment of vulnerability that was punished, mocked, or ignored. The mask usually starts there.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The first time I remember hiding a part of myself was when..."</p>
+        <p>"The message I received from that experience was that [this part of me] was..."</p>
+        <p>"The conclusion I drew about showing vulnerability / need / fear / excitement was..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Shadow — What do you judge most harshly in other men? Not what you dislike — what you judge. What quality in another man provokes your most contemptuous reaction? Where might that judgment be pointing back at you?</p>
+      <p class="card-hint">The Shadow works through projection. We most viciously criticise in others what we most refuse to acknowledge in ourselves. This question requires real honesty. The first answer that makes you defensive is probably the right one.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The quality in other men that provokes my strongest judgment is..."</p>
+        <p>"When I'm honest, I might have that quality in a version that looks like..."</p>
+        <p>"I judge [X] in others probably because I have [related thing] in myself that I haven't dealt with..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Cost — What have you actually given up to maintain your performance? Relationships where no one knows who you really are. Decisions made to look good rather than to be good. Energy spent managing image instead of building something real.</p>
+      <p class="card-hint">Be concrete. Not "I've paid a cost" but "here's the specific thing I sacrificed." The cost is real whether you name it or not — naming it is just the beginning of deciding whether to keep paying it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The most concrete cost my performance has had is..."</p>
+        <p>"A relationship where I'm performing rather than being known is... and the cost of that is..."</p>
+        <p>"The decisions I've made to look good rather than be good include..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Unmasked Moment — Can you think of a time when you were completely yourself with another person — no performance, no management, no curating? What was it like? What made it possible? Why does it not happen more often?</p>
+      <p class="card-hint">If you can't think of a time, that's the answer. If you can, what was different about that moment or that person? What conditions made it feel safe to drop the performance?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The last time I felt completely unguarded with another person was... and what made it possible was..."</p>
+        <p>"The reason that doesn't happen more often is probably..."</p>
+        <p>"If I'm honest, the closest I come to being seen is... and even then, I still hide..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- MASK AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Mask Audit</h2>
+    <p class="section-sub">Map your performance across five contexts. For each one: what do you show, what are you hiding, what triggers you to put the mask on, and what would it cost to take it off?</p>
+
+    <div class="callout">
+      <strong>How to use this:</strong> Move through each context without skipping the uncomfortable ones. The goal is a complete picture of your performance landscape — not a flattering one.
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="mask-tabs" id="mask-tabs">
+        <button class="mask-tab active" onclick="switchMask(0)">Work <span class="tab-dot"></span></button>
+        <button class="mask-tab" onclick="switchMask(1)">Friends <span class="tab-dot"></span></button>
+        <button class="mask-tab" onclick="switchMask(2)">Romantic <span class="tab-dot"></span></button>
+        <button class="mask-tab" onclick="switchMask(3)">Family <span class="tab-dot"></span></button>
+        <button class="mask-tab" onclick="switchMask(4)">Alone <span class="tab-dot"></span></button>
+      </div>
+      <div id="mask-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- SHADOW CONFRONTATION -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Shadow Confrontation</h2>
+    <p class="section-sub">Pick one quality, trait, or impulse you've disowned — something you've decided is unacceptable in yourself. Run it through this process. The goal is not to celebrate the Shadow but to understand it.</p>
+
+    <div class="callout">
+      The Shadow doesn't go away when you ignore it. It grows. This exercise is about bringing a rejected part of yourself into the light so you can make a conscious decision about it — instead of letting it make decisions for you.
+    </div>
+
+    <div class="card" style="margin-top: 28px;">
+      <div class="shadow-step">
+        <p class="shadow-label">Step 1 — Name the rejected quality</p>
+        <p class="shadow-desc">What quality, impulse, or trait have you decided is unacceptable in yourself? Name it precisely. Not "I can be selfish" but "I sometimes want to completely withdraw from everyone and not be responsible for anyone."</p>
+        <textarea class="journal-area" id="shadow-1" placeholder="The part of myself I have disowned or hidden is..." rows="3" oninput="autoSave('shadow-1', this.value); updateCharCount(this)" style="min-height:80px;"></textarea>
+        <div class="field-footer"><span class="char-count" id="shadow-1-count">0 characters</span><span class="save-indicator" id="shadow-1-saved">Saved</span></div>
+      </div>
+
+      <div class="shadow-step">
+        <p class="shadow-label">Step 2 — Trace the origin</p>
+        <p class="shadow-desc">When did you first decide this was unacceptable? Who taught you that? What was the moment — or the repeated pattern — that made you bury this part of yourself?</p>
+        <textarea class="journal-area" id="shadow-2" placeholder="I buried this part of myself when... The message I received was..." rows="4" oninput="autoSave('shadow-2', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="shadow-2-count">0 characters</span><span class="save-indicator" id="shadow-2-saved">Saved</span></div>
+      </div>
+
+      <div class="shadow-step">
+        <p class="shadow-label">Step 3 — Find the function</p>
+        <p class="shadow-desc">Shadow qualities almost always served a function at some point. They were a response to something real. What was this quality trying to do? What was it protecting you from, or expressing, or getting for you?</p>
+        <textarea class="journal-area" id="shadow-3" placeholder="This quality was originally trying to... it was a response to..." rows="4" oninput="autoSave('shadow-3', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="shadow-3-count">0 characters</span><span class="save-indicator" id="shadow-3-saved">Saved</span></div>
+      </div>
+
+      <div class="shadow-step">
+        <p class="shadow-label">Step 4 — Identify the leakage</p>
+        <p class="shadow-desc">Where is this buried quality showing up in your life right now — in disguised form? Overreactions, projections, the specific things that make you disproportionately angry or contemptuous?</p>
+        <textarea class="journal-area" id="shadow-4" placeholder="This quality leaks out in my life as... I can see it in how I react to..." rows="4" oninput="autoSave('shadow-4', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="shadow-4-count">0 characters</span><span class="save-indicator" id="shadow-4-saved">Saved</span></div>
+      </div>
+
+      <div class="shadow-step">
+        <p class="shadow-label">Step 5 — Choose a conscious relationship</p>
+        <p class="shadow-desc">You can't delete the Shadow — but you can stop letting it run you from underground. What would it look like to have a conscious, adult relationship with this quality? Not to act on it blindly, but to acknowledge it exists and decide deliberately how to relate to it?</p>
+        <textarea class="journal-area" id="shadow-5" placeholder="A healthier, conscious relationship with this part of myself would look like..." rows="4" oninput="autoSave('shadow-5', this.value); updateCharCount(this)"></textarea>
+        <div class="field-footer"><span class="char-count" id="shadow-5-count">0 characters</span><span class="save-indicator" id="shadow-5-saved">Saved</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, catch one moment where you're performing — and make a different choice.</p>
+
+    <div class="belief-display">
+      "I don't need to perform to deserve my place here."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that hits hardest for you. Make it specific to the mask you wear most often.</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Application Journal</p>
+      <p class="card-hint">Each day, note one moment where you caught yourself performing — and what happened when you chose not to.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: I caught myself performing when...&#10;Day 2: Instead of hiding, I...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Unmasked Conversation</h2>
+    <p class="section-sub">Do this before you move to Module 4. No substitutes.</p>
+
+    <div class="truth-block">
+      <p>This week, have one conversation where you say something true that you would normally filter. Not dangerous — true.</p>
+    </div>
+
+    <p>This doesn't mean confessing your deepest fears to a stranger. It means finding one moment, with one person you trust, where you say what you actually think, feel, or need — instead of the managed version.</p>
+    <p>It could be telling a friend you're struggling with something. It could be admitting to someone that you don't know the answer instead of performing confidence. It could be expressing something you care about that you normally keep quiet because you're not sure how it'll land.</p>
+    <p><strong>The point is not the specific thing you say. The point is the experience of choosing truth over performance.</strong> Notice what happens — to them, and to you.</p>
+
+    <div class="callout warning">
+      <strong>Common avoidance:</strong> "I'm already authentic" or "I don't perform." If that's your first reaction, this challenge is especially important for you. The most defended men are usually the ones most convinced they're not defending.
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Prepare — What will you say, and to whom?</p>
+      <p class="card-hint">Plan it before you do it. Name the person, name the truth you want to say, and name what you're afraid will happen if you say it. The planning matters as much as the doing.</p>
+      <textarea class="journal-area" id="challenge-prep" placeholder="I will have this conversation with...&#10;&#10;The truth I want to say is...&#10;&#10;What I'm afraid will happen is..." rows="8" oninput="autoSave('challenge-prep', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-prep-count">0 characters</span><span class="save-indicator" id="challenge-prep-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">After — What happened?</p>
+      <p class="card-hint">What was the actual outcome? What were you afraid of that didn't happen? What did it feel like to say a true thing instead of a managed one?</p>
+      <textarea class="journal-area" id="challenge-reflect" placeholder="What I said was...&#10;&#10;What actually happened was...&#10;&#10;What surprised me was..." rows="7" oninput="autoSave('challenge-reflect', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-reflect-count">0 characters</span><span class="save-indicator" id="challenge-reflect-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I had the Unmasked Conversation</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. If you're scoring yourself mostly 4s and 5s without having done the Shadow Confrontation honestly, go back.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Mask Audit across all five contexts honestly — not the flattering version, the real one.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can name the specific moment when my primary mask was first built — the event, the conclusion, and the person involved.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I ran the Shadow Confrontation on a quality I've genuinely disowned — not a safe or flattering one.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I had the Unmasked Conversation — said something true that I would normally have filtered.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I wrote my version of the belief install and tracked at least five days of catching myself in performance.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 3. Each chosen for the Mask and Shadow theme — not self-help, not theory. Men who have written honestly about what performance costs.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">No More Mr. Nice Guy — Robert Glover</p>
+        <p class="resource-desc">The definitive account of the Nice Guy mask — the performance built around being liked, never causing conflict, and getting needs met indirectly. If you've ever wondered why being "a good guy" hasn't gotten you what you want, this is the book. Uncomfortable in the best way.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Mask of Masculinity — Lewis Howes</p>
+        <p class="resource-desc">A catalogue of the nine specific masks men wear — the Stoic, the Athlete, the Material, the Sexual, the Aggressive, and more. Less psychological depth than Glover but excellent for identifying which specific masks you use and what they're protecting.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Man's Search for Meaning — Viktor Frankl</p>
+        <p class="resource-desc">Read it here for the question: what remains of a man when every mask has been stripped away by force? Frankl's answer — meaning, chosen under any circumstances — is the most honest thing written about the authentic self under pressure. Not primarily about identity, but it will clarify what you're looking for underneath the performance.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Carl Jung — The Shadow (concept overview)</p>
+        <p class="resource-desc">Find a quality lecture or documentary summary of Jung's Shadow concept. The original formulation is more nuanced and useful than most modern summaries. Understanding what the Shadow actually is — not a monster, but a repository of disowned material — is foundational for the exercise in this module.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You looked under the mask. The question now is what you build without it. That's Module 4.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m3';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    maskContexts: Array.from({length:5}, () => ({ show:'', hiding:'', trigger:'', cost:'' }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'shadow-1','shadow-2','shadow-3','shadow-4','shadow-5',
+    'belief-version','belief-decisions',
+    'challenge-prep','challenge-reflect'
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.maskContexts || state.maskContexts.length !== 5) state.maskContexts = Array.from({length:5}, () => ({ show:'', hiding:'', trigger:'', cost:'' }));
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    ['shadow-1','shadow-2','shadow-3','shadow-4'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 10) pts += 3; });
+    const maskFilled = state.maskContexts.filter(c => c.show.trim().length > 3 || c.hiding.trim().length > 3).length;
+    pts += Math.min(10, maskFilled * 2);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const cp = document.getElementById('challenge-prep'); if (cp && cp.value.trim().length > 20) pts += 4;
+    const cr = document.getElementById('challenge-reflect'); if (cr && cr.value.trim().length > 20) pts += 4;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      state.marks[this.dataset.marks] = true;
+      this.classList.add('read');
+      this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== MASK AUDIT =====
+  let currentMask = 0;
+  const MASK_CONTEXTS = [
+    { name: 'Work / Professional', p_show: 'e.g. "Confident, decisive, always has the answer"', p_hiding: 'e.g. "How often I\'m uncertain or out of my depth"', p_trigger: 'e.g. "When someone questions my judgment or competence"', p_cost: 'e.g. "I can\'t ask for help without it feeling like failure"' },
+    { name: 'Friends', p_show: 'e.g. "Easy-going, unbothered, always fine"', p_hiding: 'e.g. "When I\'m actually struggling or need support"', p_trigger: 'e.g. "Any moment where I might look weak or needy"', p_cost: 'e.g. "My friendships stay surface-level — no one actually knows me"' },
+    { name: 'Romantic / Women', p_show: 'e.g. "In control, not affected, above caring too much"', p_hiding: 'e.g. "That I genuinely want connection and it matters to me"', p_trigger: 'e.g. "Any sign she might pull away or reject me"', p_cost: 'e.g. "I sabotage real intimacy before it can hurt me"' },
+    { name: 'Family', p_show: 'e.g. "That everything is fine, I have my life together"', p_hiding: 'e.g. "Doubts, mistakes, anything that would disappoint them"', p_trigger: 'e.g. "Questions about my future, my choices, my progress"', p_cost: 'e.g. "I can\'t be honest with the people who know me longest"' },
+    { name: 'Alone', p_show: 'e.g. "Who I actually am when no one is watching"', p_hiding: 'e.g. "What I think about, what I actually want, what I\'m afraid of"', p_trigger: 'e.g. "Even alone I sometimes perform for an imagined audience"', p_cost: 'e.g. "I don\'t fully know myself — the performance is even internal"' }
+  ];
+
+  function buildMaskPanels() {
+    const container = document.getElementById('mask-panels');
+    container.innerHTML = '';
+    MASK_CONTEXTS.forEach((ctx, i) => {
+      const c = state.maskContexts[i];
+      const panel = document.createElement('div');
+      panel.className = 'mask-panel' + (i === 0 ? ' active' : '');
+      panel.id = `maskp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">Map your performance in the context of <strong style="color:var(--deep-vault)">${ctx.name}</strong>.</p>
+        <div class="mask-field">
+          <label>What you show</label>
+          <textarea rows="2" placeholder="${ctx.p_show}" oninput="updateMaskField(${i},'show',this.value)">${c.show}</textarea>
+        </div>
+        <div class="mask-field">
+          <label>What you're actually hiding</label>
+          <textarea rows="2" placeholder="${ctx.p_hiding}" oninput="updateMaskField(${i},'hiding',this.value)">${c.hiding}</textarea>
+        </div>
+        <div class="mask-field">
+          <label>What triggers you to put this mask on</label>
+          <textarea rows="2" placeholder="${ctx.p_trigger}" oninput="updateMaskField(${i},'trigger',this.value)">${c.trigger}</textarea>
+        </div>
+        <div class="mask-field">
+          <label>What it costs you</label>
+          <textarea rows="2" placeholder="${ctx.p_cost}" oninput="updateMaskField(${i},'cost',this.value)">${c.cost}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateMaskTabIndicators();
+  }
+
+  function switchMask(idx) {
+    currentMask = idx;
+    document.querySelectorAll('.mask-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.mask-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateMaskField(ctxIdx, field, value) {
+    state.maskContexts[ctxIdx][field] = value;
+    save(); updateMaskTabIndicators(); updateProgress();
+  }
+
+  function updateMaskTabIndicators() {
+    document.querySelectorAll('.mask-tab').forEach((tab, i) => {
+      const c = state.maskContexts[i];
+      tab.classList.toggle('filled', !!(c.show.trim() || c.hiding.trim()));
+    });
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = true;
+    const btn = document.getElementById('challenge-done-btn');
+    btn.classList.add('read');
+    btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You read about the mask. You didn't take it off. Go back. Do the Shadow Confrontation on something that actually makes you uncomfortable. Have the Unmasked Conversation with someone who knows you. Then re-score.";
+    else if (total <= 20) msg = "Good work. You've made the invisible visible — that's harder than it looks. Carry that honesty into Module 4, which will demand more of it.";
+    else msg = "You went into this honestly. The Shadow Confrontation, the Unmasked Conversation, the Mask Audit — you did the real version. That's the foundation the rest of this course builds on.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = true;
+    const btn = document.getElementById('complete-btn');
+    btn.classList.add('completed');
+    btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.maskContexts.filter(c => c.show.trim().length>3 && c.hiding.trim().length>3).length >= 4,
+      exercise: ['shadow-1','shadow-2','shadow-3','shadow-4'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>10; }).length >= 3,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.mask-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.mask-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 3: THE MASK\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Audience'],['r2','Q2 — The Origin of the Mask'],['r3','Q3 — The Shadow'],['r4','Q4 — The Cost'],['r5','Q5 — The Unmasked Moment']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE MASK AUDIT\n${ln('-',30)}\n\n`;
+    MASK_CONTEXTS.forEach((ctx, i) => {
+      const c = state.maskContexts[i];
+      out += `${ctx.name}\n`;
+      out += `  What you show: ${c.show||'(not filled)'}\n`;
+      out += `  What you're hiding: ${c.hiding||'(not filled)'}\n`;
+      out += `  What triggers the mask: ${c.trigger||'(not filled)'}\n`;
+      out += `  What it costs you: ${c.cost||'(not filled)'}\n\n`;
+    });
+
+    out += `THE SHADOW CONFRONTATION\n${ln('-',30)}\n\n`;
+    [['shadow-1','The rejected quality'],['shadow-2','The origin'],['shadow-3','The function'],['shadow-4','The leakage'],['shadow-5','Conscious relationship']].forEach(([id,label]) => {
+      out += `${label}:\n${val(id)}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Application Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `WEEKLY CHALLENGE — THE UNMASKED CONVERSATION\n${ln('-',30)}\n\nPreparation:\n${val('challenge-prep')}\n\nReflection:\n${val('challenge-reflect')}\nCompleted: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Completed the Mask Audit for all 5 contexts','Named the specific moment the primary mask was built','Ran the Shadow Confrontation honestly','Had the Unmasked Conversation','Belief install — 5+ days applied'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-3-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildMaskPanels();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
