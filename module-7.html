@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 7: The Strategy — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '07'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== STRATEGY MAP TABS ===== */
+    .strat-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .strat-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .strat-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .strat-tab:hover:not(.active) { color: var(--deep-vault); }
+    .strat-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .strat-tab.filled .tab-dot { opacity: 1; }
+    .strat-panel { display: none; padding: 24px 0 0; }
+    .strat-panel.active { display: block; }
+    .strat-field { margin-bottom: 16px; }
+    .strat-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .strat-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .strat-field textarea:focus { border-color: var(--banknote-green); }
+    .strat-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== TIMELINE BUILDER ===== */
+    .timeline-item { display: grid; grid-template-columns: 120px 1fr; gap: 0; margin-bottom: 0; }
+    .timeline-item + .timeline-item { border-top: 1px solid var(--sg-border); }
+    .timeline-horizon { padding: 24px 20px 24px 0; display: flex; flex-direction: column; gap: 6px; border-right: 2px solid var(--sg-border); position: relative; }
+    .timeline-horizon::after { content: ''; position: absolute; right: -6px; top: 28px; width: 10px; height: 10px; background: var(--banknote-green); border-radius: 50%; border: 2px solid var(--paper-white); }
+    .timeline-item.filled .timeline-horizon::after { background: var(--banknote-green); box-shadow: 0 0 0 3px rgba(11,107,77,0.15); }
+    .horizon-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .horizon-sub { font-size: 0.72rem; color: var(--security-gray); font-style: italic; }
+    .timeline-fields { padding: 20px 0 20px 24px; }
+    .timeline-field { margin-bottom: 12px; }
+    .timeline-field:last-child { margin-bottom: 0; }
+    .timeline-field label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 5px; }
+    .timeline-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 10px 13px; outline: none; resize: vertical; line-height: 1.6; min-height: 60px; transition: border-color 0.2s; }
+    .timeline-field textarea:focus { border-color: var(--banknote-green); }
+    .timeline-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .strat-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .strat-field textarea, .timeline-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .strat-panel { display: block !important; }
+      .timeline-item { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-horizon { border-right: none; border-bottom: 1px solid var(--sg-border); padding-bottom: 12px; }
+      .timeline-horizon::after { display: none; }
+      .timeline-fields { padding: 16px 0 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 07 — The Strategy</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> How Strategy Works</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Strategic Map</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Timeline Builder</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 07 of 16 — Pillar II: Power</p>
+    <h1>The <span>Strategy</span></h1>
+    <p class="hero-tagline">"A busy man without a strategy is building someone else's vision, not his own."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 strategic exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>Busy Isn't the Same as Building</h2>
+    <p class="section-sub">Most men mistake activity for progress. They are not the same thing.</p>
+
+    <p>You have been auditing your identity, mapping power, and building leverage. All of that work is inputs. Strategy is what determines what you do with them — what you're actually moving toward, by what route, and by when.</p>
+    <p>Without strategy, effort disperses. You make progress in multiple directions and arrive nowhere in particular. You handle what appears in front of you, respond to other people's agendas, stay busy, and then look up five years later wondering why your position hasn't fundamentally changed despite how hard you've worked.</p>
+    <p><strong>The problem was never effort. The problem was the absence of a chosen direction — and the discipline to hold it.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>Strategy is not a business school concept. It is the answer to a simple question: given where I am and where I want to be, what is the sequence of moves that gets me there most efficiently — and which moves do I need to stop making because they consume resources without building position?</p>
+    <p>Sun Tzu's central insight was not about tactics. It was about positioning. <em>Win before the battle, not during it.</em> The general who wins is the one who has already arranged things so that his opponent has no good options before the fighting starts. The tactician reacts to the battlefield. The strategist designs the battlefield.</p>
+    <p>This module is about shifting from tactical to strategic — from responding to what appears to moving toward what you've decided.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>You Don't Have a Direction Problem</h2>
+    <p class="section-sub">You have a commitment problem. Most men know what they should be building. They just won't decide.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #7</p>
+      <p>"A man without a strategy isn't building his life — he's reacting to it. Busy men with no direction work hard and stay exactly where they are."</p>
+    </div>
+
+    <p>The discomfort of committing to a direction is real. Once you decide, you are also deciding not to pursue the alternatives. You are declaring a bet. You are making yourself accountable to a specific outcome. That feels risky — and so most men avoid it by staying in perpetual exploration, always considering options, always keeping everything open.</p>
+    <p>The cost of this is enormous and mostly invisible. Every month without a direction is a month of effort that builds no position. Every year without a strategy is a year of compound interest you didn't collect. The man who commits to a direction at 25 and holds it has a fundamentally different life at 35 than the man who is still figuring it out.</p>
+
+    <h3>The false safety of optionality</h3>
+    <p>There is a version of "keeping options open" that is genuine strategic flexibility — staying uncommitted until you have enough information to make a good decision. That is sound. But most men are not practising strategic flexibility. They are avoiding commitment because commitment feels like foreclosure.</p>
+    <p><strong>Uncommitted men don't have more options. They have weaker positions in all of them.</strong> The man who commits and moves accumulates experience, reputation, and leverage in a specific direction. The man who keeps all options open accumulates nothing in particular. By the time he decides, the other man already has a position he cannot quickly replicate.</p>
+
+    <div class="callout warning">
+      <strong>The exploration trap:</strong> If you have been "figuring out your direction" for more than 12 months, you are not exploring — you are avoiding. The direction doesn't have to be perfect. It has to be chosen. You can adjust as you go. You cannot build from a standing start.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>How Strategy Actually Works</h2>
+    <p class="section-sub">Not a plan. Not a vision board. A coherent sequence of moves that builds a specific position over time.</p>
+
+    <p>Richard Rumelt's definition of good strategy is precise: it identifies a challenge, names the approach for addressing it, and aligns the specific actions behind that approach. Bad strategy, by contrast, is goals dressed up as strategy — "I want to be financially free" is not a strategy, it is a preference. A strategy answers how.</p>
+    <p>For our purposes, strategy has four components that need to be working together:</p>
+
+    <h3>1. A chosen position</h3>
+    <p>Where do you want to be in three to five years — specifically? Not "successful" or "free." A specific position: a particular income level, a particular type of work, a particular kind of relationship, a particular place to live. Without a specific target, all effort is equally valid and equally wasteful. <strong>The target doesn't have to be certain. It has to be chosen.</strong></p>
+
+    <h3>2. An honest current state</h3>
+    <p>Strategy requires an accurate map of where you are now — not where you'd like to be, not where you thought you'd be by now. Modules 1 through 6 have been building this map: your character, your beliefs, your leverage, your power position. The gap between current state and target position is where your strategy lives.</p>
+
+    <h3>3. A sequenced set of moves</h3>
+    <p>The bridge between where you are and where you want to be is built one move at a time — and the sequence matters. Not every move is available now. Some require capabilities you don't yet have. Some require positions you haven't yet built. <strong>Strategy is knowing which moves to make first, in what order, to unlock the next set of moves.</strong> This is what separates men who progress from men who spin their wheels: not effort, but sequencing.</p>
+
+    <h3>4. The things you stop doing</h3>
+    <p>This is the part most men omit. Strategy is as much about what you choose not to do as what you choose to do. Every hour spent on a low-leverage activity is an hour not spent building position. Every commitment that doesn't serve the direction is dead weight. Good strategy requires deliberate subtraction — not just addition.</p>
+
+    <div class="callout">
+      <strong>Second-order thinking:</strong> before any significant decision, ask what happens next. And then what happens after that. Most men think one move ahead. Strategic men think three. The second-order consequence of a decision is often more important than the first-order effect — and it is rarely visible to someone who isn't looking for it.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Don't answer these as if you're being evaluated. Answer them as if the quality of your next five years depends on how honest you are right now.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Game Question — What position are you actually trying to build over the next 3–5 years? Not a feeling or a lifestyle aesthetic — a specific, concrete description of where you want to be. Be precise about income, work, relationships, location, and what a typical day looks like.</p>
+      <p class="card-hint">Specificity is the test. "I want to be free and doing work I love" is not a position. "I want to be generating £X/month from X, living in Y, with Z as my primary work — and here's what that requires" is a position. If you can't describe it specifically, you haven't decided yet.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"In 3–5 years, the specific position I am trying to build is..."</p>
+        <p>"A typical week in that life looks like... which means I need..."</p>
+        <p>"If I'm honest, the reason I haven't committed to this direction yet is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Reaction Audit — In the last 90 days, what percentage of your significant time and energy went toward building the position you described above — versus responding to what other people put in front of you? Where specifically did reactive behaviour cost you the most?</p>
+      <p class="card-hint">This is not about blame. It is about proportion. Most men who feel stuck are not lazy — they are reactive. They are genuinely working hard, but most of that work serves other people's agendas. Mapping where your time actually went is the first step to reorienting it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"Of my significant effort in the last 90 days, roughly [X]% was strategic. The rest was..."</p>
+        <p>"The biggest drain on my time that serves someone else's agenda more than mine is..."</p>
+        <p>"The specific area where reactive behaviour cost me the most position was..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Asymmetric Move — What is the one move available to you right now where the cost of attempting is relatively low but the potential upside — the change to your position if it works — is disproportionately large? What has stopped you from making it?</p>
+      <p class="card-hint">Asymmetric moves are the engine of strategic progress. A small, low-risk bet with a large potential return — a new skill, a conversation you haven't had, an application you haven't submitted, a project you haven't started. Most men have at least one obvious asymmetric move they've been avoiding. Name it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The asymmetric move I've been avoiding — low cost to attempt, potentially large upside — is..."</p>
+        <p>"If it worked, the change to my position would be..."</p>
+        <p>"The real reason I haven't done it yet is... (and whether that reason is valid is...)"</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Stop List — What are you doing right now — commitments, habits, relationships, projects — that consume real time and energy but are not building toward the position you described in Question 1? What would you lose by stopping, and is that loss real or imagined?</p>
+      <p class="card-hint">Every strategy requires a stop list. Not just a list of things to start. The resources you free by stopping low-leverage activities are the resources that fund the things you actually want to build. Most men find this harder than adding new commitments, because stopping requires confronting sunk costs and disappointing people.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The things I am currently doing that are not building toward my chosen position are..."</p>
+        <p>"If I stopped [X], the real cost would be... and whether I can afford that cost is..."</p>
+        <p>"The thing I am most reluctant to stop — and the honest reason why — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Second-Order Question — Think of the most significant decision you are currently facing or have recently made. What is the first-order consequence? Now go deeper: what happens as a result of that? And then what? What would someone with a 10-year time horizon see that your current thinking is missing?</p>
+      <p class="card-hint">Most regret comes from not thinking past the immediate consequence. The promotion that locks you into a role you hate. The relationship you stayed in because leaving was uncomfortable. The investment that made sense in isolation. Second-order thinking is a skill — it requires deliberately slowing down and asking "and then what?" at least twice before deciding.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The decision I'm currently facing is... The first-order consequence is..."</p>
+        <p>"But what happens after that? And then what? The third-order consequence I haven't thought about is..."</p>
+        <p>"What someone with a 10-year time horizon would see that I'm missing is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- STRATEGIC MAP -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Strategic Map</h2>
+    <p class="section-sub">Map your current position, target position, key moves, and obstacles across four domains. This is the document you return to every 90 days.</p>
+
+    <div class="callout">
+      <strong>A strategy is a working document, not a declaration.</strong> Write it specifically enough that you'd be able to look at it in 90 days and honestly assess whether you moved toward it or not. Vague strategies produce vague accountability.
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="strat-tabs" id="strat-tabs">
+        <button class="strat-tab active" onclick="switchStrat(0)">Career <span class="tab-dot"></span></button>
+        <button class="strat-tab" onclick="switchStrat(1)">Financial <span class="tab-dot"></span></button>
+        <button class="strat-tab" onclick="switchStrat(2)">Health <span class="tab-dot"></span></button>
+        <button class="strat-tab" onclick="switchStrat(3)">Personal <span class="tab-dot"></span></button>
+      </div>
+      <div id="strat-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE BUILDER -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Timeline Builder</h2>
+    <p class="section-sub">Map the specific position you're targeting at each time horizon — and the key move required to reach it. Work backwards from the longest horizon to the shortest.</p>
+
+    <div class="callout">
+      Start at the 3-year horizon and work backwards. The 3-year target determines what the 1-year milestone needs to be. The 1-year milestone determines what needs to happen in the next 90 days. The 90-day goal determines this week's priority. <strong>Strategy runs backwards; execution runs forwards.</strong>
+    </div>
+
+    <div class="card" style="padding: 28px; margin-top: 28px;" id="timeline-card">
+      <!-- Built by JS -->
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, identify one reactive response you turned into a strategic choice.</p>
+
+    <div class="belief-display">
+      "I don't react to what's in front of me. I move toward what I've decided."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that fits your specific direction — what does choosing your move over reacting to others' look like in your current situation?</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Strategy Journal</p>
+      <p class="card-hint">Each day, note one moment where you made a strategic choice instead of a reactive one — and what it cost you in the short term versus what it builds in the long term.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: Instead of reacting to [X], I chose to [Y] because it moves me toward...&#10;Day 2: The reactive pull today was... I chose instead to...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The 90-Day Plan</h2>
+    <p class="section-sub">Do this before moving to Module 8. This is the most important output of this module.</p>
+
+    <div class="truth-block">
+      <p>Write a specific 90-day strategic plan: three positions to build, three key moves to make, and three things to stop doing. One page. Specific enough to be falsifiable.</p>
+    </div>
+
+    <p>A 90-day horizon is long enough to see real progress and short enough to hold attention. The plan does not need to be comprehensive or perfect — it needs to be honest and specific. Three positions, not ten. Three moves, not a wishlist. Three stops, not a vague intention to "cut back."</p>
+    <p>The test of a good 90-day plan: if you looked at it in 90 days, you would be able to say clearly whether you had done it or not. Vague plans produce vague accountability. <strong>Write it so that there is no ambiguity about whether you moved or didn't.</strong></p>
+    <p>After you write it, share it with one person — not for approval, but for accountability. The act of stating a direction to someone else is significantly more binding than stating it only to yourself.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Three Positions to Build — in the next 90 days</p>
+      <p class="card-hint">What specific, measurable state do you want to be in 90 days from now in the three areas that matter most? Use concrete language: numbers, behaviours, outcomes — not feelings.</p>
+      <textarea class="journal-area" id="challenge-positions" placeholder="Position 1: In 90 days, I will have [specific, measurable state]...&#10;&#10;Position 2: In 90 days, I will have...&#10;&#10;Position 3: In 90 days, I will have..." rows="9" oninput="autoSave('challenge-positions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-positions-count">0 characters</span><span class="save-indicator" id="challenge-positions-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">Three Key Moves — the specific actions that build those positions</p>
+      <p class="card-hint">For each position above, what is the single most important action that moves you toward it? Not a list of tasks — the lever. The thing that, if you do it, makes everything else easier or unnecessary.</p>
+      <textarea class="journal-area" id="challenge-moves" placeholder="Move 1: The key action that builds Position 1 is... I will do this by...&#10;&#10;Move 2: The key action that builds Position 2 is...&#10;&#10;Move 3: The key action that builds Position 3 is..." rows="9" oninput="autoSave('challenge-moves', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-moves-count">0 characters</span><span class="save-indicator" id="challenge-moves-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">Three Stops — what you are cutting to free up resources</p>
+      <p class="card-hint">Name three specific things you are stopping or significantly reducing in the next 90 days. What they currently cost you in time, energy, or money — and what you'll redirect those resources toward.</p>
+      <textarea class="journal-area" id="challenge-stops" placeholder="Stop 1: I am stopping / significantly reducing [X]. This currently costs me [time/energy/money]. I will redirect that to...&#10;&#10;Stop 2:&#10;&#10;Stop 3:" rows="9" oninput="autoSave('challenge-stops', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-stops-count">0 characters</span><span class="save-indicator" id="challenge-stops-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I wrote my 90-Day Plan</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. If you still can't describe your 3-year target specifically, score yourself 1 on the first item and go back.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I can describe my 3–5 year target position specifically — in concrete terms that would be clear to someone else, not just a feeling or aesthetic.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Strategic Map across all four domains — with an honest current state, a specific target, and at least one concrete next move per domain.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Timeline Builder — working backwards from 3 years to 90 days, with a specific key move at each horizon.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I wrote a specific 90-Day Plan — three positions, three moves, three stops — that is concrete enough to be honestly evaluated at the end of 90 days.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I identified at least one asymmetric move I've been avoiding — and have either made it or committed to making it in the next 30 days.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 7. These are the clearest treatments of strategic thinking available — each addresses a different dimension of how direction is chosen and held.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">Good Strategy Bad Strategy — Richard Rumelt</p>
+        <p class="resource-desc">The most rigorous and readable book on what strategy actually is. Rumelt's distinction between good strategy (a specific challenge + a guiding policy + coherent actions) and bad strategy (goals and wishful thinking dressed up as strategy) is essential reading for anyone who has ever confused ambition with direction. Part I alone is worth the read.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Art of War — Sun Tzu</p>
+        <p class="resource-desc">Read for the second time — now through the lens of Module 7. The strategic insight is not about battles. It is about positioning: arranging conditions so that the outcome is determined before the conflict begins. The chapter on strategic positioning (Chapter 4) and the chapter on adaptation (Chapter 8) are particularly relevant here.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Thinking in Bets — Annie Duke</p>
+        <p class="resource-desc">Duke's framework for separating decision quality from outcome quality is directly relevant to strategic thinking. Good decisions sometimes produce bad outcomes. Bad decisions sometimes produce good outcomes. Learning to evaluate your strategic choices by the quality of your thinking at the time — not by how they turn out — is how you improve your decision-making over time rather than just getting lucky.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The 7 Habits of Highly Effective People — Stephen Covey (Habits 2 & 3)</p>
+        <p class="resource-desc">Read selectively: Habit 2 (Begin with the End in Mind) is the clearest formulation of working backwards from a chosen destination. Habit 3 (Put First Things First) addresses the reactive vs. proactive distinction directly — specifically the time management matrix that separates what is urgent from what is important. These two chapters are operationally useful and complement Rumelt directly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You have a direction and a 90-day plan. Module 8 is about protecting both — building the reputation that makes people take your moves seriously.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m7';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    stratContexts: Array.from({length:4}, () => ({ current:'', target:'', moves:'', obstacles:'' })),
+    timelineEntries: Array.from({length:5}, () => ({ position:'', move:'' }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'belief-version','belief-decisions',
+    'challenge-positions','challenge-moves','challenge-stops'
+  ];
+
+  const STRAT_CONTEXTS = [
+    { name: 'Career / Work',
+      p_current: 'e.g. "Mid-level manager at X. Good but not exceptional. No clear upward path visible."',
+      p_target: 'e.g. "In 3 years: running my own consulting practice generating £X/month"',
+      p_moves: 'e.g. "Build 2 external clients while employed. Develop a niche no one else owns."',
+      p_obstacles: 'e.g. "Time constraints. Fear of leaving stable income. No clear client base yet."' },
+    { name: 'Financial',
+      p_current: 'e.g. "£X savings. One income. £Y monthly expenses. Net position: fragile."',
+      p_target: 'e.g. "In 3 years: £X in savings, one income stream independent of employment"',
+      p_moves: 'e.g. "Reduce fixed costs by £X/month. Start skill-based side income."',
+      p_obstacles: 'e.g. "Lifestyle inflation. No clear monetisable skill outside main job."' },
+    { name: 'Health',
+      p_current: 'e.g. "Training 2x/week inconsistently. Sleep poor. Energy low by mid-afternoon."',
+      p_target: 'e.g. "In 3 years: training 4x/week consistently, sleeping 7–8h, energy baseline significantly higher"',
+      p_moves: 'e.g. "Fix sleep first — everything else improves from there. 10pm cutoff."',
+      p_obstacles: 'e.g. "Late nights habitual. No fixed training schedule."' },
+    { name: 'Personal / Life',
+      p_current: 'e.g. "Relationships are reactive. No close friendships built since uni. Solo most evenings."',
+      p_target: 'e.g. "In 3 years: 3–4 close relationships with men I genuinely respect"',
+      p_moves: 'e.g. "Reach out to 2 people per month. Have a real conversation, not a check-in."',
+      p_obstacles: 'e.g. "Pride. Don\'t want to appear to need people. No habit of initiating."' }
+  ];
+
+  const TIMELINE_HORIZONS = [
+    { label: '3 Years', sub: 'The target', p_pos: 'e.g. "I am generating £X from X, living in Y, doing work that is Z"', p_move: 'e.g. "The foundational move that makes this possible is..."' },
+    { label: '1 Year', sub: 'The milestone', p_pos: 'e.g. "I am at [specific intermediate state] — proof the 3-year path is working"', p_move: 'e.g. "The move that locks in this milestone is..."' },
+    { label: '90 Days', sub: 'The sprint', p_pos: 'e.g. "I have [specific, measurable outcome] in hand"', p_move: 'e.g. "The single most important action in the next 90 days is..."' },
+    { label: '30 Days', sub: 'The commitment', p_pos: 'e.g. "I have done [specific first step] that I can\'t easily undo"', p_move: 'e.g. "The move I\'m making this month, specifically, is..."' },
+    { label: 'This Week', sub: 'The start', p_pos: 'e.g. "By the end of this week I will have [one concrete thing] done"', p_move: 'e.g. "The specific action I take first, this week, is..."' }
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.stratContexts || state.stratContexts.length !== 4) state.stratContexts = Array.from({length:4}, () => ({ current:'', target:'', moves:'', obstacles:'' }));
+        if (!state.timelineEntries || state.timelineEntries.length !== 5) state.timelineEntries = Array.from({length:5}, () => ({ position:'', move:'' }));
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const sFilled = state.stratContexts.filter(c => c.current.trim().length > 3 && c.target.trim().length > 3).length;
+    pts += Math.min(10, sFilled * 2.5);
+    const tFilled = state.timelineEntries.filter(e => e.position.trim().length > 5).length;
+    pts += Math.min(5, tFilled);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const cp = document.getElementById('challenge-positions'); if (cp && cp.value.trim().length > 30) pts += 3;
+    const cm = document.getElementById('challenge-moves'); if (cm && cm.value.trim().length > 30) pts += 3;
+    const cs = document.getElementById('challenge-stops'); if (cs && cs.value.trim().length > 30) pts += 2;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== STRATEGIC MAP =====
+  let currentStrat = 0;
+
+  function buildStratPanels() {
+    const container = document.getElementById('strat-panels');
+    container.innerHTML = '';
+    STRAT_CONTEXTS.forEach((ctx, i) => {
+      const c = state.stratContexts[i];
+      const panel = document.createElement('div');
+      panel.className = 'strat-panel' + (i === 0 ? ' active' : '');
+      panel.id = `stratp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">Map your strategic position in the domain of <strong style="color:var(--deep-vault)">${ctx.name}</strong>.</p>
+        <div class="strat-field">
+          <label>Current state — honest, specific</label>
+          <textarea rows="2" placeholder="${ctx.p_current}" oninput="updateStratField(${i},'current',this.value)">${c.current}</textarea>
+        </div>
+        <div class="strat-field">
+          <label>Target position — where you want to be in 3 years</label>
+          <textarea rows="2" placeholder="${ctx.p_target}" oninput="updateStratField(${i},'target',this.value)">${c.target}</textarea>
+        </div>
+        <div class="strat-field">
+          <label>Key moves — the 1–2 actions that bridge the gap</label>
+          <textarea rows="2" placeholder="${ctx.p_moves}" oninput="updateStratField(${i},'moves',this.value)">${c.moves}</textarea>
+        </div>
+        <div class="strat-field">
+          <label>Real obstacles — what is actually in the way</label>
+          <textarea rows="2" placeholder="${ctx.p_obstacles}" oninput="updateStratField(${i},'obstacles',this.value)">${c.obstacles}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateStratTabIndicators();
+  }
+
+  function switchStrat(idx) {
+    currentStrat = idx;
+    document.querySelectorAll('.strat-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.strat-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateStratField(ctxIdx, field, value) {
+    state.stratContexts[ctxIdx][field] = value;
+    save(); updateStratTabIndicators(); updateProgress();
+  }
+
+  function updateStratTabIndicators() {
+    document.querySelectorAll('.strat-tab').forEach((tab, i) => {
+      const c = state.stratContexts[i];
+      tab.classList.toggle('filled', !!(c.current.trim() || c.target.trim()));
+    });
+  }
+
+  // ===== TIMELINE BUILDER =====
+  function buildTimeline() {
+    const card = document.getElementById('timeline-card');
+    card.innerHTML = '';
+    TIMELINE_HORIZONS.forEach((h, i) => {
+      const e = state.timelineEntries[i];
+      const item = document.createElement('div');
+      item.className = 'timeline-item' + (e.position.trim() ? ' filled' : '');
+      item.id = `tl-item-${i}`;
+      item.innerHTML = `
+        <div class="timeline-horizon">
+          <span class="horizon-label">${h.label}</span>
+          <span class="horizon-sub">${h.sub}</span>
+        </div>
+        <div class="timeline-fields">
+          <div class="timeline-field">
+            <label>Target position</label>
+            <textarea rows="2" placeholder="${h.p_pos}" oninput="updateTimeline(${i},'position',this.value)">${e.position}</textarea>
+          </div>
+          <div class="timeline-field">
+            <label>Key move required</label>
+            <textarea rows="2" placeholder="${h.p_move}" oninput="updateTimeline(${i},'move',this.value)">${e.move}</textarea>
+          </div>
+        </div>`;
+      card.appendChild(item);
+    });
+  }
+
+  function updateTimeline(idx, field, value) {
+    state.timelineEntries[idx][field] = value;
+    const item = document.getElementById(`tl-item-${idx}`);
+    if (item) item.classList.toggle('filled', !!(state.timelineEntries[idx].position.trim()));
+    save(); updateProgress();
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I wrote my 90-Day Plan</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You read about strategy. You didn't build one. The Strategic Map and 90-Day Plan only count if they're specific enough to be falsifiable. Vague strategies produce vague results. Go back and be specific.";
+    else if (total <= 20) msg = "You have a direction and a plan. The next test is whether you return to it in 90 days and hold yourself accountable to what you wrote. Most men write plans. Few actually review them. Be one of the few.";
+    else msg = "You did this properly. You have a specific position, a sequenced set of moves, and a stop list. That is more strategic clarity than most men develop in a decade. The work now is execution — not more planning.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.stratContexts.filter(c => c.current.trim().length>3 && c.target.trim().length>3).length >= 3,
+      exercise: state.timelineEntries.filter(e => e.position.trim().length > 5).length >= 3,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.strat-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.strat-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 7: THE STRATEGY\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Game Question'],['r2','Q2 — The Reaction Audit'],['r3','Q3 — The Asymmetric Move'],['r4','Q4 — The Stop List'],['r5','Q5 — The Second-Order Question']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE STRATEGIC MAP\n${ln('-',30)}\n\n`;
+    STRAT_CONTEXTS.forEach((ctx, i) => {
+      const c = state.stratContexts[i];
+      out += `${ctx.name}\n`;
+      out += `  Current state: ${c.current||'(not filled)'}\n`;
+      out += `  Target position: ${c.target||'(not filled)'}\n`;
+      out += `  Key moves: ${c.moves||'(not filled)'}\n`;
+      out += `  Real obstacles: ${c.obstacles||'(not filled)'}\n\n`;
+    });
+
+    out += `THE TIMELINE BUILDER\n${ln('-',30)}\n\n`;
+    TIMELINE_HORIZONS.forEach((h, i) => {
+      const e = state.timelineEntries[i];
+      out += `${h.label} (${h.sub})\n`;
+      out += `  Position: ${e.position||'(not filled)'}\n`;
+      out += `  Key move: ${e.move||'(not filled)'}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Strategy Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `90-DAY PLAN\n${ln('-',30)}\n\n`;
+    out += `Three Positions to Build:\n${val('challenge-positions')}\n\n`;
+    out += `Three Key Moves:\n${val('challenge-moves')}\n\n`;
+    out += `Three Stops:\n${val('challenge-stops')}\n`;
+    out += `Plan written: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Described 3–5 year target specifically','Completed Strategic Map across all 4 domains','Completed Timeline Builder — 3 years to this week','Wrote specific 90-Day Plan — positions, moves, stops','Identified and committed to an asymmetric move'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-7-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildStratPanels();
+    buildTimeline();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
