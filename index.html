@@ -778,7 +778,7 @@
   }
 
   // ===== UPDATE DASHBOARD =====
-  function updateDashboard() {
+  function updateDashboard(builtSet = new Set()) {
     let completeCount = 0;
     let inProgressCount = 0;
 
@@ -788,8 +788,7 @@
 
       if (!card) return;
 
-      // Unlock modules as their files are built and uploaded
-      const isBuilt = mod.n <= 2;
+      const isBuilt = builtSet.has(mod.n);
 
       if (!isBuilt) return; // leave locked cards alone
 
@@ -859,8 +858,16 @@
   }
 
   // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', () => {
-    updateDashboard();
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Check which module files actually exist on the server
+    const checks = MODULES.map(mod =>
+      fetch(mod.file, { method: 'HEAD' })
+        .then(r => r.ok ? mod.n : null)
+        .catch(() => null)
+    );
+    const results = await Promise.all(checks);
+    const builtSet = new Set(results.filter(n => n !== null));
+    updateDashboard(builtSet);
     setupAnimations();
   });
 </script>
