@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 5: The Game — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '05'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== POWER AUDIT TABS ===== */
+    .power-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .power-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .power-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .power-tab:hover:not(.active) { color: var(--deep-vault); }
+    .power-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .power-tab.filled .tab-dot { opacity: 1; }
+    .power-panel { display: none; padding: 24px 0 0; }
+    .power-panel.active { display: block; }
+    .power-field { margin-bottom: 16px; }
+    .power-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .power-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .power-field textarea:focus { border-color: var(--banknote-green); }
+    .power-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== OPTIONS INVENTORY ===== */
+    .options-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sg-border); }
+    .options-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .options-label { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 4px; }
+    .options-desc { font-size: 0.8rem; color: var(--security-gray); margin-bottom: 12px; font-style: italic; }
+    .options-rating { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .opt-btn { padding: 6px 14px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .opt-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .opt-btn.selected-low { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+    .opt-btn.selected-mid { background: rgba(212,175,55,0.1); border-color: var(--gold-foil); color: var(--gold-foil-dark); }
+    .opt-btn.selected-high { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+    .options-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; min-height: 70px; transition: border-color 0.2s; }
+    .options-field textarea:focus { border-color: var(--banknote-green); }
+    .options-field textarea::placeholder { color: var(--security-gray); }
+    .options-field label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 5px; margin-top: 10px; }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .power-tabs, .options-rating, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .power-field textarea, .options-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .power-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 05 — The Game</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> What Power Actually Is</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Power Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Options Inventory</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 05 of 16 — Pillar II: Power</p>
+    <h1>The <span>Game</span></h1>
+    <p class="hero-tagline">"Every room has a power structure. Not seeing it doesn't mean you're above it."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 strategic exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Room You Walk Into</h2>
+    <p class="section-sub">There is a game being played everywhere you go. You are either a participant or a piece.</p>
+
+    <p>Walk into any room — a workplace, a social gathering, a negotiation, a family dinner — and something is already in motion. There are people whose opinions carry more weight. People whose approval others seek. Decisions being shaped by forces that have nothing to do with what's formally on the table. Resources flowing toward certain people and away from others, for reasons that are rarely stated out loud.</p>
+    <p>This is not cynicism. This is how human groups have always worked. Power dynamics are as natural as gravity — they exist whether you believe in them or not.</p>
+    <p><strong>The question is not whether the game is being played. The question is whether you understand it well enough to move with intention inside it.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>Most men fall into one of two failure modes. The first is naivety — they genuinely don't see the power structures around them, and so they get outmaneuvered, overlooked, and leveraged without ever understanding why. They work hard, play fair, and wonder why results don't follow effort the way they were told it would.</p>
+    <p>The second is cynicism — they see power everywhere, conclude that everything is corrupt and rigged, and disengage. They opt out, pride themselves on not playing the game, and mistake passivity for integrity. They still get the outcomes of someone who doesn't understand power — they just feel righteous about it.</p>
+    <p>Neither works. <strong>The man who understands power is neither naive nor cynical.</strong> He sees the structures clearly, moves through them intelligently, and builds his position without losing himself in the process.</p>
+    <p>That's what this pillar is about. Starting here, with the foundations.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>You Are Already Playing</h2>
+    <p class="section-sub">Refusing to understand power doesn't exempt you from its consequences.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #5</p>
+      <p>"Every room you walk into has a power structure. Not seeing it doesn't mean you're above it — it means you're at the bottom of it."</p>
+    </div>
+
+    <p>The men who benefit most from power dynamics being invisible are the ones who understand them best. Every time someone around you doesn't see how influence actually moves in a room, you are watching someone who can be led without knowing they're being led.</p>
+    <p>This is uncomfortable to sit with. Because it means that in every situation where you lost something — a deal, a promotion, a negotiation, a relationship — and you blamed bad luck or unfairness, there is a real possibility that you were simply outplayed by someone who understood the dynamics better than you did.</p>
+
+    <h3>Why good men avoid this subject</h3>
+    <p>There is a moral squeamishness about power that is particularly common in men who were raised to be decent. Power feels like domination. Understanding it feels like manipulation. Building it feels like selling out.</p>
+    <p>This is a trap. <strong>Power is not inherently corrupt.</strong> It is a description of influence — the capacity to shape outcomes. A doctor has power over a patient's treatment. A father has power over his children's environment. A founder has power over his company's culture. Power used poorly is destructive. Power used well is how good things get built and maintained.</p>
+    <p>The man who refuses to understand power doesn't opt out of the system. He just ensures that his capacity for good is always constrained by people who are less scrupulous than he is.</p>
+
+    <div class="callout warning">
+      <strong>The naive tax:</strong> every significant thing you have lost — money, opportunity, respect, position — that you attributed to bad luck or unfairness deserves a second look. How much of it was the cost of not understanding how things actually work?
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>What Power Actually Is</h2>
+    <p class="section-sub">Not domination. Not manipulation. The capacity to have options and shape outcomes — and how to build it.</p>
+
+    <p>Strip away the moral loading and power is simple: it is the capacity to determine what happens. In your own life, in a room, in a relationship, in a negotiation. The more of it you have, the more your choices matter. The less of it you have, the more you are subject to other people's choices.</p>
+    <p>Power in practice has three forms. Understanding all three is what separates the man who moves through the world with leverage from the one who is always reacting.</p>
+
+    <h3>Options — the foundation of all power</h3>
+    <p>The most fundamental form of power is having options. A man with no alternatives has no power, regardless of how skilled or principled he is. He cannot walk away from a bad deal. He cannot refuse a bad offer. He cannot hold a line when the cost of holding it is losing the only thing he has.</p>
+    <p>The single most powerful move in almost any negotiation, relationship, or career decision is having a real alternative — not a bluff, not a threat, but a genuine other option that makes your current situation one choice among several. <strong>Build options everywhere. Dependency in any form is a form of weakness.</strong></p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">The Options Test</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">In any area of your life, ask: what happens if this goes away? If you would be genuinely desperate — if losing it would force you to accept terms you'd otherwise reject — you have low power in that area. Building options is building power.</p>
+    </div>
+
+    <h3>Perception — how others read you</h3>
+    <p>Your power in any room is partly determined by the capabilities you actually have — and partly by the capabilities others believe you have. These are not the same thing, and the gap between them matters.</p>
+    <p>This is not about deception. It is about understanding that reputation precedes you into every room, and that how you carry yourself, what you signal, and what others have heard about you shapes what they offer you before you've said a word. Men who dismiss this tend to be chronically underestimated — and chronically frustrated that their actual capability doesn't translate into actual outcomes.</p>
+
+    <h3>Leverage — what you have that others need</h3>
+    <p>Leverage is the specific thing — a skill, a resource, a relationship, information, access — that gives you an advantage in a particular situation. It is not permanent and it is not universal. A man who has leverage in one context may have none in another.</p>
+    <p>The question is whether you know what your leverage is, in the specific situations that matter to you. Most men have more leverage than they use, because they've never taken stock of what they actually bring to a table.</p>
+
+    <div class="callout">
+      <strong>The compound effect:</strong> options, perception, and leverage build on each other. A man with strong options is harder to pressure, which improves his perception. Better perception brings more opportunities, which builds leverage. Leverage creates more options. The game rewards men who understand this cycle and deliberately build it — and punishes those who don't.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Be specific. "I don't really think about power" is the most revealing answer you can give — and it's not an acceptable one to stop at.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Power Map — In the most important areas of your life right now (work, finances, relationships, social), who actually has the most influence over outcomes? Where do you sit in those structures — and is that where you want to be?</p>
+      <p class="card-hint">Be specific about people, not categories. Not "my boss has power" but "my boss controls my income and I have no alternative, which means I accept conditions I otherwise wouldn't." Map the actual structure.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"In my work situation, the person with the most actual power over my outcomes is... because..."</p>
+        <p>"In the area of my life where I have the least power right now, the dynamic looks like..."</p>
+        <p>"The power structure I've been pretending doesn't exist is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Naive Tax — Think of a specific situation where you lost something significant — an opportunity, money, a position, respect — that you attributed at the time to bad luck, unfairness, or someone else's failure. Looking back now: was it actually the cost of not understanding the dynamics at play?</p>
+      <p class="card-hint">This is not about self-blame. It's about honest audit. If someone outmaneuvered you and you didn't see it coming, the question is what you'd need to understand to avoid the same outcome next time.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"A situation where I lost something and called it bad luck, but looking back was probably..."</p>
+        <p>"The dynamic I didn't see at the time was..."</p>
+        <p>"What I'd do differently, now that I understand it better, is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">Your Leverage — What do you actually have that others need or want? Skills, knowledge, access, relationships, resources, attention, time? Where is your leverage strongest right now — and where are you bringing nothing to the table?</p>
+      <p class="card-hint">Most men underestimate their leverage because they've never inventoried it. Write the specific things — not vague qualities. "I'm reliable" is not leverage. "I am the only person in my company who can X, which means Y depends on me" is leverage.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The specific thing I bring that is genuinely hard to replace is..."</p>
+        <p>"The context where my leverage is strongest right now is... because..."</p>
+        <p>"The area where I currently have no leverage — nothing to offer or trade — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Perception Gap — How do the people who matter most in your key contexts actually perceive you right now? Not how you want to be seen — how you are actually seen. Where does that perception help you, and where does it cost you?</p>
+      <p class="card-hint">Don't answer this from your own vantage point. Think about what specific people — your employer, key contacts, the people you're trying to influence — would actually say about you. What do they tell each other? What do they assume about you without asking?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"If the key people in my work/financial life described me to someone else, they would say..."</p>
+        <p>"The perception of me that is costing me the most right now is..."</p>
+        <p>"The gap between how I see myself and how I'm actually seen is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">Moving or Being Moved — In the most important areas of your life right now, are you shaping outcomes or reacting to them? Are you setting the terms, or accepting the terms set by others? Be honest about which areas you are actually in control of — and which ones are controlling you.</p>
+      <p class="card-hint">This is not about whether you're "in charge." It's about agency — whether your choices are genuinely driving your outcomes, or whether you're mostly responding to what others have decided. The areas where you have the least agency are the areas where you have the most work to do.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The area of my life where I am most reactive — responding rather than directing — is..."</p>
+        <p>"The situation where I am most clearly setting the terms rather than accepting them is..."</p>
+        <p>"The area where I most need to move from reactive to proactive is... and the first step is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- POWER AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Power Audit</h2>
+    <p class="section-sub">Map your current power position across four key contexts. For each: who holds influence, where you sit, what leverage you have, and what you want to change.</p>
+
+    <div class="callout">
+      <strong>The goal:</strong> not to find out how powerful you are, but to see each situation clearly. You cannot change a dynamic you haven't mapped.
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="power-tabs" id="power-tabs">
+        <button class="power-tab active" onclick="switchPower(0)">Work <span class="tab-dot"></span></button>
+        <button class="power-tab" onclick="switchPower(1)">Finances <span class="tab-dot"></span></button>
+        <button class="power-tab" onclick="switchPower(2)">Social <span class="tab-dot"></span></button>
+        <button class="power-tab" onclick="switchPower(3)">Romantic <span class="tab-dot"></span></button>
+      </div>
+      <div id="power-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- OPTIONS INVENTORY -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Options Inventory</h2>
+    <p class="section-sub">Rate how many genuine options you have in five key life areas. Then map what having no options actually costs you — and what building real options would require.</p>
+
+    <div class="callout">
+      Options are the foundation of power. A man with one employer and no other income is trapped. A man with two income streams and a third in development is negotiating from strength. Rate honestly — then build.
+    </div>
+
+    <div class="card" style="margin-top: 28px;" id="options-card">
+      <!-- Built by JS -->
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, find one situation where you can observe the power structure before engaging with it.</p>
+
+    <div class="belief-display">
+      "I don't play to dominate. I play to have options."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that fits your specific situation — what does building options look like for you right now?</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Application Journal</p>
+      <p class="card-hint">Each day, note one situation where you saw a power dynamic you would previously have missed — or one decision you made from a position of more options than before.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: Today I noticed a power dynamic I would have missed before — ...&#10;Day 2: A situation where I moved with more leverage than usual was...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Observation Week</h2>
+    <p class="section-sub">Do this before you move to Module 6. It costs nothing and pays disproportionately.</p>
+
+    <div class="truth-block">
+      <p>For the next seven days, before you participate in any significant interaction, spend thirty seconds mapping the room first.</p>
+    </div>
+
+    <p>Every meeting, negotiation, social event, difficult conversation — before you engage, pause. Who is in this room? Who defers to whom? Who is being paid attention to and who is being ignored? What does each person want from this interaction? What do I want? What leverage does each person have?</p>
+    <p>You are not doing this to be manipulative. You are doing this to see clearly. Most men walk into every room essentially blind — they engage with the surface conversation while an entirely different conversation is happening underneath. <strong>This week, start seeing both.</strong></p>
+    <p>Write down what you observe. The patterns will start to become visible within a few days.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Observations</p>
+      <p class="card-hint">Each day, describe one interaction where you mapped the room before engaging. What did you see that you would have missed? What did that awareness change about how you moved?</p>
+      <textarea class="journal-area" id="challenge-obs" placeholder="Day 1: Before [situation], I noticed...&#10;What I would have missed without looking first was...&#10;&#10;Day 2: " rows="10" oninput="autoSave('challenge-obs', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-obs-count">0 characters</span><span class="save-indicator" id="challenge-obs-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">End of Week — What did you learn?</p>
+      <p class="card-hint">After seven days of deliberate observation: what patterns did you see repeatedly? What surprised you? What changed about how you moved once you could see the structure?</p>
+      <textarea class="journal-area" id="challenge-reflect" placeholder="The pattern I saw most consistently was...&#10;&#10;The thing that surprised me most was...&#10;&#10;What changed about how I moved was..." rows="7" oninput="autoSave('challenge-reflect', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-reflect-count">0 characters</span><span class="save-indicator" id="challenge-reflect-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I completed the Observation Week</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. If you've never thought seriously about power before, a 3 on the Power Audit is more honest than a 5.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Power Audit across all four contexts — specifically, naming real people and real dynamics, not abstractions.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can identify at least one specific situation where I paid the naive tax — and I understand what dynamic I missed.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Options Inventory and identified the areas where I have the least options — and what building them would require.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Observation Week — seven days of mapping the room before participating.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can articulate the difference between power as domination and power as options — and I know which areas of my life I need more of the latter.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 5. Selected for rigour, not for comfort. These are the books that will change how you read every room.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">The 48 Laws of Power — Robert Greene (Laws 1, 6, 10, 25, 34)</p>
+        <p class="resource-desc">Read selectively: Law 1 (never outshine the master), Law 6 (court attention at all costs), Law 10 (avoid the unhappy and unlucky), Law 25 (re-create yourself), Law 34 (be royal in your own fashion). Not a manual for manipulation — a map of how power has always moved between humans. Greene describes reality; what you do with it is yours to decide.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Influence — Robert Cialdini</p>
+        <p class="resource-desc">The six principles of persuasion — reciprocity, commitment, social proof, authority, liking, scarcity — are the mechanics of how influence actually moves in human interaction. Read this as a map, not a manipulation manual. Understanding these principles is the difference between being moved by them unconsciously and seeing them when they're being applied to you.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Art of War — Sun Tzu</p>
+        <p class="resource-desc">Short, dense, and still the most useful framework for strategic thinking available. The core insight: victory goes to the man who understands the terrain, knows his own strengths and limitations, and doesn't fight battles he isn't positioned to win. Read it as a thinking framework, not a military text.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Robert Greene — The Laws of Human Nature (lecture)</p>
+        <p class="resource-desc">Greene's framework for understanding what actually drives human behaviour beneath the stated reasons. People rarely do what they say they're doing or want what they say they want. Learning to read the deeper motivations in a room is the skill this module is building toward.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You can see the room now. Module 6 is about building the leverage that changes your position in it.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m5';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    powerContexts: Array.from({length:4}, () => ({ influence:'', position:'', leverage:'', change:'' })),
+    optionsRatings: [0, 0, 0, 0, 0],
+    optionsNotes: ['','','','','']
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'belief-version','belief-decisions',
+    'challenge-obs','challenge-reflect'
+  ];
+
+  const POWER_CONTEXTS = [
+    { name: 'Work / Career',
+      p_influence: 'e.g. "My manager controls my income, promotion, and daily conditions"',
+      p_position: 'e.g. "I have specialist knowledge they need but no formal authority"',
+      p_leverage: 'e.g. "I\'m the only one who can do X — but I\'ve never used that"',
+      p_change: 'e.g. "Build an external option so I\'m not dependent on one employer"' },
+    { name: 'Finances',
+      p_influence: 'e.g. "My landlord, my employer, debt obligations"',
+      p_position: 'e.g. "One income source, no savings buffer, high fixed costs"',
+      p_leverage: 'e.g. "A skill I could monetise but haven\'t"',
+      p_change: 'e.g. "Create a second income stream within 6 months"' },
+    { name: 'Social / Peers',
+      p_influence: 'e.g. "X sets the frame for most of our group\'s decisions"',
+      p_position: 'e.g. "I\'m well-liked but rarely shape where things go"',
+      p_leverage: 'e.g. "I have access / connections others in the group don\'t"',
+      p_change: 'e.g. "Start setting the frame more — initiate rather than follow"' },
+    { name: 'Romantic',
+      p_influence: 'e.g. "I pursue more than I\'m pursued — which gives her more power"',
+      p_position: 'e.g. "I have low options which makes me accept more than I should"',
+      p_leverage: 'e.g. "What I genuinely offer that is rare"',
+      p_change: 'e.g. "Build options so my choices are genuine, not default"' }
+  ];
+
+  const OPTIONS_AREAS = [
+    { label: 'Income & Money', desc: 'How many genuine ways do you have to earn? If your primary source disappeared today, what else exists?' },
+    { label: 'Career & Skills', desc: 'How employable are you outside your current role? How in-demand is what you know?' },
+    { label: 'Relationships', desc: 'In your key relationships, are you there by choice — or because you have no realistic alternative?' },
+    { label: 'Living & Location', desc: 'Are you where you are by design? Do you have the means to change it if needed?' },
+    { label: 'Health & Energy', desc: 'Your physical capacity is a form of optionality. How many things can you not do because of your current physical state?' }
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.powerContexts || state.powerContexts.length !== 4) state.powerContexts = Array.from({length:4}, () => ({ influence:'', position:'', leverage:'', change:'' }));
+        if (!state.optionsRatings || state.optionsRatings.length !== 5) state.optionsRatings = [0,0,0,0,0];
+        if (!state.optionsNotes || state.optionsNotes.length !== 5) state.optionsNotes = ['','','','',''];
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const pFilled = state.powerContexts.filter(c => c.influence.trim().length > 3 && c.position.trim().length > 3).length;
+    pts += Math.min(10, pFilled * 2.5);
+    const oRated = state.optionsRatings.filter(r => r > 0).length;
+    pts += Math.min(5, oRated);
+    const oNoted = state.optionsNotes.filter(n => n.trim().length > 10).length;
+    pts += Math.min(5, oNoted);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const co = document.getElementById('challenge-obs'); if (co && co.value.trim().length > 30) pts += 4;
+    const cr = document.getElementById('challenge-reflect'); if (cr && cr.value.trim().length > 20) pts += 3;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== POWER AUDIT =====
+  let currentPower = 0;
+
+  function buildPowerPanels() {
+    const container = document.getElementById('power-panels');
+    container.innerHTML = '';
+    POWER_CONTEXTS.forEach((ctx, i) => {
+      const c = state.powerContexts[i];
+      const panel = document.createElement('div');
+      panel.className = 'power-panel' + (i === 0 ? ' active' : '');
+      panel.id = `powerp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">Map your power position in the context of <strong style="color:var(--deep-vault)">${ctx.name}</strong>.</p>
+        <div class="power-field">
+          <label>Who holds the most influence here — and how</label>
+          <textarea rows="2" placeholder="${ctx.p_influence}" oninput="updatePowerField(${i},'influence',this.value)">${c.influence}</textarea>
+        </div>
+        <div class="power-field">
+          <label>Where you currently sit in this structure</label>
+          <textarea rows="2" placeholder="${ctx.p_position}" oninput="updatePowerField(${i},'position',this.value)">${c.position}</textarea>
+        </div>
+        <div class="power-field">
+          <label>Your leverage — what you have that others need</label>
+          <textarea rows="2" placeholder="${ctx.p_leverage}" oninput="updatePowerField(${i},'leverage',this.value)">${c.leverage}</textarea>
+        </div>
+        <div class="power-field">
+          <label>What you want to change — one concrete move</label>
+          <textarea rows="2" placeholder="${ctx.p_change}" oninput="updatePowerField(${i},'change',this.value)">${c.change}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updatePowerTabIndicators();
+  }
+
+  function switchPower(idx) {
+    currentPower = idx;
+    document.querySelectorAll('.power-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.power-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updatePowerField(ctxIdx, field, value) {
+    state.powerContexts[ctxIdx][field] = value;
+    save(); updatePowerTabIndicators(); updateProgress();
+  }
+
+  function updatePowerTabIndicators() {
+    document.querySelectorAll('.power-tab').forEach((tab, i) => {
+      const c = state.powerContexts[i];
+      tab.classList.toggle('filled', !!(c.influence.trim() || c.position.trim()));
+    });
+  }
+
+  // ===== OPTIONS INVENTORY =====
+  function buildOptionsCard() {
+    const card = document.getElementById('options-card');
+    card.innerHTML = '';
+    OPTIONS_AREAS.forEach((area, i) => {
+      const rating = state.optionsRatings[i];
+      const note = state.optionsNotes[i];
+      const item = document.createElement('div');
+      item.className = 'options-item';
+      const ratings = [1,2,3,4,5].map(n => {
+        let cls = 'opt-btn';
+        if (rating === n) cls += n <= 2 ? ' selected-low' : n === 3 ? ' selected-mid' : ' selected-high';
+        return `<button class="${cls}" onclick="setOptionRating(${i},${n},this)">${n}</button>`;
+      }).join('');
+      item.innerHTML = `
+        <p class="options-label">${area.label}</p>
+        <p class="options-desc">${area.desc}</p>
+        <div class="options-rating" data-opt="${i}">${ratings}</div>
+        <p style="font-size:0.72rem;color:var(--security-gray);margin-bottom:10px;">1–2 = trapped &nbsp;|&nbsp; 3 = limited &nbsp;|&nbsp; 4–5 = genuine options</p>
+        <div class="options-field">
+          <label>What having no options here costs you — and what building them would require</label>
+          <textarea rows="3" placeholder="The cost of low options here is... Building real options would require..." oninput="updateOptionNote(${i},this.value)">${note}</textarea>
+        </div>`;
+      if (i < OPTIONS_AREAS.length - 1) {
+        const divider = document.createElement('div');
+        divider.style.cssText = 'margin:8px 0 20px;height:1px;background:var(--sg-border);';
+        item.appendChild(divider);
+      }
+      card.appendChild(item);
+    });
+  }
+
+  function setOptionRating(idx, value, btn) {
+    state.optionsRatings[idx] = value;
+    const wrap = btn.closest('.options-rating');
+    wrap.querySelectorAll('.opt-btn').forEach((b, i) => {
+      b.classList.remove('selected-low','selected-mid','selected-high');
+      const n = i + 1;
+      if (n === value) b.classList.add(n <= 2 ? 'selected-low' : n === 3 ? 'selected-mid' : 'selected-high');
+    });
+    save(); updateProgress();
+  }
+
+  function updateOptionNote(idx, value) {
+    state.optionsNotes[idx] = value;
+    save(); updateProgress();
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I completed the Observation Week</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You read about power. You didn't map your actual situation. The Power Audit only counts if you named real people and real dynamics. Go back. Be specific.";
+    else if (total <= 20) msg = "Good start. You can see the structures now. The Observation Week habit is worth keeping permanently — not just this week. Carry it into Module 6.";
+    else msg = "You did this properly. You mapped your real position, identified where you have low options, and spent a week seeing rooms before you entered them. That changes your trajectory.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.powerContexts.filter(c => c.influence.trim().length>3 && c.position.trim().length>3).length >= 3,
+      exercise: state.optionsRatings.filter(r => r > 0).length >= 4,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.power-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.power-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 5: THE GAME\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Power Map'],['r2','Q2 — The Naive Tax'],['r3','Q3 — Your Leverage'],['r4','Q4 — The Perception Gap'],['r5','Q5 — Moving or Being Moved']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE POWER AUDIT\n${ln('-',30)}\n\n`;
+    POWER_CONTEXTS.forEach((ctx, i) => {
+      const c = state.powerContexts[i];
+      out += `${ctx.name}\n`;
+      out += `  Who holds influence: ${c.influence||'(not filled)'}\n`;
+      out += `  Where I sit: ${c.position||'(not filled)'}\n`;
+      out += `  My leverage: ${c.leverage||'(not filled)'}\n`;
+      out += `  What I want to change: ${c.change||'(not filled)'}\n\n`;
+    });
+
+    out += `THE OPTIONS INVENTORY\n${ln('-',30)}\n\n`;
+    OPTIONS_AREAS.forEach((area, i) => {
+      out += `${area.label}: ${state.optionsRatings[i]>0?state.optionsRatings[i]+'/5':'not rated'}\n`;
+      out += `  ${state.optionsNotes[i]||'(not filled)'}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Application Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `WEEKLY CHALLENGE — THE OBSERVATION WEEK\n${ln('-',30)}\n\nDaily Observations:\n${val('challenge-obs')}\n\nEnd of Week Reflection:\n${val('challenge-reflect')}\nCompleted: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Completed Power Audit — real people, real dynamics','Identified a specific naive tax situation','Completed Options Inventory — rated and noted all 5 areas','Completed the Observation Week','Can articulate power as options vs. domination'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-5-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildPowerPanels();
+    buildOptionsCard();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
