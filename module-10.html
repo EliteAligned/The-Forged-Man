@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 10: How the World Actually Works — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '10'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== ENVIRONMENT MAP TABS ===== */
+    .env-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .env-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .env-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .env-tab:hover:not(.active) { color: var(--deep-vault); }
+    .env-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .env-tab.filled .tab-dot { opacity: 1; }
+    .env-panel { display: none; padding: 24px 0 0; }
+    .env-panel.active { display: block; }
+    .env-field { margin-bottom: 16px; }
+    .env-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .env-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .env-field textarea:focus { border-color: var(--banknote-green); }
+    .env-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== SITUATION ANALYSIS ===== */
+    .analysis-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .analysis-step-header { padding: 14px 20px; background: rgba(11,107,77,0.03); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .analysis-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(11,107,77,0.2); line-height: 1; flex-shrink: 0; }
+    .analysis-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .analysis-step-body { padding: 20px; }
+    .analysis-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .analysis-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .analysis-field textarea:focus { border-color: var(--banknote-green); }
+    .analysis-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .env-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .env-field textarea, .analysis-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .env-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 10 — How the World Actually Works</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> The Five Frameworks</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Environment Map</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Situation Analysis</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 10 of 16 — Pillar IV: Power</p>
+    <h1>How the World <span>Actually Works</span></h1>
+    <p class="hero-tagline">"The world runs on incentives, not intentions. Ignoring this makes you permanently reactive."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 mapping exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Map Most Men Are Using Is Wrong</h2>
+    <p class="section-sub">Not wrong in detail — wrong in its fundamental assumptions about what drives human behavior and how outcomes are produced.</p>
+
+    <p>Most men operate with a model of the world that was handed to them in childhood and never seriously examined. In this model, institutions exist to serve the purposes they claim. People act primarily from stated reasons. Effort and merit are the primary determinants of outcomes. Fairness is a reliable feature of well-functioning systems. Good intentions produce good results.</p>
+    <p>These beliefs are comforting. They are also systematically wrong in ways that keep well-meaning men confused, reactive, and unable to build real leverage. Not wrong occasionally — wrong as a general operating model for understanding human behavior in organizations, relationships, and society.</p>
+    <p><strong>The man who insists on operating from the comforting model is not principled. He is naive.</strong> And naivety is not a neutral position — in the real world, it is a tax paid continuously in outcomes you don't understand, opportunities you don't see, and situations you keep finding yourself in without knowing how you got there.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>This module is not about cynicism. Cynicism is just the naive model with the signs reversed — instead of assuming good intentions everywhere, it assumes bad ones. Both are wrong for the same reason: they substitute a simple story for an accurate map.</p>
+    <p>What this module builds is a more accurate map — one that explains human behavior not by what people say they value, but by what they are rewarded for. Not by who the org chart says has power, but by who actually controls decisions. Not by what the facts are, but by what narrative is winning. <strong>Seeing clearly is not cynicism. It is the prerequisite for acting effectively.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>People Do What They Are Rewarded For</h2>
+    <p class="section-sub">Not what they say they value. Not what they believe they should do. What they are actually, concretely rewarded for — and this explains almost everything that otherwise seems irrational.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #10</p>
+      <p>"The world does not run on merit, fairness, or stated intentions. It runs on incentives, power, and narrative. The man who doesn't see this clearly isn't above the game — he's playing it blind."</p>
+    </div>
+
+    <p>Consider how many situations in your own experience have felt unfair, irrational, or inexplicable. The colleague who gets promoted despite obvious mediocrity. The institution that claims one set of values and systematically produces outcomes incompatible with them. The person whose behavior contradicts everything they say they believe. The system that keeps producing the same bad outcome despite everyone agreeing it's bad.</p>
+    <p>In almost every case, the explanation is not moral failure or stupidity. The explanation is incentives. <strong>Show someone's incentive structure and you can predict their behavior more reliably than listening to their stated values.</strong> The colleague who gets promoted makes his manager look good. The institution that produces bad outcomes has a funding structure that rewards those outcomes. The person whose behavior contradicts their values is responding to social incentives that run opposite to their stated ones.</p>
+
+    <h3>The morality trap</h3>
+    <p>The standard response to incentive analysis is moral objection: "people should do what's right regardless of incentives." This is true as a moral claim and largely irrelevant as a predictive model. When you design a system, policy, or relationship, you must design it around how people actually behave — not how you believe they should. The idealist who builds institutions around hoped-for virtue produces institutions that work badly when populated by ordinary humans. <strong>Incentive design is not cynicism. It is engineering.</strong></p>
+
+    <div class="callout warning">
+      <strong>The good intentions problem:</strong> Most of the damage done in the world is done by people with good intentions operating inside bad incentive structures. The bureaucrat who creates unnecessary complexity is not evil — he is responding to a system that rewards activity over results. The manager who avoids hard conversations is not cowardly in every domain of his life — he is responding to an incentive structure that punishes conflict. Understanding this makes you more useful, not less moral.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Five Frameworks for Seeing Clearly</h2>
+    <p class="section-sub">Not a complete theory of everything — five specific lenses that explain the largest portion of what most men find confusing about human behavior and social outcomes.</p>
+
+    <h3>1. Incentives over intentions</h3>
+    <p>The single most predictive lens available. Before trying to understand why someone behaves the way they do, map what they are rewarded for — financially, socially, professionally, emotionally. Then map what they are punished for, even implicitly. The behavior that seems inexplicable or irrational will almost always make sense through this lens. People are not primarily driven by stated values. They are driven by the reward structures they live inside. <strong>Change the incentives and the behavior changes, even if nothing else does.</strong></p>
+
+    <h3>2. Power maps, not org charts</h3>
+    <p>Official hierarchies describe formal authority. Real power — the ability to make things happen, block things, or shape decisions — almost never follows the org chart exactly. Real power lives with whoever controls the information flow, whoever has the relationships that matter, whoever is irreplaceable in practice, whoever has the credibility to define what counts as a problem. In most organizations and social environments, the man who has mapped the real power structure is operating in a different game from the man reading the official one. <strong>Find out who the decisions actually go through, not who they officially go to.</strong></p>
+
+    <h3>3. Narrative as operating reality</h3>
+    <p>In the short and medium term, the story told about a situation matters more than the facts of it. This is not a claim about truth — it is a claim about how human cognition and social consensus actually work. People do not primarily process raw information. They process stories. The person who controls the narrative around a situation — who sets the frame, who gets to define what the relevant facts are, what analogy applies — has enormous influence over how that situation resolves. <strong>Being factually correct and narratively losing is a losing position.</strong> Understanding narrative is not manipulation — it is literacy.</p>
+
+    <h3>4. Skin in the game</h3>
+    <p>Nassim Taleb's most important insight: the quality of advice, analysis, and decision-making is largely determined by whether the advisor bears personal consequences if they are wrong. The consultant who will not live with the outcome gives different advice from the operator who will. The commentator who bears no personal cost for being wrong is structurally incentivised toward confidence over accuracy. The policy-maker who does not live under the policies he designs will design them differently from the people who do. <strong>When taking advice or allocating authority, always ask: what happens to this person if they are wrong?</strong></p>
+
+    <h3>5. Systems over individuals</h3>
+    <p>Most outcomes — good and bad — are produced more by the structure of the system than by the character of the individuals within it. Put good people in a badly designed system and you get bad outcomes. Put ordinary people in a well-designed system and you get reliable results. This cuts both ways: it means you should be slower to blame individuals for systemic failures, and faster to examine the structure when things go wrong. It also means that changing one individual rarely changes the system — and that the most leveraged interventions are structural, not personal. <strong>Ask: what is the system producing, and what structure is producing that?</strong></p>
+
+    <div class="callout">
+      <strong>Using these frameworks without losing your compass:</strong> The goal of seeing clearly is not to become someone who exploits, manipulates, or abandons ethics. It is to stop being someone who is routinely surprised, outmaneuvered, or operating from a map that doesn't match the territory. Understanding how power actually works is what allows you to build it legitimately. Understanding incentives is what allows you to design relationships and institutions that actually work.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">These questions require specific, named examples — not abstract agreement with the principles. Generic answers produce no insight. Name the environment, the person, the situation.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Incentive Map — Choose one institution, organisation, or environment you operate in. Map the actual incentives — not the stated values or mission, but what people are concretely rewarded for and what gets implicitly punished. Now look at the behavior that has frustrated or confused you in that environment. How much of it makes sense through the incentive lens?</p>
+      <p class="card-hint">Be specific about the environment and specific about the incentives. Not "people are incentivised to look good" — who, for what, in what form, with what consequences for the alternative? The level of specificity determines the usefulness of the analysis. Vague incentive analysis produces vague insight.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The environment I'm mapping is... The official values or stated purpose are... The actual incentives — what people are rewarded for — are..."</p>
+        <p>"The behavior that has most confused or frustrated me in this environment is... Mapped against the actual incentives, the explanation is..."</p>
+        <p>"What someone who understood the real incentive structure would do differently in this environment is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Power Map — In one environment you operate in regularly (work, a community, a social group), who actually has influence? Not who officially has it, but who decisions actually go through. Who can make things happen without formal authority? Who can quietly block things? Who controls the information that matters? How does the real map differ from the official one?</p>
+      <p class="card-hint">Real power often lives with gatekeepers, information brokers, and indispensable operators rather than official titles. The EA to the CEO. The informal social anchor of the group. The person everyone checks with before the meeting, not in it. Mapping this is not cynical — it is understanding the terrain you operate in. You cannot navigate a landscape you haven't mapped.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The environment I'm mapping is... The official power structure says... The real power structure, based on who decisions actually go through, is..."</p>
+        <p>"The person who has real influence without official authority is... They have it because..."</p>
+        <p>"My position in the real power map is... What this means for how I should operate is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Narrative Question — Where in your own life has narrative determined outcomes more than facts? Where has a story — told by you, about you, or by others — shaped what was possible in ways that raw information alone would not have predicted? And where are you currently losing a narrative battle that you're winning on the facts?</p>
+      <p class="card-hint">Narrative questions are often uncomfortable because they reveal that being right is not sufficient. The person who is factually correct but cannot frame their position compellingly is at a systematic disadvantage relative to the person who is factually weaker but narratively stronger. Understanding this is not giving up on truth — it is understanding the full landscape of how truth operates in social contexts.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"A situation where narrative mattered more than facts in my own experience was..."</p>
+        <p>"The story currently being told about me — or by me — that is shaping my options is..."</p>
+        <p>"The narrative battle I am currently losing despite being factually correct is... The reason the other narrative is winning is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Skin-in-the-Game Audit — In your key relationships and decisions, who bears the consequences if things go wrong? Where do you take advice from or give authority to people who have no personal stake in being right? What decisions have you made recently based primarily on advice from someone who bore no personal cost for being wrong — and how did those decisions turn out?</p>
+      <p class="card-hint">The skin-in-the-game principle applies as much to your own advice as to advice you receive. When you advise someone on something where you bear no consequence if you're wrong, you will give different advice than when you do. Applying this principle to yourself — only advising confidently when you have genuine stakes — is as important as applying it as a filter for whose advice you trust.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The key areas where I currently take advice from people with no skin in the game are..."</p>
+        <p>"A recent decision I made based on advice from someone who bore no cost for being wrong was... The outcome was..."</p>
+        <p>"The person whose advice I should weight more heavily because they have direct skin in the game is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Systems Question — Where have you been blaming individuals for outcomes that were actually produced by the structure of a system? And where have you been expecting individual effort or willpower to overcome a structural disadvantage — in your own life or in others'? What is a system in your life that keeps producing the same bad outcome, and what is the structural feature producing it?</p>
+      <p class="card-hint">The systems lens is humbling in both directions. It makes you slower to blame people and faster to examine structure. It also makes you more honest about why your own repeated failures in a particular domain are not purely about character or effort — there is usually a structural feature that keeps producing the same result. The question is what the structure is, not whether you tried hard enough.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"A situation where I have been blaming an individual for a systemic outcome is... The structural feature actually producing it is..."</p>
+        <p>"A repeated failure in my own life that is likely structural rather than purely characterological is... The structural feature I haven't changed is..."</p>
+        <p>"The highest-leverage structural change I could make — to a system I operate in or one I control — would be..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ENVIRONMENT MAP -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Environment Map</h2>
+    <p class="section-sub">Choose one environment you operate in — your workplace, an organisation, a social structure — and map it across five dimensions. The goal is a more accurate operating model of one environment you navigate regularly.</p>
+
+    <div class="callout">
+      <strong>Pick one specific environment and map it completely.</strong> A partial map of five environments is less useful than a complete map of one. Choose the environment where an accurate map would have the highest immediate impact on your decisions and position.
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:8px;">Environment being mapped</p>
+      <p class="card-hint" style="margin-bottom:10px;">Name it specifically — not "work" but the specific team, organisation, or structure. The more specific the environment, the more useful the map.</p>
+      <textarea class="journal-area" id="env-name" placeholder="e.g. The sales team at [Company X]. The committee at [Organisation Y]. My extended social group centred on [Z]." rows="2" style="min-height:60px;" oninput="autoSave('env-name', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="env-name-count">0 characters</span><span class="save-indicator" id="env-name-saved">Saved</span></div>
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 8px;">
+      <div class="env-tabs" id="env-tabs">
+        <button class="env-tab active" onclick="switchEnv(0)">Incentives <span class="tab-dot"></span></button>
+        <button class="env-tab" onclick="switchEnv(1)">Power <span class="tab-dot"></span></button>
+        <button class="env-tab" onclick="switchEnv(2)">Narrative <span class="tab-dot"></span></button>
+        <button class="env-tab" onclick="switchEnv(3)">Leverage <span class="tab-dot"></span></button>
+        <button class="env-tab" onclick="switchEnv(4)">My Position <span class="tab-dot"></span></button>
+      </div>
+      <div id="env-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- SITUATION ANALYSIS -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Situation Analysis</h2>
+    <p class="section-sub">Apply the five frameworks to one specific situation you currently find frustrating, confusing, or stuck. The goal is a complete re-read of one real situation using accurate lenses.</p>
+
+    <div class="callout">
+      <strong>Choose a situation with real stakes.</strong> Not a hypothetical, not an abstract grievance — a specific, live situation where getting a more accurate read would change what you do. The value of this exercise is entirely proportional to how honestly you engage with it.
+    </div>
+
+    <div id="analysis-steps" style="margin-top:28px;"></div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, apply the incentive lens to one situation before reacting to it — and record what you see differently.</p>
+
+    <div class="belief-display">
+      "I see the game as it is. That's the only way to play it well."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that is most true to your current situation — what does seeing clearly look like in the specific environment you are navigating right now?</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Clarity Journal</p>
+      <p class="card-hint">Each day this week, apply the incentive lens to one situation before reacting. What was the situation? What did you see when you mapped the incentives? What would you have done differently without the lens?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="Day 1: The situation was... Mapping the incentives revealed... Without this lens I would have...&#10;Day 2: &#10;Day 3: " rows="8" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Incentive Pause</h2>
+    <p class="section-sub">Do this before moving to Module 11. Seven days of deliberate lens application before reaction.</p>
+
+    <div class="truth-block">
+      <p>For seven days: before reacting to any frustrating or confusing situation, pause and map the incentive structure first. What does this person or institution get rewarded for? What explains this behavior if they are rational actors inside their incentive structure?</p>
+    </div>
+
+    <p>The Incentive Pause is simple: any time you find yourself reacting with frustration, confusion, or moral indignation to someone's behavior, stop before responding. Take 60 seconds to map the incentives. Ask: what would a rational person do if they were rewarded for what this person is rewarded for and punished for what this person is punished for? Does the behavior make sense now?</p>
+    <p>This practice does not excuse bad behavior or prevent you from addressing it. It gives you an accurate diagnosis before you respond — and accurate diagnoses produce better responses than moral reactions. <strong>The goal is not to feel neutral. It is to act effectively.</strong></p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Seven-Day Incentive Pause Log</p>
+      <p class="card-hint">Each day, log one instance where you applied the Incentive Pause before reacting. What was the situation? What did mapping the incentives reveal? How did your response change as a result?</p>
+      <textarea class="journal-area" id="challenge-log" placeholder="Day 1: Situation — [X] behaved in a way that seemed [Y]. Incentive map: they are rewarded for... punished for... So the behavior makes sense because... My response, given this, was...&#10;Day 2: &#10;Day 3: &#10;Day 4: &#10;Day 5: &#10;Day 6: &#10;Day 7: " rows="14" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I completed the seven-day Incentive Pause</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. The test is not whether you understood the concepts — it is whether you applied them specifically to your own life.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I mapped the incentive structure of a real environment I operate in — specifically enough to explain at least one behavior that previously seemed irrational or unfair.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Environment Map across all five dimensions — incentives, power, narrative, leverage, and my position — for one specific environment I operate in.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Situation Analysis — applying all five frameworks to a specific live situation — and I identified at least one concrete thing I would do differently as a result.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I ran the Incentive Pause for seven days — applying it at least once per day to a real situation before reacting, and logging what I saw differently as a result.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">My model of at least one environment I operate in has changed as a result of this module — I am operating from a more accurate map than I was before I started.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 10. These are the clearest treatments of incentives, power, narrative, and systems thinking available — each addresses a different dimension of how the world actually works.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">Influence — Robert Cialdini</p>
+        <p class="resource-desc">The most rigorous account of the psychological mechanisms that drive human compliance and behavior. Cialdini's six principles — reciprocity, commitment, social proof, authority, liking, scarcity — are not manipulation tactics. They are descriptions of how human decision-making actually works under conditions of uncertainty. Understanding them makes you both more effective at persuasion and far harder to manipulate. The updated edition includes unity as a seventh principle, which is worth the read on its own.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Skin in the Game — Nassim Nicholas Taleb</p>
+        <p class="resource-desc">Taleb's most practically useful book. The central argument — that those who make decisions should bear the consequences of those decisions, and that much of modern institutional dysfunction comes from the separation of decision-making from consequence — is one of the most useful analytical lenses available. The chapters on the intellectual-yet-idiot, the minority rule, and the lindy effect are each worth the price of the book independently.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Thinking in Systems — Donella Meadows</p>
+        <p class="resource-desc">The clearest introduction to systems thinking available. Meadows' framework — stocks, flows, feedback loops, leverage points — gives you the vocabulary and the analytical tools to diagnose why systems produce the outcomes they do, and where the highest-leverage interventions are. Her list of places to intervene in a system (in order of increasing effectiveness) is one of the most genuinely useful frameworks in this entire reading list.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Laws of Human Nature — Robert Greene</p>
+        <p class="resource-desc">Greene's most ambitious work — a synthesis of psychology, history, and behavioural observation into a framework for understanding what actually drives human behavior beneath the surface of stated reasons and conscious intentions. Read it as a map of psychological patterns, not as a manual for manipulation. The laws on self-sabotage, grandiosity, compulsive behaviour, and the shadow are particularly useful for understanding your own patterns as much as others'.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You have a clearer map. Module 11 uses it — taking the power lens into the specific domain of reputation, perception, and how you are seen before you speak.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m10';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    envMap: Array.from({length:5}, () => ({ a:'', b:'' })),
+    analysis: Array.from({length:5}, () => ({ field:'' }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'env-name',
+    'belief-version','belief-journal',
+    'challenge-log'
+  ];
+
+  const ENV_DIMENSIONS = [
+    {
+      name: 'Incentives',
+      desc: 'What people in this environment are actually rewarded for — financially, socially, professionally — and what gets implicitly punished.',
+      qa: 'What are people actually rewarded for here?',
+      qb: 'What gets punished, even if subtly or informally?',
+      pa: 'e.g. "Activity over results. Looking busy over being effective. Not making waves over raising genuine problems."',
+      pb: 'e.g. "Being the bearer of bad news. Challenging the status quo publicly. Standing out negatively even when right."'
+    },
+    {
+      name: 'Power Structure',
+      desc: 'Who actually has influence — the ability to make things happen, block things, or shape decisions — versus who officially has authority.',
+      qa: 'Who are the real power nodes — people decisions actually go through?',
+      qb: 'Where does your official map diverge most from the real map?',
+      pa: 'e.g. "The ops director who controls all budget approvals regardless of what the org chart says. The EA who filters all access to the CEO."',
+      pb: 'e.g. "The VP of Sales nominally has authority over [X] but actually defers to [Y] on every significant call."'
+    },
+    {
+      name: 'Narrative',
+      desc: 'The stories being told about this environment — what the dominant frame is, who controls it, and what stories about you or your work are circulating.',
+      qa: 'What is the dominant narrative in this environment right now?',
+      qb: 'Who controls the narrative, and what story is being told about your position in it?',
+      pa: 'e.g. "The team is high-performing and undervalued. The story being told upward is that growth is limited by resourcing, not execution."',
+      pb: 'e.g. "The narrative about me is [X]. This is being shaped primarily by [Y]. The gap between this narrative and reality is..."'
+    },
+    {
+      name: 'Leverage Points',
+      desc: 'Where in this environment small moves produce outsized effects — the structural nodes, the key relationships, the information flows that matter most.',
+      qa: 'Where are the highest-leverage points in this environment?',
+      qb: 'What is the one structural change that would have the biggest impact on how this environment works?',
+      pa: 'e.g. "The Monday leadership meeting where all resource decisions are pre-framed. Whoever briefs the COO before that meeting sets the agenda."',
+      pb: 'e.g. "If the incentive structure changed to reward [X] instead of [Y], the behavior of the whole system would shift."'
+    },
+    {
+      name: 'My Position',
+      desc: 'Where you actually sit in this map — your real leverage, your vulnerabilities, and the gap between your official position and your actual influence.',
+      qa: 'What is your current position in the real map — what leverage do you actually have?',
+      qb: 'What is the most important thing to change about your position in this environment — and what would it take?',
+      pa: 'e.g. "Technically well-regarded but not in the information flows that matter. My work is valued but my influence on decisions is near zero."',
+      pb: 'e.g. "The change that would most improve my position is building a direct relationship with [X], which currently goes through [Y]."'
+    }
+  ];
+
+  const ANALYSIS_STEPS = [
+    {
+      num: '01',
+      label: 'Name the Situation',
+      fields: [
+        { id: 'sa-situation', label: 'The situation — what is happening, specifically', rows: 3, ph: 'Describe the specific situation: who is involved, what has happened, what is frustrating or confusing about it. Be concrete.' },
+        { id: 'sa-stake', label: 'Your stake — what matters to you here and why', rows: 2, ph: 'What outcome do you want? What are the consequences of the current trajectory?' }
+      ]
+    },
+    {
+      num: '02',
+      label: 'Map the Incentives',
+      fields: [
+        { id: 'sa-incent', label: 'What are the key actors rewarded for in this situation?', rows: 3, ph: 'For each person whose behavior is central to this situation: what do they get rewarded for? What would they lose by acting differently?' },
+        { id: 'sa-rational', label: 'How does the behavior make sense given those incentives?', rows: 2, ph: 'If these people are rational actors responding to their incentive structure, their behavior makes sense because...' }
+      ]
+    },
+    {
+      num: '03',
+      label: 'Map the Power',
+      fields: [
+        { id: 'sa-power', label: 'Who actually controls the outcome here?', rows: 2, ph: 'Not who officially has authority — who actually determines how this resolves?' },
+        { id: 'sa-narrative', label: 'What narrative is winning, and who controls it?', rows: 2, ph: 'What story is being told about this situation? Who is framing it, and whose framing is currently prevailing?' }
+      ]
+    },
+    {
+      num: '04',
+      label: 'Apply Skin in the Game',
+      fields: [
+        { id: 'sa-skin', label: 'Who bears the consequences if this goes wrong?', rows: 2, ph: 'Who has real skin in the game here — including yourself? Whose advice or influence should you weight most heavily as a result?' },
+        { id: 'sa-blind', label: 'Where might you be getting advice from people with no stake in the outcome?', rows: 2, ph: 'Any advisors, opinions, or guidance you are relying on where the person bears no personal cost for being wrong?' }
+      ]
+    },
+    {
+      num: '05',
+      label: 'Identify What to Do Differently',
+      fields: [
+        { id: 'sa-insight', label: 'What does the clearer map reveal that you were missing?', rows: 2, ph: 'What do you understand about this situation now that you did not before applying these frameworks?' },
+        { id: 'sa-action', label: 'What specifically will you do differently as a result?', rows: 3, ph: 'Not a general intention — a specific action, a changed approach, or a decision you are now making differently.' }
+      ]
+    }
+  ];
+
+  const ANALYSIS_FIELD_IDS = ANALYSIS_STEPS.flatMap(s => s.fields.map(f => f.id));
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    ANALYSIS_FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.envMap || state.envMap.length !== 5) state.envMap = Array.from({length:5}, () => ({ a:'', b:'' }));
+      }
+      if (data.texts) {
+        [...TEXT_FIELDS, ...ANALYSIS_FIELD_IDS].forEach(id => {
+          const el = document.getElementById(id);
+          if (el && data.texts[id] !== undefined) { el.value = data.texts[id]; updateCharCount(el); }
+        });
+      }
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const en = document.getElementById('env-name'); if (en && en.value.trim().length > 5) pts += 2;
+    const envFilled = state.envMap.filter(d => d.a.trim().length > 5 || d.b.trim().length > 5).length;
+    pts += Math.min(8, envFilled * 1.6);
+    const analysisFilled = ANALYSIS_FIELD_IDS.filter(id => { const el=document.getElementById(id); return el&&el.value.trim().length>10; }).length;
+    pts += Math.min(6, analysisFilled);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 4;
+    pts += Math.min(4, state.days.filter(Boolean).length);
+    const cl = document.getElementById('challenge-log'); if (cl && cl.value.trim().length > 30) pts += 3;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== ENVIRONMENT MAP =====
+  let currentEnv = 0;
+
+  function buildEnvPanels() {
+    const container = document.getElementById('env-panels');
+    container.innerHTML = '';
+    ENV_DIMENSIONS.forEach((dim, i) => {
+      const d = state.envMap[i];
+      const panel = document.createElement('div');
+      panel.className = 'env-panel' + (i === 0 ? ' active' : '');
+      panel.id = `envp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">${dim.desc}</p>
+        <div class="env-field">
+          <label>${dim.qa}</label>
+          <textarea rows="3" placeholder="${dim.pa}" oninput="updateEnvField(${i},'a',this.value)">${d.a}</textarea>
+        </div>
+        <div class="env-field">
+          <label>${dim.qb}</label>
+          <textarea rows="3" placeholder="${dim.pb}" oninput="updateEnvField(${i},'b',this.value)">${d.b}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateEnvTabIndicators();
+  }
+
+  function switchEnv(idx) {
+    currentEnv = idx;
+    document.querySelectorAll('.env-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.env-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateEnvField(dimIdx, field, value) {
+    state.envMap[dimIdx][field] = value;
+    save(); updateEnvTabIndicators(); updateProgress();
+  }
+
+  function updateEnvTabIndicators() {
+    document.querySelectorAll('.env-tab').forEach((tab, i) => {
+      const d = state.envMap[i];
+      tab.classList.toggle('filled', !!(d.a.trim() || d.b.trim()));
+    });
+  }
+
+  // ===== SITUATION ANALYSIS =====
+  function buildAnalysisSteps() {
+    const container = document.getElementById('analysis-steps');
+    container.innerHTML = '';
+    ANALYSIS_STEPS.forEach(step => {
+      const el = document.createElement('div');
+      el.className = 'analysis-step';
+      const fieldsHtml = step.fields.map(f => `
+        <div class="analysis-field">
+          <label>${f.label}</label>
+          <textarea id="${f.id}" rows="${f.rows}" placeholder="${f.ph}" oninput="autoSave('${f.id}', this.value); updateCharCount(this)">${''}</textarea>
+        </div>`).join('');
+      el.innerHTML = `
+        <div class="analysis-step-header">
+          <span class="analysis-step-num">${step.num}</span>
+          <span class="analysis-step-label">${step.label}</span>
+        </div>
+        <div class="analysis-step-body">${fieldsHtml}</div>`;
+      container.appendChild(el);
+    });
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I completed the seven-day Incentive Pause</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You understood the frameworks intellectually but did not apply them to your actual life. Abstract agreement with incentive theory produces no change in how you navigate real environments. Go back and complete the Environment Map and Situation Analysis with a real, specific, live situation — not a hypothetical.";
+    else if (total <= 20) msg = "You have applied the frameworks to real situations and have a more accurate map of at least one environment. The work now is keeping the lens active — applying it before reacting rather than after. The Incentive Pause practice is the mechanism for making this a default rather than an occasional insight.";
+    else msg = "You did this properly. You have a working analytical toolkit applied to real environments, and you have evidence of changed decisions and changed responses. The deepest application of this module is not solving one situation — it is updating your default model of human behavior permanently. That takes sustained practice, not a single exercise.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const envFilled = state.envMap.filter(d => d.a.trim().length > 5 || d.b.trim().length > 5).length;
+    const analysisFilled = ANALYSIS_FIELD_IDS.filter(id => { const el=document.getElementById(id); return el&&el.value.trim().length>10; }).length;
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: envFilled >= 4,
+      exercise: analysisFilled >= 6,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.env-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.env-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 10: HOW THE WORLD ACTUALLY WORKS\nExported: ${date}\n${ln('=',56)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [
+      ['r1','Q1 — The Incentive Map'],
+      ['r2','Q2 — The Power Map'],
+      ['r3','Q3 — The Narrative Question'],
+      ['r4','Q4 — The Skin-in-the-Game Audit'],
+      ['r5','Q5 — The Systems Question']
+    ].forEach(([id,label]) => { out += `${label}\n${val(id)}\n\n`; });
+
+    out += `THE ENVIRONMENT MAP\n${ln('-',30)}\n\nEnvironment: ${val('env-name')}\n\n`;
+    ENV_DIMENSIONS.forEach((dim, i) => {
+      const d = state.envMap[i];
+      out += `${dim.name}\n`;
+      out += `  ${dim.qa}\n  ${d.a||'(not filled)'}\n\n`;
+      out += `  ${dim.qb}\n  ${d.b||'(not filled)'}\n\n`;
+    });
+
+    out += `THE SITUATION ANALYSIS\n${ln('-',30)}\n\n`;
+    ANALYSIS_STEPS.forEach(step => {
+      out += `Step ${step.num}: ${step.label}\n`;
+      step.fields.forEach(f => { out += `  ${f.label}:\n  ${val(f.id)}\n\n`; });
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Clarity Journal:\n${val('belief-journal')}\n\n`;
+
+    out += `INCENTIVE PAUSE — SEVEN DAYS\n${ln('-',30)}\n\n${val('challenge-log')}\n`;
+    out += `Challenge completed: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    [
+      'Mapped incentive structure — explained one previously confusing behavior',
+      'Completed Environment Map across all five dimensions',
+      'Completed Situation Analysis — identified concrete changed action',
+      'Ran seven-day Incentive Pause — daily application logged',
+      'Operating from a more accurate map than at module start'
+    ].forEach((label, i) => { out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`; });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-10-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildEnvPanels();
+    buildAnalysisSteps();
+    buildDayTracker();
+    // restore analysis fields after building
+    ANALYSIS_FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) { const data = JSON.parse(raw); if (data.texts && data.texts[id] !== undefined) el.value = data.texts[id]; }
+        } catch(e) {}
+      }
+    });
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
