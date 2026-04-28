@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 8: The Architecture of a Controlled Life — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '08'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== ARCHITECTURE BLUEPRINT TABS ===== */
+    .arch-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .arch-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .arch-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .arch-tab:hover:not(.active) { color: var(--deep-vault); }
+    .arch-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .arch-tab.filled .tab-dot { opacity: 1; }
+    .arch-panel { display: none; padding: 24px 0 0; }
+    .arch-panel.active { display: block; }
+    .arch-field { margin-bottom: 16px; }
+    .arch-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .arch-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .arch-field textarea:focus { border-color: var(--banknote-green); }
+    .arch-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== NON-NEGOTIABLE STACK ===== */
+    .nn-card { border: 1px solid var(--sg-border); margin-bottom: 20px; }
+    .nn-card-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--sg-border); background: rgba(11,107,77,0.03); }
+    .nn-number { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: rgba(11,107,77,0.18); line-height: 1; flex-shrink: 0; }
+    .nn-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .nn-body { padding: 20px; display: grid; gap: 14px; }
+    .nn-field label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 5px; }
+    .nn-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 10px 13px; outline: none; resize: vertical; line-height: 1.6; min-height: 52px; transition: border-color 0.2s; }
+    .nn-field textarea:focus { border-color: var(--banknote-green); }
+    .nn-field textarea::placeholder { color: var(--security-gray); }
+    .nn-card.filled .nn-card-header { background: rgba(11,107,77,0.07); }
+    .nn-card.filled .nn-number { color: rgba(11,107,77,0.35); }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .arch-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .arch-field textarea, .nn-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .arch-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 08 — The Architecture of a Controlled Life</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> How It's Built</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Architecture Blueprint</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Non-Negotiable Stack</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 08 of 16 — Pillar III: Discipline</p>
+    <h1>The Architecture of a <span>Controlled Life</span></h1>
+    <p class="hero-tagline">"Motivation is for amateurs. Systems are for professionals."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>4–6 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 structural exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>Discipline Is Infrastructure, Not Willpower</h2>
+    <p class="section-sub">The man who "has discipline" usually has something simpler: a life designed so the right behavior is the path of least resistance.</p>
+
+    <p>Most men treat discipline as a personality trait — something you either have the strength to summon or you don't. They talk about it like a muscle that can be flexed on demand, and they feel shame when it isn't there. This framing is almost entirely wrong, and it keeps men stuck in a cycle of willpower and failure that never actually resolves.</p>
+    <p>Here is what is actually true: willpower is a finite, unreliable resource that degrades under stress, fatigue, and decision fatigue. Every time you rely on it to override your environment, you are betting against the house. Sometimes you win. Often you don't. And the losses compound.</p>
+    <p><strong>The men who are genuinely disciplined are not fighting themselves harder. They have stopped fighting altogether.</strong> They have designed their environment, their schedule, and their defaults so that the right behavior requires the least resistance — and the wrong behavior requires effort to choose.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>James Clear's research into habit formation, and BJ Fogg's work on behavior design, converge on the same conclusion: behavior is largely a function of context, not character. The person who exercises consistently is not more virtuous than the person who doesn't — they have usually made exercise easier, more automatic, and harder to avoid.</p>
+    <p>This module is not about trying harder. It is about building differently. The goal is a life where your defaults — what you do when you don't think about it — already serve your direction. Where discipline is the structure you live inside, not the willpower you summon from outside it.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>You Don't Have a Motivation Problem</h2>
+    <p class="section-sub">You have a systems problem. And relying on motivation to fix a systems problem is why nothing permanently changes.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #8</p>
+      <p>"Every time you rely on willpower where you could have built a system, you are choosing a worse tool for the job. The strong man is not the one who resists the most — it's the one who has the least to resist."</p>
+    </div>
+
+    <p>Think about the areas of your life where you are consistently inconsistent. Exercise. Sleep. Focus. Diet. Finances. Reading. Almost certainly, the problem is not that you lack the desire to do these things or that you haven't tried hard enough. The problem is that your environment and your defaults are arranged against you.</p>
+    <p>You're trying to sleep at 11pm in a room with your phone on the nightstand, having just spent three hours on a screen. You're trying to eat well in a house stocked with foods that aren't. You're trying to focus with notifications enabled, a browser with infinite diversions, and no defined block of time in which work happens. Then you blame yourself for failing.</p>
+
+    <h3>The willpower depletion cycle</h3>
+    <p>Willpower draws from a shared pool with all other forms of self-regulation — stress management, emotional regulation, decision-making. High-stress days deplete the pool faster. By the time you need willpower for something that matters, you've spent it on a hundred small resistances earlier in the day. <strong>The answer is never more willpower. It is fewer situations where willpower is required.</strong></p>
+
+    <div class="callout warning">
+      <strong>The motivation myth:</strong> Waiting until you feel motivated is a strategy for permanent inaction. Motivation is a byproduct of action, not a prerequisite for it. You do not feel motivated and then act. You act, and then feel motivated. The system that gets you started regardless of how you feel is more valuable than any amount of motivation.
+    </div>
+
+    <p>The hardest thing to accept in this module is that your failure to be consistent is not a character flaw. It is an engineering problem. You built a life that makes the wrong behavior easier than the right behavior — and then you've been blaming yourself for taking the easier path. Stop blaming. Start building.</p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>How Controlled Lives Are Actually Built</h2>
+    <p class="section-sub">Five structural levers. Most men use none of them deliberately. Building one changes things. Building all five changes everything.</p>
+
+    <p>A controlled life is not a rigid life. It is a designed life. The goal is not perfect adherence to a schedule — it is an environment and a set of defaults so well-designed that they carry you toward where you want to go even on the days when you have nothing left to give. Here are the five levers:</p>
+
+    <h3>1. Environment design</h3>
+    <p>Your environment is the most powerful behavioral influence you have, and most men have never touched it deliberately. The principle is simple: make good behavior easier and bad behavior harder. Put the book on the pillow. Remove the app from the phone. Set out the gym clothes the night before. The gap between your intention and your behavior is often nothing more than the friction between you and the right action. <strong>Reduce that friction and behavior follows.</strong></p>
+
+    <h3>2. Temporal architecture — pre-deciding when</h3>
+    <p>Decisions made in advance are almost always better than decisions made in the moment. When you decide what to do with a block of time in the moment, you are making that decision under the influence of how you currently feel, what is immediately available, and what requires the least resistance. When you decide in advance — through time blocking, weekly planning, or scheduled defaults — you are deciding with your best thinking, not your most depleted. Most men never pre-decide. They respond to whatever appears.</p>
+
+    <h3>3. Identity anchors</h3>
+    <p>Behavior that is attached to identity is dramatically more durable than behavior attached to goals. "I am someone who trains" is more resistant to excuses than "I am trying to get fit." The goal-based framing allows negotiation: I've had a hard week, I'll start again Monday. The identity-based framing does not: this is what I do. The way you talk about your behavior — to yourself and to others — shapes the behavior itself. <strong>Name who you are, not what you're trying to do.</strong></p>
+
+    <h3>4. Accountability architecture</h3>
+    <p>External accountability consistently outperforms internal accountability for most people. The gym partner, the coach, the public commitment, the money on the line — all of these work because they introduce a social cost to failing that internal accountability does not have. This is not weakness. It is understanding how motivation actually works. Build external accountability into your systems deliberately, not as a last resort.</p>
+
+    <h3>5. The recovery protocol</h3>
+    <p>The most overlooked element of any discipline architecture is what happens when you fail. Because you will fail. The question is not whether you miss a day — it is how quickly you return, and whether missing one day becomes missing a week. The "never miss twice" principle is more useful than any streak target: a single failure is an accident; two consecutive failures is the beginning of a new default. Build your recovery protocol before you need it.</p>
+
+    <div class="callout">
+      <strong>The compound effect of structural discipline:</strong> Small consistent behaviors, run through a well-designed system over 12 months, produce outcomes that feel disproportionate to the daily effort. The man who trains three times a week for a year, consistently, will outperform the man who trains hard for two months and stops — every single time. Consistency is the multiplier. Structure is what makes consistency possible.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Don't answer these as if you're being evaluated. Answer them as if the quality of your next 12 months depends on how honest you are right now.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Systems Audit — In the areas where you are most inconsistent (training, sleep, focused work, diet, finances — pick your top two or three), what specifically is your environment doing that makes the wrong behavior easier than the right one? Describe the actual setup, not a vague sense of it.</p>
+      <p class="card-hint">Be concrete. Not "I struggle with my phone at night" but "My phone charges on my nightstand. I pick it up when I wake up before I've done anything else. The last thing I see before sleep is usually a screen. The blue light and the mental stimulation delay my sleep by at least 45 minutes." The more specific your diagnosis, the more specific your fix can be.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The area where I am most inconsistent is... The specific thing in my environment that makes this harder than it should be is..."</p>
+        <p>"If someone watched me try to do [behavior X] and fail, what they would observe is... The friction point is..."</p>
+        <p>"The one environmental change that would probably have the biggest impact on my consistency in this area is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Decision Audit — How much of your day is pre-decided versus decided in the moment? When do you make decisions about how to spend your time — before the day begins, or when a time slot opens and you're looking for something to fill it? Where does in-the-moment decision-making cost you the most?</p>
+      <p class="card-hint">Most men are almost entirely reactive about time. They have broad intentions ("I'm going to focus on the project today") but make no specific decision about when, for how long, in what sequence, or what to do when something interrupts. Then they're surprised that the day disappeared. Temporal architecture is the single highest-leverage change most men can make.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"On a typical day, the decisions I make in advance are... The decisions I leave to the moment are..."</p>
+        <p>"The time block where in-the-moment decision-making costs me the most is... because what usually happens is..."</p>
+        <p>"If I pre-decided [one specific block], the change I'd expect to see is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Identity Question — What are the two or three behaviors that you most want to be consistent with? Now examine how you talk about them — to yourself and to others. Are you speaking about them as things you're trying to do, or as things that are part of who you are? Where is the gap between your identity claim and your actual behavior?</p>
+      <p class="card-hint">Identity-based behavior change works because it changes the decision frame. "I'm trying to exercise more" invites negotiation every single morning. "I'm someone who trains" does not — it's already decided. But you have to earn the identity claim through behavior before it sticks. The process is: decide the identity, act consistently with it in small ways, and let the behavior reinforce the claim over time.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The behavior I most want to be consistent with is... I currently talk about it as... I want to talk about it as..."</p>
+        <p>"The identity I want to claim is 'I am someone who...' — and the gap between claiming it and earning it is..."</p>
+        <p>"The smallest version of this behavior I could do every day — one that I would never negotiate with — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Accountability Question — Where are you relying entirely on internal motivation to maintain behaviors that consistently break down? What would the external accountability version of those commitments look like — and what has stopped you from building it?</p>
+      <p class="card-hint">Most men resist external accountability because they feel they should be able to hold themselves to their own standards without help. This is pride masquerading as discipline. Elite performers in every field — athletes, executives, artists — use coaches, partners, and structures to maintain their best work. The refusal to use external accountability is not strength. It is a preference for the feeling of self-reliance over the outcomes that would come from actually using the best tools available.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The commitments I consistently break when held only by internal motivation are..."</p>
+        <p>"The external accountability structure that would most likely hold me to [behavior X] is..."</p>
+        <p>"The real reason I haven't built this external structure yet is... and whether that reason is actually valid is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Recovery Question — Think about the last time a consistent behavior broke down. What happened after the first miss? Did you have a plan for getting back, or did one miss turn into a longer absence? What does your current "recovery protocol" look like — and do you actually have one?</p>
+      <p class="card-hint">Most men have no explicit recovery protocol. When they miss, they either beat themselves up and white-knuckle a return (which often leads to perfectionism-driven abandonment), or they quietly let the behavior lapse while intending to restart "when things settle down." Neither works reliably. A recovery protocol is a pre-decided answer to "what happens the day after I miss?" — and it should be easy, not punishing.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The last time I broke a consistent behavior, what happened on the day after the first miss was..."</p>
+        <p>"My current recovery protocol when I fail is... (if I have one at all)"</p>
+        <p>"A recovery protocol that would actually work for me — simple, non-punishing, automatic — would be..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE BLUEPRINT -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Architecture Blueprint</h2>
+    <p class="section-sub">Map the current and ideal state of five key structures in your life. Identify the one change per domain that would have the biggest impact. This is a working document — return to it and update it.</p>
+
+    <div class="callout">
+      <strong>Focus on friction, not willpower.</strong> For each domain, the question is not "how do I try harder?" It is "what specifically makes the right behavior harder than it needs to be — and what is the one structural change that reduces that friction most?"
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="arch-tabs" id="arch-tabs">
+        <button class="arch-tab active" onclick="switchArch(0)">Morning <span class="tab-dot"></span></button>
+        <button class="arch-tab" onclick="switchArch(1)">Deep Work <span class="tab-dot"></span></button>
+        <button class="arch-tab" onclick="switchArch(2)">Evening <span class="tab-dot"></span></button>
+        <button class="arch-tab" onclick="switchArch(3)">Weekly <span class="tab-dot"></span></button>
+        <button class="arch-tab" onclick="switchArch(4)">Recovery <span class="tab-dot"></span></button>
+      </div>
+      <div id="arch-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- NON-NEGOTIABLE STACK -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Non-Negotiable Stack</h2>
+    <p class="section-sub">Define the three behaviors that are non-negotiable — that you commit to regardless of how you feel, how busy you are, or what else is happening. These are the floor of your discipline, not the ceiling.</p>
+
+    <div class="callout">
+      <strong>A non-negotiable is not an aspiration.</strong> It is a behavior you are committed to executing at its minimum viable version on every day, including bad days. The power is not in doing it perfectly — it is in never fully stopping. One set of five exercises is still training. Ten minutes of focused reading is still reading. The minimum keeps the identity intact and the habit alive.
+    </div>
+
+    <p>Most men make the mistake of setting their non-negotiables too high — full workouts, hour-long reading sessions, comprehensive morning routines. Then when life compresses, they can't maintain them and they stop entirely. <strong>Set your non-negotiables at the floor, not the ceiling.</strong> What is the smallest version of this behavior that counts? That version is the non-negotiable.</p>
+
+    <div id="nn-cards" style="margin-top:28px;"></div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, identify one place where you used structure instead of willpower — and record what that felt like.</p>
+
+    <div class="belief-display">
+      "Discipline is infrastructure, not willpower. I build the system. The system does the work."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that is most true to your specific situation — what does building structure instead of relying on motivation look like in your life right now?</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Discipline Journal</p>
+      <p class="card-hint">Each day, note one moment where you used a structural solution instead of willpower — a pre-decision, an environmental change, an accountability tool. What was the situation, and what did you do instead of relying on how you felt?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="Day 1: Instead of relying on willpower for [X], I used... The result was...&#10;Day 2: The moment where I could have used willpower but used structure instead was...&#10;Day 3: " rows="8" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Controlled Week</h2>
+    <p class="section-sub">Do this before moving to Module 9. It is the proof of concept for everything in this module.</p>
+
+    <div class="truth-block">
+      <p>On Sunday evening, pre-decide every significant time block for the coming week. Make no same-day decisions about your non-negotiables or focus blocks. At the end of the week, audit the gap between designed and actual.</p>
+    </div>
+
+    <p>A Controlled Week is simple: before the week begins, you write down when your non-negotiables happen, when your focused work blocks happen, and what your defaults are for unstructured time. You treat these as pre-decided — not negotiable based on how you feel on the day.</p>
+    <p>The goal is not perfection. The goal is data. At the end of the week, you will have a clear picture of where your architecture held and where it didn't — and that data is the raw material for improving your system. <strong>One controlled week reveals more about your behavioral defaults than months of vague intention.</strong></p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Your Controlled Week Design</p>
+      <p class="card-hint">Write your pre-decisions for the coming week. Include: non-negotiable times, focus blocks, sleep boundary, and at least one environmental change you are making this week. Be specific enough that you could evaluate it honestly at the end of 7 days.</p>
+      <textarea class="journal-area" id="challenge-structure" placeholder="Non-negotiables (when and minimum version):&#10;e.g. Training: Monday, Wednesday, Friday at 7am. Minimum = 20 minutes of movement.&#10;e.g. Reading: Every evening at 9:30pm. Minimum = 10 pages.&#10;&#10;Focus blocks (when and what for):&#10;&#10;Sleep boundary (lights out by):&#10;&#10;Environmental change I am making this week:&#10;&#10;End-of-week review: what I will look at on Sunday to assess how the architecture held:" rows="15" oninput="autoSave('challenge-structure', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-structure-count">0 characters</span><span class="save-indicator" id="challenge-structure-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I designed my Controlled Week</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5. Be honest — this is a working document, not a performance.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Systems Audit — I can describe specifically, in concrete terms, where my environment is working against me in at least two areas of my life.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Architecture Blueprint across all five domains — with a specific current state, ideal state, and at least one concrete structural change per domain.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I defined my Non-Negotiable Stack — three specific behaviors with a minimum viable floor and a trigger — and I have committed to them for the next 30 days.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I made at least one concrete environmental change this week — something in my physical or digital environment that reduces friction for a behavior I want to be consistent with.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I designed and ran a Controlled Week — pre-deciding my key time blocks before the week began and auditing the gap between design and reality at the end.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 8. These are the most useful and practical treatments of behavioral architecture available — each addresses a different dimension of how controlled lives are built.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">Atomic Habits — James Clear</p>
+        <p class="resource-desc">The clearest and most practical synthesis of behavior design research available. Clear's four laws of behavior change — make it obvious, make it attractive, make it easy, make it satisfying — map directly to the five levers in this module. The chapters on environment design and identity-based habits are required reading. Do not read this as motivation — read it as an engineering manual.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Deep Work — Cal Newport</p>
+        <p class="resource-desc">Newport's argument is that the ability to perform deep, focused work is both increasingly rare and increasingly valuable — and that it requires deliberate structural support, not just good intentions. The sections on scheduling philosophy and environment design for focus are directly applicable to the Architecture Blueprint in this module. His "fixed-schedule productivity" approach is the temporal architecture lever in action.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Tiny Habits — BJ Fogg</p>
+        <p class="resource-desc">Fogg's research at the Stanford Behavior Design Lab makes the most rigorous case for starting small. His Fogg Behavior Model (Behavior = Motivation × Ability × Prompt) is the mechanism behind the Non-Negotiable Stack exercise in this module. The section on designing for ability — reducing the difficulty of the target behavior to near-zero — is especially useful for building sustainable non-negotiables.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Power of Full Engagement — Jim Loehr &amp; Tony Schwartz</p>
+        <p class="resource-desc">The central argument — that managing energy, not time, is the foundation of high performance — is the missing dimension in most productivity and discipline frameworks. The distinction between physical, emotional, mental, and spiritual energy, and the argument for deliberate recovery as a performance requirement rather than an indulgence, directly addresses why most discipline architectures eventually break down. Read alongside Atomic Habits for a more complete picture.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You have a structure. Module 9 is about doing hard things on purpose — using voluntary hardship to build the resilience that structure alone can't give you.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m8';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    archBlueprint: Array.from({length:5}, () => ({ current:'', ideal:'', friction:'', change:'' })),
+    nonNegs: Array.from({length:3}, () => ({ behavior:'', floor:'', trigger:'' }))
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'belief-version','belief-journal',
+    'challenge-structure'
+  ];
+
+  const ARCH_DOMAINS = [
+    {
+      name: 'Morning Routine',
+      desc: 'The first 60–90 minutes of the day. Not necessarily elaborate — but intentional and pre-decided.',
+      p_current: 'e.g. "Wake at 7:30. Phone immediately. Scroll 20–30 min. Coffee. Reactive from there."',
+      p_ideal: 'e.g. "Wake at 6:30. No phone for first hour. Training or reading. Brief planning. Ready before the day demands anything."',
+      p_friction: 'e.g. "Phone on nightstand. No fixed wake time. No pre-decided first action."',
+      p_change: 'e.g. "Move phone to another room. Set fixed wake time. First action pre-decided the night before."'
+    },
+    {
+      name: 'Deep Work',
+      desc: 'Your highest-value focused work. When it happens, for how long, under what conditions.',
+      p_current: 'e.g. "No fixed block. Work when tasks appear. Notifications on. Interrupted constantly. Never feel like I do my best work."',
+      p_ideal: 'e.g. "90-minute block, 9–10:30am. Phone in drawer. Door closed or headphones. No email until block is done."',
+      p_friction: 'e.g. "No defined time. Notifications enabled. Open office. Email as default first task."',
+      p_change: 'e.g. "Block 9–10:30am as non-negotiable in calendar. Phone drawer during block. Email opens at 11am."'
+    },
+    {
+      name: 'Evening Wind-Down',
+      desc: 'The hour before sleep. The quality of this block determines tomorrow\'s performance as much as the morning does.',
+      p_current: 'e.g. "Screen until I fall asleep. Irregular bedtime. Phone on nightstand. Often still checking email at 11pm."',
+      p_ideal: 'e.g. "10pm screens off. Brief review of next day. Read until 10:45. Sleep by 11."',
+      p_friction: 'e.g. "No fixed end point for evening. No wind-down signal. Phone accessible until sleep."',
+      p_change: 'e.g. "10pm phone to charger in hallway. Brief tomorrow-review as shutdown ritual."'
+    },
+    {
+      name: 'Weekly Architecture',
+      desc: 'How you design the week before it begins. The most leveraged planning intervention available.',
+      p_current: 'e.g. "No weekly planning. Monday appears and I respond to whatever arrives. Calendar is reactive not designed."',
+      p_ideal: 'e.g. "Sunday 30min: review last week, set 3 priorities, block key time slots, write non-negotiables for the week."',
+      p_friction: 'e.g. "No fixed planning time. No weekly review habit. Calendar fills from incoming requests."',
+      p_change: 'e.g. "Sunday 8pm — 30 min weekly design session. Fixed in calendar. Non-negotiable."'
+    },
+    {
+      name: 'Recovery Protocol',
+      desc: 'What happens when a non-negotiable breaks down. The specific plan for getting back.',
+      p_current: 'e.g. "No protocol. When I miss, I feel bad and either try to double-up or quietly let it lapse."',
+      p_ideal: 'e.g. "Never miss twice. Day after a miss: minimum viable version, no matter what. No punishment, no catch-up — just return."',
+      p_friction: 'e.g. "No pre-decided recovery plan. Failure triggers shame spiral or avoidance."',
+      p_change: 'e.g. "Define minimum viable version for each non-negotiable now. That is the recovery default."'
+    }
+  ];
+
+  const NN_LABELS = ['Non-Negotiable 01', 'Non-Negotiable 02', 'Non-Negotiable 03'];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    // save nn fields
+    for (let i = 0; i < 3; i++) {
+      ['behavior','floor','trigger'].forEach(f => {
+        const el = document.getElementById(`nn-${i}-${f}`);
+        if (el) data.texts[`nn-${i}-${f}`] = el.value;
+      });
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.archBlueprint || state.archBlueprint.length !== 5) state.archBlueprint = Array.from({length:5}, () => ({ current:'', ideal:'', friction:'', change:'' }));
+        if (!state.nonNegs || state.nonNegs.length !== 3) state.nonNegs = Array.from({length:3}, () => ({ behavior:'', floor:'', trigger:'' }));
+      }
+      if (data.texts) {
+        TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id] !== undefined) { el.value = data.texts[id]; updateCharCount(el); } });
+        for (let i = 0; i < 3; i++) {
+          ['behavior','floor','trigger'].forEach(f => {
+            const el = document.getElementById(`nn-${i}-${f}`);
+            if (el && data.texts[`nn-${i}-${f}`] !== undefined) el.value = data.texts[`nn-${i}-${f}`];
+          });
+        }
+      }
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const aFilled = state.archBlueprint.filter(d => d.current.trim().length > 3 && d.ideal.trim().length > 3).length;
+    pts += Math.min(10, aFilled * 2);
+    const nnFilled = state.nonNegs.filter(n => n.behavior.trim().length > 3 && n.floor.trim().length > 3).length;
+    pts += Math.min(6, nnFilled * 2);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 4;
+    pts += Math.min(4, state.days.filter(Boolean).length);
+    const cs = document.getElementById('challenge-structure'); if (cs && cs.value.trim().length > 30) pts += 5;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== ARCHITECTURE BLUEPRINT =====
+  let currentArch = 0;
+
+  function buildArchPanels() {
+    const container = document.getElementById('arch-panels');
+    container.innerHTML = '';
+    ARCH_DOMAINS.forEach((domain, i) => {
+      const d = state.archBlueprint[i];
+      const panel = document.createElement('div');
+      panel.className = 'arch-panel' + (i === 0 ? ' active' : '');
+      panel.id = `archp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">${domain.desc}</p>
+        <div class="arch-field">
+          <label>Current state — what actually happens now</label>
+          <textarea rows="2" placeholder="${domain.p_current}" oninput="updateArchField(${i},'current',this.value)">${d.current}</textarea>
+        </div>
+        <div class="arch-field">
+          <label>Ideal state — what it would look like if it worked</label>
+          <textarea rows="2" placeholder="${domain.p_ideal}" oninput="updateArchField(${i},'ideal',this.value)">${d.ideal}</textarea>
+        </div>
+        <div class="arch-field">
+          <label>Key friction — what specifically makes it hard</label>
+          <textarea rows="2" placeholder="${domain.p_friction}" oninput="updateArchField(${i},'friction',this.value)">${d.friction}</textarea>
+        </div>
+        <div class="arch-field">
+          <label>One structural change — the highest-leverage fix</label>
+          <textarea rows="2" placeholder="${domain.p_change}" oninput="updateArchField(${i},'change',this.value)">${d.change}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateArchTabIndicators();
+  }
+
+  function switchArch(idx) {
+    currentArch = idx;
+    document.querySelectorAll('.arch-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.arch-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateArchField(domainIdx, field, value) {
+    state.archBlueprint[domainIdx][field] = value;
+    save(); updateArchTabIndicators(); updateProgress();
+  }
+
+  function updateArchTabIndicators() {
+    document.querySelectorAll('.arch-tab').forEach((tab, i) => {
+      const d = state.archBlueprint[i];
+      tab.classList.toggle('filled', !!(d.current.trim() || d.ideal.trim()));
+    });
+  }
+
+  // ===== NON-NEGOTIABLE STACK =====
+  function buildNNCards() {
+    const container = document.getElementById('nn-cards');
+    container.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const nn = state.nonNegs[i];
+      const card = document.createElement('div');
+      card.className = 'nn-card' + (nn.behavior.trim() ? ' filled' : '');
+      card.id = `nn-card-${i}`;
+      card.innerHTML = `
+        <div class="nn-card-header">
+          <span class="nn-number">${String(i+1).padStart(2,'0')}</span>
+          <span class="nn-label">${NN_LABELS[i]}</span>
+        </div>
+        <div class="nn-body">
+          <div class="nn-field">
+            <label>The behavior — what it is, specifically</label>
+            <textarea id="nn-${i}-behavior" rows="2" placeholder="${i===0?'e.g. "Training — resistance training or 30 min cardio"':i===1?'e.g. "Reading — non-fiction, deliberate"':'e.g. "Daily planning — 10-minute review and next-day setup"'}" oninput="updateNN(${i},'behavior',this.value)">${nn.behavior}</textarea>
+          </div>
+          <div class="nn-field">
+            <label>The minimum viable floor — the version you do on your worst day</label>
+            <textarea id="nn-${i}-floor" rows="2" placeholder="${i===0?'e.g. "10 minutes of any movement counts. One set of anything counts."':i===1?'e.g. "5 pages counts. Reading one paragraph and stopping does not."':'e.g. "Write tomorrow\'s top 3 priorities. Nothing else required."'}" oninput="updateNN(${i},'floor',this.value)">${nn.floor}</textarea>
+          </div>
+          <div class="nn-field">
+            <label>The trigger — when it happens and what starts it</label>
+            <textarea id="nn-${i}-trigger" rows="2" placeholder="${i===0?'e.g. "6:30am, immediately after coffee. Kit is out the night before."':i===1?'e.g. "9:30pm, after phone goes to charger. Book is on the pillow."':'e.g. "After evening meal, before any screens. Notebook is on table."'}" oninput="updateNN(${i},'trigger',this.value)">${nn.trigger}</textarea>
+          </div>
+        </div>`;
+      container.appendChild(card);
+    }
+  }
+
+  function updateNN(idx, field, value) {
+    state.nonNegs[idx][field] = value;
+    const card = document.getElementById(`nn-card-${idx}`);
+    if (card) card.classList.toggle('filled', !!(state.nonNegs[idx].behavior.trim()));
+    save(); updateProgress();
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I designed my Controlled Week</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You understood the concept but haven't built the system yet. Understanding without application is worthless here. Pick one structural change — one — and implement it this week before you move on. The point of this module is building, not reading.";
+    else if (total <= 20) msg = "You have a working structure in place. The test now is whether you maintain it through a difficult period — a high-stress week, a disrupted schedule, an unexpected obligation. That's when architecture either holds or it doesn't. Keep the non-negotiables simple enough to survive those conditions.";
+    else msg = "You built this properly. You have a designed life, not a reacted-to one. The long-term work is auditing and updating the architecture as your direction and circumstances evolve — not treating it as fixed. What works at this stage of your life will need to change. Keep the structure alive by reviewing it quarterly.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.archBlueprint.filter(d => d.current.trim().length>3 && d.ideal.trim().length>3).length >= 4,
+      exercise: state.nonNegs.filter(n => n.behavior.trim().length>3 && n.floor.trim().length>3).length === 3,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.arch-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.arch-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 8: THE ARCHITECTURE OF A CONTROLLED LIFE\nExported: ${date}\n${ln('=',62)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [
+      ['r1','Q1 — The Systems Audit'],
+      ['r2','Q2 — The Decision Audit'],
+      ['r3','Q3 — The Identity Question'],
+      ['r4','Q4 — The Accountability Question'],
+      ['r5','Q5 — The Recovery Question']
+    ].forEach(([id,label]) => { out += `${label}\n${val(id)}\n\n`; });
+
+    out += `THE ARCHITECTURE BLUEPRINT\n${ln('-',30)}\n\n`;
+    ARCH_DOMAINS.forEach((domain, i) => {
+      const d = state.archBlueprint[i];
+      out += `${domain.name}\n`;
+      out += `  Current state: ${d.current||'(not filled)'}\n`;
+      out += `  Ideal state: ${d.ideal||'(not filled)'}\n`;
+      out += `  Key friction: ${d.friction||'(not filled)'}\n`;
+      out += `  One structural change: ${d.change||'(not filled)'}\n\n`;
+    });
+
+    out += `THE NON-NEGOTIABLE STACK\n${ln('-',30)}\n\n`;
+    for (let i = 0; i < 3; i++) {
+      const nn = state.nonNegs[i];
+      out += `Non-Negotiable ${i+1}\n`;
+      out += `  Behavior: ${nn.behavior||val(`nn-${i}-behavior`)}\n`;
+      out += `  Minimum floor: ${nn.floor||val(`nn-${i}-floor`)}\n`;
+      out += `  Trigger: ${nn.trigger||val(`nn-${i}-trigger`)}\n\n`;
+    }
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Discipline Journal:\n${val('belief-journal')}\n\n`;
+
+    out += `CONTROLLED WEEK DESIGN\n${ln('-',30)}\n\n${val('challenge-structure')}\n`;
+    out += `Controlled Week completed: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    [
+      'Completed Systems Audit — specific, concrete diagnosis',
+      'Completed Architecture Blueprint across all five domains',
+      'Defined Non-Negotiable Stack — behavior, floor, and trigger',
+      'Made at least one concrete environmental change this week',
+      'Designed and ran a Controlled Week'
+    ].forEach((label, i) => { out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`; });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-8-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildArchPanels();
+    buildNNCards();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
