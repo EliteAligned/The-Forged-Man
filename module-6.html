@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 6: The Leverage — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '06'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== LEVERAGE AUDIT TABS ===== */
+    .lever-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .lever-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .lever-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .lever-tab:hover:not(.active) { color: var(--deep-vault); }
+    .lever-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .lever-tab.filled .tab-dot { opacity: 1; }
+    .lever-panel { display: none; padding: 24px 0 0; }
+    .lever-panel.active { display: block; }
+    .lever-field { margin-bottom: 16px; }
+    .lever-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .lever-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .lever-field textarea:focus { border-color: var(--banknote-green); }
+    .lever-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== SKILL STACK ===== */
+    .skill-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--sg-border); }
+    .skill-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .skill-label { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 4px; }
+    .skill-desc { font-size: 0.8rem; color: var(--security-gray); margin-bottom: 12px; font-style: italic; }
+    .skill-rating { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .skill-btn { padding: 6px 14px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .skill-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .skill-btn.selected-low { background: rgba(107,43,43,0.08); border-color: var(--red); color: var(--red); }
+    .skill-btn.selected-mid { background: rgba(212,175,55,0.1); border-color: var(--gold-foil); color: var(--gold-foil-dark); }
+    .skill-btn.selected-high { background: rgba(11,107,77,0.1); border-color: var(--banknote-green); color: var(--banknote-green); }
+    .skill-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; min-height: 70px; transition: border-color 0.2s; }
+    .skill-field textarea:focus { border-color: var(--banknote-green); }
+    .skill-field textarea::placeholder { color: var(--security-gray); }
+    .skill-field label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 5px; margin-top: 10px; }
+
+    /* ===== BELIEF INSTALL ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .lever-tabs, .skill-rating, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .lever-field textarea, .skill-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .lever-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 06 — The Leverage</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Three Forms of Leverage</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Leverage Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Skill Stack</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 06 of 16 — Pillar II: Power</p>
+    <h1>The <span>Leverage</span></h1>
+    <p class="hero-tagline">"Skills that everyone has are worth what everyone gets."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 strategic exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>Why Most Men Stay Replaceable</h2>
+    <p class="section-sub">Effort is common. Leverage is rare. The gap between them is where most lives are quietly decided.</p>
+
+    <p>In Module 5, you mapped the power structures around you — the rooms, the dynamics, where you sit and where the influence actually flows. Now comes the harder question: what do you have that changes your position in those structures?</p>
+    <p>Most men work hard. Most men show up. Most men do what they're told, deliver what's expected, and then wonder why their situation doesn't change as fast as their effort would suggest it should. The answer is almost always the same: effort without leverage is just labour. And labour gets priced like a commodity, because it is one.</p>
+    <p><strong>Leverage is the specific thing — a skill, a resource, a relationship, a piece of knowledge — that makes you genuinely hard to replace.</strong> It is what changes the terms of your negotiations, your career, your earning power, your relationships. Without it, you are always subject to other people's decisions. With it, you start making your own.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>This is not abstract. The man who has one income stream and a common skill set is at the mercy of whoever employs him. The man who has three income streams, a rare skill, and access to a network of people who matter is negotiating from a fundamentally different position. Same hours in the day. Very different leverage.</p>
+    <p>The difference between them was not intelligence or luck. It was deliberate construction. One man built something. The other waited for something to be given.</p>
+    <p>This module is about the construction. Where leverage actually comes from, how to map what you currently have, and what to build next.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Common Is Cheap</h2>
+    <p class="section-sub">The market is ruthlessly honest about what you're actually worth in it.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #6</p>
+      <p>"Skills that everyone has are worth what everyone gets. Build the specific thing that makes you irreplaceable — or spend your life accepting what you're given."</p>
+    </div>
+
+    <p>The labour market, the social market, the relationship market — every market you participate in prices you by how easily you can be replaced. If ten other people can do what you do, at your level, you will be paid like ten other people. If no one else can do what you do, in the way you can do it, you will be paid like no one else.</p>
+    <p>This is not cruel. It is simply how scarcity and value work. And it has a direct implication: the most important question you can ask about your position in any market is not "am I good?" but "am I rare?"</p>
+
+    <h3>The comfort trap</h3>
+    <p>There is a specific way competence becomes a trap. You become good enough to be kept, but not rare enough to be irreplaceable. You get enough reward to feel like progress but not enough to feel like freedom. You become comfortable in a position you can't leverage. You have a job, not a position.</p>
+    <p><strong>Comfort at the level of competence is one of the most effective ways to prevent the development of leverage.</strong> The man who is good enough to keep doesn't feel the pressure to become rare. He is neither desperate enough to change nor free enough to not have to.</p>
+
+    <div class="callout warning">
+      <strong>The replacement test:</strong> If you disappeared from your job, your client list, your professional network tomorrow — how long would it take to replace you? Days? Weeks? If the honest answer is "not long," you have a leverage problem. Not a work ethic problem. A leverage problem.
+    </div>
+
+    <p>Being hard to replace is not about being difficult or withholding. It is about building something specific, rare, and genuinely valuable — and then making sure the people who matter know you have it.</p>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Three Forms of Leverage</h2>
+    <p class="section-sub">Not all leverage is equal. Understanding which form to build — and in what order — determines how fast your position changes.</p>
+
+    <p>Leverage is not one thing. There are three distinct forms, each building differently, each with its own timeline and risk profile. Most men have partial access to one. The men who change their position fastest are deliberately building all three.</p>
+
+    <h3>Skill leverage — the foundation</h3>
+    <p>Skill leverage is what you can do that few others can do at your level. It is the most direct form of leverage and the most within your control. You build it by going deeper than the market goes — by specialising in ways that create genuine scarcity rather than staying generalist in ways that keep you fungible.</p>
+    <p>The key insight from Cal Newport's work: <em>rare and valuable skills require rare and valuable practice</em>. The man who spends his time doing what is easy to him builds competence. The man who deliberately stretches into the uncomfortable edge of his capability builds leverage. These feel different from the inside. The first feels productive. The second feels like struggle. One builds a career. The other builds a position.</p>
+
+    <div class="card" style="border-left: 3px solid var(--banknote-green);">
+      <p class="card-title">The Rarity Question</p>
+      <p style="margin:8px 0 0;color:#2E3B36;font-size:0.9rem;">For any skill you're developing: could most people in your field claim this at roughly your level? If yes, it is a competence, not leverage. Leverage requires going further than almost everyone in your field is willing to go — in a specific direction that the market values.</p>
+    </div>
+
+    <h3>Resource leverage — money working for you</h3>
+    <p>Resource leverage is what happens when your assets generate more options than your labour alone can generate. A man with savings has more negotiating power than a man without, because he can walk away from bad deals. A man with multiple income streams cannot be controlled by a single employer. A man with owned assets has a floor that labour alone cannot provide.</p>
+    <p>The first rule of resource leverage: <strong>stop trading time for money as your only mechanism.</strong> Skill leverage unlocks higher time value. But it still trades time. Resource leverage begins when some of your income arrives whether or not you show up. That shift — even a small one — changes your negotiating position in everything.</p>
+
+    <h3>Network leverage — access through association</h3>
+    <p>Network leverage is access — to information, opportunities, capital, introductions, and trust that exist inside relationships rather than in the open market. Most of what moves at the upper levels of any field moves through networks, not job boards. The right introduction is worth years of independent effort.</p>
+    <p>The mistake most men make with networking is treating it as transactional — going to events, collecting contacts, asking for favours. Network leverage is built differently: by becoming genuinely worth knowing, by offering value before asking for it, and by investing in a small number of relationships with disproportionate depth rather than a large number of relationships with no depth at all.</p>
+
+    <div class="callout">
+      <strong>The compounding effect:</strong> skill leverage raises your value in the market. Resource leverage reduces your dependency on any single part of it. Network leverage opens access to parts of the market that aren't publicly available. Built together, they create a position that is genuinely hard to displace — not because you're protected, but because you've made yourself expensive to replace and easy to work with.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Vague answers here produce vague leverage plans. Be specific about what you actually have and what you actually need to build.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">The Scarcity Test — What do you do that is genuinely rare and valuable? Not what you're good at — what you have that is specifically hard to find at your level, in your market, that the people who matter would pay a premium to access?</p>
+      <p class="card-hint">Most men find this question uncomfortable because the honest answer is "not much yet." That is useful information, not a verdict. The question is: if you don't have genuine scarcity, what would it take to build it?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The thing I do that most people in my field cannot do at my level is..."</p>
+        <p>"If I'm honest, the skill I have that is genuinely rare is... and the one I pretend is rare but isn't is..."</p>
+        <p>"The direction I'd need to go to build real scarcity in my field is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">The Dependency Audit — Where are you completely dependent? One employer, one income stream, one client, one relationship — where, if the single thing you rely on were removed, would you be genuinely desperate? What does that dependency actually cost you in terms of the terms you accept?</p>
+      <p class="card-hint">Dependency is not always obvious — sometimes it hides as preference. "I want to stay here" sometimes means "I have nowhere else to go." Be honest about which situations you're in by choice and which you're in because you have no real alternative.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The area of my life where I have the most dangerous single-point dependency is..."</p>
+        <p>"The terms I accept in [situation] that I wouldn't accept if I had a real alternative are..."</p>
+        <p>"The cost of this dependency — what I give up or put up with because of it — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">The Leverage Gap — Between where you are and where you want to be in the next 3–5 years: what specific leverage are you currently missing? Not character traits, not habits — what specific capability, resource, or relationship access would change your position most if you had it?</p>
+      <p class="card-hint">Most men can describe where they want to be but haven't mapped what leverage would get them there. The gap between your current position and the position you want is usually a leverage gap — not an effort gap. Name the specific missing piece.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The specific leverage I'm missing that is holding my position in place is..."</p>
+        <p>"If I had [specific skill / resource / relationship], the thing that would change most is..."</p>
+        <p>"The men who are where I want to be all seem to have... which I don't yet have..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">The Build Question — If you committed 30 minutes per day for the next 12 months to building one specific leverage asset, what would it be? What would you have at the end of that year — and how would having it change your position?</p>
+      <p class="card-hint">This is not about what you wish you could build. It is about what you will actually build, given your current situation, constraints, and realistic capacity. Pick one. Describe it specifically. Then describe what having it changes.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The one leverage asset I would build with 30 minutes per day for 12 months is..."</p>
+        <p>"At the end of that year, I would have... which would mean I could..."</p>
+        <p>"The reason I haven't started building this yet is... and whether that reason is real or an excuse is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">The Network Audit — Who in your current network has genuine leverage — access, resources, or skills that are rare and valuable? What do you currently offer them? And what would you need to build to be genuinely worth knowing for someone whose position is above yours?</p>
+      <p class="card-hint">Network leverage is two-directional. The question is not just who you know — it is what you bring to those relationships. Men with leverage attract men with leverage. Men who only consume network value eventually lose it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The people in my network who have genuine leverage — things I want access to — are..."</p>
+        <p>"What I currently offer them that is genuinely valuable is... What I don't offer yet is..."</p>
+        <p>"To be worth knowing to someone whose position is above mine, I would need to build..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- LEVERAGE AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">The System</p>
+    <h2>The Leverage Audit</h2>
+    <p class="section-sub">Map your current leverage position across four domains. For each: what you have, what it's worth in the real world, where the biggest gap is, and what to build next.</p>
+
+    <div class="callout">
+      <strong>Be honest about what is actual leverage and what is just competence.</strong> Competence is the baseline. Leverage is what's rare at your level of competence. You're not looking for what you're good at — you're looking for what would be genuinely hard to replace.
+    </div>
+
+    <div class="card" style="padding: 0; margin-top: 28px;">
+      <div class="lever-tabs" id="lever-tabs">
+        <button class="lever-tab active" onclick="switchLever(0)">Skills <span class="tab-dot"></span></button>
+        <button class="lever-tab" onclick="switchLever(1)">Financial <span class="tab-dot"></span></button>
+        <button class="lever-tab" onclick="switchLever(2)">Network <span class="tab-dot"></span></button>
+        <button class="lever-tab" onclick="switchLever(3)">Knowledge <span class="tab-dot"></span></button>
+      </div>
+      <div id="lever-panels" style="padding: 0 24px 28px;"></div>
+    </div>
+  </section>
+
+  <!-- SKILL STACK -->
+  <section class="section" id="exercise">
+    <p class="section-tag">The Exercise</p>
+    <h2>The Skill Stack</h2>
+    <p class="section-sub">Rate your current skill level across five key categories. Then identify the one to build most urgently — and map what that actually requires.</p>
+
+    <div class="callout">
+      Most men are specialists in one area and weak everywhere else. The highest-leverage individuals have a stack — a core rare skill combined with enough business, communication, and technical capability to deploy it effectively. Rate honestly.
+    </div>
+
+    <div class="card" style="margin-top: 28px;" id="skill-card">
+      <!-- Built by JS -->
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">The Belief Install</p>
+    <h2>Install This Week's Belief</h2>
+    <p class="section-sub">Write it by hand every morning. Each day, find one decision or action that is building your leverage rather than just spending your time.</p>
+
+    <div class="belief-display">
+      "I don't compete on effort. I compete on irreplaceability."
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Write your own version</p>
+      <p class="card-hint">Rewrite it in the language that fits your specific leverage-build — what does becoming irreplaceable look like in your situation right now?</p>
+      <textarea class="journal-area" id="belief-version" placeholder="In my own words..." rows="3" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Practice Tracker</p>
+      <div class="day-grid" id="day-grid"></div>
+    </div>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Build Journal</p>
+      <p class="card-hint">Each day, note one specific action you took that was building leverage — not just completing tasks, but adding to the rare and valuable thing you're building. If you can't name one, that day was consumption, not construction.</p>
+      <textarea class="journal-area" id="belief-decisions" placeholder="Day 1: The leverage-building action I took today was...&#10;Day 2: Today I spent 30 minutes building...&#10;Day 3: " rows="8" oninput="autoSave('belief-decisions', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-decisions-count">0 characters</span><span class="save-indicator" id="belief-decisions-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Leverage Build</h2>
+    <p class="section-sub">Do this before you move to Module 7. This challenge starts a habit that compounds across years.</p>
+
+    <div class="truth-block">
+      <p>For the next seven days, commit 30 uninterrupted minutes per day to building the specific leverage asset you identified in Reflection Question 4. No exceptions. No substitutions.</p>
+    </div>
+
+    <p>30 minutes per day is not a large commitment. But 30 minutes of deliberate, focused skill-building — compounded daily, weekly, yearly — is how rare capability is actually built. Not through heroic multi-hour sessions that are unsustainable, but through consistent, uncomfortable practice in the specific direction that creates scarcity.</p>
+    <p>The rules: it must be deliberate practice, not comfortable practice. If it feels easy, you are reinforcing competence, not building leverage. <strong>Seek the edge of your current ability and work there.</strong> This is where the market-moving skills are built.</p>
+    <p>At the end of each session, write down what you worked on, what felt hard, and what you noticed about the edge of your current capability. Over seven days, patterns will emerge about where your leverage actually is and where it isn't yet.</p>
+
+    <div class="card mt-6">
+      <p class="card-title" style="margin-bottom:12px;">Daily Session Log</p>
+      <p class="card-hint">After each 30-minute session: what specifically did you work on, what felt genuinely difficult (not just time-consuming), and what did you notice about your current ceiling?</p>
+      <textarea class="journal-area" id="challenge-obs" placeholder="Day 1: I worked on... What felt hard was... What I noticed about my ceiling was...&#10;&#10;Day 2: " rows="10" oninput="autoSave('challenge-obs', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-obs-count">0 characters</span><span class="save-indicator" id="challenge-obs-saved">Saved</span></div>
+    </div>
+
+    <div class="card mt-4">
+      <p class="card-title" style="margin-bottom:12px;">End of Week — What did you learn about your leverage build?</p>
+      <p class="card-hint">After seven days: what moved? What was harder than expected? What did you discover about the specific thing you're trying to build — and what would it take to keep this habit beyond this week?</p>
+      <textarea class="journal-area" id="challenge-reflect" placeholder="After 7 days of deliberate practice, what I learned was...&#10;&#10;The thing that was harder than expected was...&#10;&#10;To keep this going, I would need to..." rows="7" oninput="autoSave('challenge-reflect', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-reflect-count">0 characters</span><span class="save-indicator" id="challenge-reflect-saved">Saved</span></div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <button class="mark-read-btn" id="challenge-done-btn" onclick="markChallengeDone()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>I completed the Leverage Build</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself 1–5 on each criterion. If you didn't name specific leverage — a specific skill, a specific asset, a specific relationship — score yourself 2 or below.</p>
+
+    <div id="assessment-items">
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the Leverage Audit across all four domains — with honest, specific answers about what I actually have versus what I wish I had.</div>
+        <div class="score-buttons" data-item="0">
+          <button class="score-btn" onclick="setScore(0,1)">1</button><button class="score-btn" onclick="setScore(0,2)">2</button><button class="score-btn" onclick="setScore(0,3)">3</button><button class="score-btn" onclick="setScore(0,4)">4</button><button class="score-btn" onclick="setScore(0,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I identified at least one specific dependency that is costing me terms I wouldn't accept if I had real alternatives.</div>
+        <div class="score-buttons" data-item="1">
+          <button class="score-btn" onclick="setScore(1,1)">1</button><button class="score-btn" onclick="setScore(1,2)">2</button><button class="score-btn" onclick="setScore(1,3)">3</button><button class="score-btn" onclick="setScore(1,4)">4</button><button class="score-btn" onclick="setScore(1,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I rated my Skill Stack honestly and identified the one category to build most urgently — with a specific plan, not just an intention.</div>
+        <div class="score-buttons" data-item="2">
+          <button class="score-btn" onclick="setScore(2,1)">1</button><button class="score-btn" onclick="setScore(2,2)">2</button><button class="score-btn" onclick="setScore(2,3)">3</button><button class="score-btn" onclick="setScore(2,4)">4</button><button class="score-btn" onclick="setScore(2,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I completed the 7-day Leverage Build — 30 minutes of deliberate practice per day on the specific leverage asset I identified.</div>
+        <div class="score-buttons" data-item="3">
+          <button class="score-btn" onclick="setScore(3,1)">1</button><button class="score-btn" onclick="setScore(3,2)">2</button><button class="score-btn" onclick="setScore(3,3)">3</button><button class="score-btn" onclick="setScore(3,4)">4</button><button class="score-btn" onclick="setScore(3,5)">5</button>
+        </div>
+      </div>
+      <div class="assessment-item">
+        <div class="assessment-text">I can articulate the difference between competence and leverage — and I know specifically what rare thing I am building and why it will change my position.</div>
+        <div class="score-buttons" data-item="4">
+          <button class="score-btn" onclick="setScore(4,1)">1</button><button class="score-btn" onclick="setScore(4,2)">2</button><button class="score-btn" onclick="setScore(4,3)">3</button><button class="score-btn" onclick="setScore(4,4)">4</button><button class="score-btn" onclick="setScore(4,5)">5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score">0</div>
+      <div class="result-label">/ 25 — Module Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Go Deeper</p>
+    <h2>Assigned Reading</h2>
+    <p class="section-sub">For Module 6. These are the books that most directly address how leverage is built — not theoretically, but operationally.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Primary</span>
+      <div>
+        <p class="resource-title">So Good They Can't Ignore You — Cal Newport</p>
+        <p class="resource-desc">The most rigorous treatment of how rare and valuable career capital is actually built. Newport's central argument — that "follow your passion" is bad advice, and that passion follows mastery — is directly relevant here. The sections on deliberate practice and career capital are the operational framework for this module's challenge. Read the whole book, but focus on Part II and III.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">The Almanack of Naval Ravikant — Eric Jorgenson</p>
+        <p class="resource-desc">Naval's framework for building wealth without renting out your time is one of the clearest articulations of leverage available. His distinction between permissioned and permissionless leverage — and why specific knowledge (what you know that cannot be taught in a course) is more valuable than general skill — maps directly onto the three forms of leverage in this module.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Read</span>
+      <div>
+        <p class="resource-title">Never Eat Alone — Keith Ferrazzi</p>
+        <p class="resource-desc">The most practical treatment of network leverage available. Ferrazzi's core insight — that the most valuable networkers are relentless givers, not strategic takers — reframes how relationship capital is built. The chapters on how to approach people who are above you in any hierarchy are particularly relevant for the Network Audit.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Watch</span>
+      <div>
+        <p class="resource-title">Naval Ravikant — How to Get Rich (Not a How-To) (podcast / transcript)</p>
+        <p class="resource-desc">The original Twitter thread expanded into a full conversation. The sections on specific knowledge, permissionless leverage, and the difference between renting your time and owning equity in something are essential listening for anyone building the leverage side of Module 6. Available free as a podcast episode or full transcript online.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLETE -->
+  <section id="complete-section">
+    <div class="forge-score-display">
+      <div class="forge-score-number" id="forge-score">0</div>
+      <div class="forge-score-label">Forge Score</div>
+    </div>
+    <h2 class="complete-title">Module Complete</h2>
+    <p class="complete-sub">You know what leverage is and where yours is weak. Module 7 is about thinking strategically — moving with intention in a world that rewards it.</p>
+    <button class="btn-complete" id="complete-btn" onclick="completeModule()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Mark Module Complete
+    </button>
+    <div class="export-bar">
+      <button class="btn-export" onclick="printModule()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Save as PDF
+      </button>
+      <button class="btn-export" onclick="exportText()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Answers (.txt)
+      </button>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn-secondary" onclick="if(confirm('Reset all progress for this module?')) resetAll()">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.79"/></svg>
+        Reset progress
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'tfm_m6';
+
+  const state = {
+    marks: { hook: false, hardtruth: false, lesson: false },
+    scores: [0, 0, 0, 0, 0],
+    challengeDone: false,
+    moduleComplete: false,
+    days: [false,false,false,false,false,false,false],
+    leverageContexts: Array.from({length:4}, () => ({ current:'', worth:'', gap:'', next:'' })),
+    skillRatings: [0, 0, 0, 0, 0],
+    skillNotes: ['','','','','']
+  };
+
+  const TEXT_FIELDS = [
+    'r1','r2','r3','r4','r5',
+    'belief-version','belief-decisions',
+    'challenge-obs','challenge-reflect'
+  ];
+
+  const LEVER_CONTEXTS = [
+    { name: 'Skills',
+      p_current: 'e.g. "I can build full-stack web apps and know ML basics — but so can most mid-level devs"',
+      p_worth: 'e.g. "Worth £60-80k in the market; not scarce enough to command a premium"',
+      p_gap: 'e.g. "I have no specialisation — I\'m a generalist in a market that pays for depth"',
+      p_next: 'e.g. "Go deep on distributed systems — niche enough that fewer people have it"' },
+    { name: 'Financial',
+      p_current: 'e.g. "One salary, some savings, no assets generating income"',
+      p_worth: 'e.g. "Net worth £12k. No passive income. One single-point-of-failure income stream"',
+      p_gap: 'e.g. "No resource leverage at all — everything depends on my labour"',
+      p_next: 'e.g. "Start a second income stream — even £300/month changes my negotiating position"' },
+    { name: 'Network',
+      p_current: 'e.g. "I know a lot of people at my level. Very few above it"',
+      p_worth: 'e.g. "Current network gets me leads but no access to deals, capital, or senior introductions"',
+      p_gap: 'e.g. "I have no relationships with people who have genuine leverage in my field"',
+      p_next: 'e.g. "Build something worth sharing — so I have something to offer, not just ask for"' },
+    { name: 'Knowledge',
+      p_current: 'e.g. "I know my field well but nothing proprietary — it\'s all publicly available"',
+      p_worth: 'e.g. "My knowledge advantage is thin. I read the same things as everyone else"',
+      p_gap: 'e.g. "I have no information edge — no proprietary insight, no unique access"',
+      p_next: 'e.g. "Get closer to the work — direct market research, not second-hand summaries"' }
+  ];
+
+  const SKILL_AREAS = [
+    { label: 'Core / Domain Skill', desc: 'The main thing you do professionally or are building toward. How deep and rare is your expertise in your primary domain?' },
+    { label: 'Business & Financial', desc: 'Can you read a P&L? Understand a deal structure? Build and price an offer? Business literacy is leverage in almost every context.' },
+    { label: 'Communication & Persuasion', desc: 'Can you write clearly, speak compellingly, and sell an idea to someone who doesn\'t already agree with you? This multiplies every other skill.' },
+    { label: 'Technical / Digital', desc: 'Can you build tools, automate tasks, or use technical systems to produce more than the average person? Even basic technical literacy is increasingly leveraged.' },
+    { label: 'Physical & Operational', desc: 'Your physical capacity, energy management, and ability to execute under pressure. A high-leverage skill set operated by a depleted body produces diminishing returns.' }
+  ];
+
+  // ===== SAVE / LOAD =====
+  function save() {
+    const data = { state, texts: {} };
+    TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) data.texts[id] = el.value; });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.state) {
+        Object.assign(state, data.state);
+        if (!state.days || state.days.length !== 7) state.days = [false,false,false,false,false,false,false];
+        if (!state.leverageContexts || state.leverageContexts.length !== 4) state.leverageContexts = Array.from({length:4}, () => ({ current:'', worth:'', gap:'', next:'' }));
+        if (!state.skillRatings || state.skillRatings.length !== 5) state.skillRatings = [0,0,0,0,0];
+        if (!state.skillNotes || state.skillNotes.length !== 5) state.skillNotes = ['','','','',''];
+      }
+      if (data.texts) TEXT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el && data.texts[id]) { el.value = data.texts[id]; updateCharCount(el); } });
+    } catch(e) {}
+  }
+
+  let saveTimeout;
+  function autoSave(id, value) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      save();
+      const ind = document.getElementById(id + '-saved');
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
+      updateProgress();
+    }, 600);
+  }
+
+  // ===== PROGRESS =====
+  function calcProgress() {
+    let pts = 0;
+    if (state.marks.hook) pts += 5;
+    if (state.marks.hardtruth) pts += 5;
+    if (state.marks.lesson) pts += 5;
+    ['r1','r2','r3','r4','r5'].forEach(id => { const el = document.getElementById(id); if (el && el.value.trim().length > 30) pts += 4; });
+    const lFilled = state.leverageContexts.filter(c => c.current.trim().length > 3 && c.gap.trim().length > 3).length;
+    pts += Math.min(10, lFilled * 2.5);
+    const sRated = state.skillRatings.filter(r => r > 0).length;
+    pts += Math.min(5, sRated);
+    const sNoted = state.skillNotes.filter(n => n.trim().length > 10).length;
+    pts += Math.min(5, sNoted);
+    const bv = document.getElementById('belief-version'); if (bv && bv.value.trim().length > 10) pts += 5;
+    pts += Math.min(5, state.days.filter(Boolean).length);
+    const co = document.getElementById('challenge-obs'); if (co && co.value.trim().length > 30) pts += 4;
+    const cr = document.getElementById('challenge-reflect'); if (cr && cr.value.trim().length > 20) pts += 3;
+    if (state.challengeDone) pts += 3;
+    state.scores.forEach(s => { if (s > 0) pts += 1; });
+    return Math.min(100, pts);
+  }
+
+  function calcForgeScore() {
+    const assessTotal = state.scores.reduce((a,b) => a+b, 0);
+    return Math.min(100, Math.round((calcProgress() * 0.6) + (assessTotal / 25 * 40)));
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score').textContent = calcForgeScore();
+    updateSidebarState();
+    updateAssessmentResult();
+  }
+
+  function updateCharCount(el) {
+    const countEl = document.getElementById(el.id + '-count');
+    if (countEl) countEl.textContent = el.value.length + ' character' + (el.value.length === 1 ? '' : 's');
+  }
+
+  // ===== MARK READ =====
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      } else {
+        this.classList.remove('read');
+        this.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mark as read</span>`;
+      }
+      save(); updateProgress();
+    });
+  });
+
+  function applyMarks() {
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      if (state.marks[btn.dataset.marks]) {
+        btn.classList.add('read');
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Done</span>`;
+      }
+    });
+  }
+
+  // ===== STARTER PROMPTS =====
+  function toggleStarter(btn) {
+    const prompts = btn.nextElementSibling;
+    prompts.classList.toggle('open');
+    btn.style.opacity = prompts.classList.contains('open') ? '1' : '';
+  }
+
+  // ===== LEVERAGE AUDIT =====
+  let currentLever = 0;
+
+  function buildLeverPanels() {
+    const container = document.getElementById('lever-panels');
+    container.innerHTML = '';
+    LEVER_CONTEXTS.forEach((ctx, i) => {
+      const c = state.leverageContexts[i];
+      const panel = document.createElement('div');
+      panel.className = 'lever-panel' + (i === 0 ? ' active' : '');
+      panel.id = `leverp-${i}`;
+      panel.innerHTML = `
+        <p style="font-size:0.82rem;color:var(--security-gray);margin-bottom:20px;font-style:italic;">Map your current leverage in the domain of <strong style="color:var(--deep-vault)">${ctx.name}</strong>.</p>
+        <div class="lever-field">
+          <label>What leverage you currently have here</label>
+          <textarea rows="2" placeholder="${ctx.p_current}" oninput="updateLeverField(${i},'current',this.value)">${c.current}</textarea>
+        </div>
+        <div class="lever-field">
+          <label>What it's actually worth in the real world / market</label>
+          <textarea rows="2" placeholder="${ctx.p_worth}" oninput="updateLeverField(${i},'worth',this.value)">${c.worth}</textarea>
+        </div>
+        <div class="lever-field">
+          <label>The biggest gap — where your leverage is weakest or missing</label>
+          <textarea rows="2" placeholder="${ctx.p_gap}" oninput="updateLeverField(${i},'gap',this.value)">${c.gap}</textarea>
+        </div>
+        <div class="lever-field">
+          <label>The one thing to build next — specific, not vague</label>
+          <textarea rows="2" placeholder="${ctx.p_next}" oninput="updateLeverField(${i},'next',this.value)">${c.next}</textarea>
+        </div>`;
+      container.appendChild(panel);
+    });
+    updateLeverTabIndicators();
+  }
+
+  function switchLever(idx) {
+    currentLever = idx;
+    document.querySelectorAll('.lever-tab').forEach((t,i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.lever-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  }
+
+  function updateLeverField(ctxIdx, field, value) {
+    state.leverageContexts[ctxIdx][field] = value;
+    save(); updateLeverTabIndicators(); updateProgress();
+  }
+
+  function updateLeverTabIndicators() {
+    document.querySelectorAll('.lever-tab').forEach((tab, i) => {
+      const c = state.leverageContexts[i];
+      tab.classList.toggle('filled', !!(c.current.trim() || c.gap.trim()));
+    });
+  }
+
+  // ===== SKILL STACK =====
+  function buildSkillCard() {
+    const card = document.getElementById('skill-card');
+    card.innerHTML = '';
+    SKILL_AREAS.forEach((area, i) => {
+      const rating = state.skillRatings[i];
+      const note = state.skillNotes[i];
+      const item = document.createElement('div');
+      item.className = 'skill-item';
+      const ratings = [1,2,3,4,5].map(n => {
+        let cls = 'skill-btn';
+        if (rating === n) cls += n <= 2 ? ' selected-low' : n === 3 ? ' selected-mid' : ' selected-high';
+        return `<button class="${cls}" onclick="setSkillRating(${i},${n},this)">${n}</button>`;
+      }).join('');
+      item.innerHTML = `
+        <p class="skill-label">${area.label}</p>
+        <p class="skill-desc">${area.desc}</p>
+        <div class="skill-rating" data-skill="${i}">${ratings}</div>
+        <p style="font-size:0.72rem;color:var(--security-gray);margin-bottom:10px;">1–2 = weak / common &nbsp;|&nbsp; 3 = competent &nbsp;|&nbsp; 4–5 = rare leverage</p>
+        <div class="skill-field">
+          <label>What building this further would actually require — and whether you're doing it</label>
+          <textarea rows="3" placeholder="To develop real leverage here I would need to... Currently I am / am not doing this because..." oninput="updateSkillNote(${i},this.value)">${note}</textarea>
+        </div>`;
+      if (i < SKILL_AREAS.length - 1) {
+        const divider = document.createElement('div');
+        divider.style.cssText = 'margin:8px 0 20px;height:1px;background:var(--sg-border);';
+        item.appendChild(divider);
+      }
+      card.appendChild(item);
+    });
+  }
+
+  function setSkillRating(idx, value, btn) {
+    state.skillRatings[idx] = value;
+    const wrap = btn.closest('.skill-rating');
+    wrap.querySelectorAll('.skill-btn').forEach((b, i) => {
+      b.classList.remove('selected-low','selected-mid','selected-high');
+      const n = i + 1;
+      if (n === value) b.classList.add(n <= 2 ? 'selected-low' : n === 3 ? 'selected-mid' : 'selected-high');
+    });
+    save(); updateProgress();
+  }
+
+  function updateSkillNote(idx, value) {
+    state.skillNotes[idx] = value;
+    save(); updateProgress();
+  }
+
+  // ===== DAY TRACKER =====
+  function buildDayTracker() {
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const grid = document.getElementById('day-grid');
+    grid.innerHTML = '';
+    days.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check ${state.days[i]?'checked':''}" onclick="toggleDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleDay(idx, el) {
+    state.days[idx] = !state.days[idx];
+    el.classList.toggle('checked', state.days[idx]);
+    save(); updateProgress();
+  }
+
+  // ===== CHALLENGE =====
+  function markChallengeDone() {
+    state.challengeDone = !state.challengeDone;
+    const btn = document.getElementById('challenge-done-btn');
+    if (state.challengeDone) {
+      btn.classList.add('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`;
+    } else {
+      btn.classList.remove('read');
+      btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>I completed the Leverage Build</span>`;
+    }
+    save(); updateProgress();
+  }
+
+  // ===== ASSESSMENT =====
+  function setScore(item, value) {
+    state.scores[item] = value;
+    const container = document.querySelector(`.score-buttons[data-item="${item}"]`);
+    container.querySelectorAll('.score-btn').forEach((btn, i) => btn.classList.toggle('selected', i + 1 === value));
+    save(); updateProgress();
+  }
+
+  function updateAssessmentResult() {
+    const total = state.scores.reduce((a,b) => a+b, 0);
+    const allSet = state.scores.every(s => s > 0);
+    const el = document.getElementById('assessment-result');
+    if (!allSet) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    document.getElementById('result-score').textContent = total;
+    let msg = '';
+    if (total < 15) msg = "You read about leverage. You didn't audit it. The Leverage Audit only counts if you named specific things — a specific skill, a specific gap, a specific next action. Go back. Be honest.";
+    else if (total <= 20) msg = "Solid. You've mapped the gap between where you are and what you need to build. The Leverage Build habit — 30 minutes per day — is the mechanism. Keep it going after this week.";
+    else msg = "You did this properly. You mapped your actual leverage position, identified your real dependencies, and built the habit. That is how position changes — not through insight alone, but through the daily construction that follows it.";
+    document.getElementById('result-message').textContent = msg;
+  }
+
+  // ===== COMPLETE =====
+  function completeModule() {
+    state.moduleComplete = !state.moduleComplete;
+    const btn = document.getElementById('complete-btn');
+    if (state.moduleComplete) {
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`;
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Mark Module Complete`;
+    }
+    save();
+  }
+
+  function resetAll() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // ===== SIDEBAR =====
+  function updateSidebarState() {
+    const completionMap = {
+      hook: state.marks.hook,
+      'hard-truth': state.marks.hardtruth,
+      lesson: state.marks.lesson,
+      reflection: ['r1','r2','r3','r4','r5'].filter(id => { const e=document.getElementById(id); return e&&e.value.trim().length>30; }).length === 5,
+      system: state.leverageContexts.filter(c => c.current.trim().length>3 && c.gap.trim().length>3).length >= 3,
+      exercise: state.skillRatings.filter(r => r > 0).length >= 4,
+      belief: (() => { const bv=document.getElementById('belief-version'); return bv&&bv.value.trim().length>10&&state.days.some(Boolean); })(),
+      challenge: state.challengeDone,
+      assessment: state.scores.every(s => s > 0),
+      resources: false
+    };
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('done', !!completionMap[item.dataset.section]));
+  }
+
+  // ===== SCROLL SPY =====
+  function setupScrollSpy() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.getAttribute('href') === '#' + id));
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(el => obs.observe(el));
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  function setupAnimations() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(el => obs.observe(el));
+  }
+
+  // ===== MOBILE =====
+  document.getElementById('menu-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('main').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+  // ===== PRINT =====
+  function printModule() {
+    document.querySelectorAll('textarea').forEach(el => {
+      const div = document.createElement('div');
+      div.className = 'print-value';
+      div.textContent = el.value.trim() || '(not answered)';
+      el.after(div);
+    });
+    document.querySelectorAll('.lever-panel').forEach(p => p.style.display = 'block');
+    window.print();
+    document.querySelectorAll('.print-value').forEach(el => el.remove());
+    document.querySelectorAll('.lever-panel').forEach(p => p.style.display = '');
+  }
+
+  // ===== EXPORT TXT =====
+  function exportText() {
+    const date = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    const val = id => { const el = document.getElementById(id); return el && el.value.trim() ? el.value.trim() : '(not answered)'; };
+    const ln = (c, n) => c.repeat(n);
+    let out = `THE FORGED MAN — MODULE 6: THE LEVERAGE\nExported: ${date}\n${ln('=',52)}\n\n`;
+
+    out += `DEEP REFLECTION\n${ln('-',30)}\n\n`;
+    [['r1','Q1 — The Scarcity Test'],['r2','Q2 — The Dependency Audit'],['r3','Q3 — The Leverage Gap'],['r4','Q4 — The Build Question'],['r5','Q5 — The Network Audit']].forEach(([id,label]) => {
+      out += `${label}\n${val(id)}\n\n`;
+    });
+
+    out += `THE LEVERAGE AUDIT\n${ln('-',30)}\n\n`;
+    LEVER_CONTEXTS.forEach((ctx, i) => {
+      const c = state.leverageContexts[i];
+      out += `${ctx.name}\n`;
+      out += `  Current leverage: ${c.current||'(not filled)'}\n`;
+      out += `  Market worth: ${c.worth||'(not filled)'}\n`;
+      out += `  Biggest gap: ${c.gap||'(not filled)'}\n`;
+      out += `  Next build: ${c.next||'(not filled)'}\n\n`;
+    });
+
+    out += `THE SKILL STACK\n${ln('-',30)}\n\n`;
+    SKILL_AREAS.forEach((area, i) => {
+      out += `${area.label}: ${state.skillRatings[i]>0?state.skillRatings[i]+'/5':'not rated'}\n`;
+      out += `  ${state.skillNotes[i]||'(not filled)'}\n\n`;
+    });
+
+    out += `BELIEF INSTALL\n${ln('-',30)}\n\nMy version:\n${val('belief-version')}\n\n`;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    out += `7-Day Tracker: ${state.days.map((d,i) => d ? dayNames[i] : `[${dayNames[i]}]`).join('  ')}\n\n`;
+    out += `Daily Build Journal:\n${val('belief-decisions')}\n\n`;
+
+    out += `WEEKLY CHALLENGE — THE LEVERAGE BUILD\n${ln('-',30)}\n\nDaily Session Log:\n${val('challenge-obs')}\n\nEnd of Week Reflection:\n${val('challenge-reflect')}\nCompleted: ${state.challengeDone?'Yes':'No'}\n\n`;
+
+    out += `SELF-ASSESSMENT\n${ln('-',30)}\n\n`;
+    ['Completed Leverage Audit — specific, honest','Identified a specific costly dependency','Rated Skill Stack with a specific build plan','Completed 7-day Leverage Build challenge','Can articulate competence vs. leverage clearly'].forEach((label, i) => {
+      out += `${label}: ${state.scores[i]>0?state.scores[i]+'/5':'not scored'}\n`;
+    });
+    out += `\nTotal: ${state.scores.reduce((a,b)=>a+b,0)} / 25\nForge Score: ${calcForgeScore()} / 100\n`;
+
+    const blob = new Blob([out], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'forged-man-module-6-answers.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    load();
+    buildLeverPanels();
+    buildSkillCard();
+    buildDayTracker();
+    applyMarks();
+    state.scores.forEach((s,i) => { if (s>0) setScore(i,s); });
+    if (state.challengeDone) {
+      const btn = document.getElementById('challenge-done-btn');
+      if (btn) { btn.classList.add('read'); btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Challenge completed</span>`; }
+    }
+    if (state.moduleComplete) {
+      const btn = document.getElementById('complete-btn');
+      if (btn) { btn.classList.add('completed'); btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Module Complete`; }
+    }
+    updateProgress();
+    setupScrollSpy();
+    setupAnimations();
+  });
+</script>
+</body>
+</html>
