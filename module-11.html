@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 11: Reputation, Perception & Reality — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '11'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== REPUTATION AUDIT TABS ===== */
+    .rep-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .rep-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .rep-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .rep-tab:hover:not(.active) { color: var(--deep-vault); }
+    .rep-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .rep-tab.filled .tab-dot { opacity: 1; }
+    .rep-panel { display: none; padding: 24px 0 0; }
+    .rep-panel.active { display: block; }
+    .rep-field { margin-bottom: 16px; }
+    .rep-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .rep-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .rep-field textarea:focus { border-color: var(--banknote-green); }
+    .rep-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== PERCEPTION GAP ===== */
+    .gap-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .gap-step-header { padding: 14px 20px; background: rgba(11,107,77,0.03); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .gap-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(11,107,77,0.2); line-height: 1; flex-shrink: 0; }
+    .gap-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .gap-step-body { padding: 20px; }
+    .gap-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .gap-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .gap-field textarea:focus { border-color: var(--banknote-green); }
+    .gap-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    .print-value { display: none; white-space: pre-wrap; font-family: var(--font-body); font-size: 0.9rem; line-height: 1.7; color: var(--deep-vault); padding: 12px 0; border-bottom: 1px solid var(--sg-border); }
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .rep-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .rep-field textarea, .gap-field textarea { display: none; }
+      .print-value { display: block; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .rep-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 11 — Reputation, Perception & Reality</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Building It Deliberately</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Reputation Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Perception Gap</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 11 of 16 — Pillar IV: Power</p>
+    <h1>Reputation, <span>Perception & Reality</span></h1>
+    <p class="hero-tagline">"You will be judged before you speak. Your reputation is either an asset you built or a liability that built itself."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 mapping exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>What Precedes You Into Every Room</h2>
+    <p class="section-sub">Your reputation is not a summary of your character. It is a social asset — one that determines what opportunities reach you, what trust you receive, and how much friction you encounter in everything you pursue.</p>
+
+    <p>Before you open your mouth in any meeting, any deal, any new relationship — a version of you has already arrived. That version was assembled from past interactions, second-hand accounts, visible behavior, and the signals you've been broadcasting — deliberately or not. In most cases, this prior version of you does more to determine the outcome than anything you will say or do in the room.</p>
+    <p>Most men have never seriously thought about their reputation as something they are actively managing. They operate as though reputation is the automatic byproduct of good work and good intentions. This is exactly wrong. Good work with poor visibility produces a weak reputation. Poor work with skilled framing can produce a strong one — at least temporarily. And intentions are invisible. <strong>Reputation is built from what others observe and how they interpret it, not from what you know to be true about yourself.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>The uncomfortable truth is that managing your reputation is not vanity. It is competence. The man who refuses to care about perception on principle is not principled — he is delegating the construction of his reputation to chance, gossip, and other people's narratives. In high-stakes environments — career, business, leadership — that is a serious operational failure.</p>
+    <p>This module does not teach you to be fake. It teaches you to be deliberate. To understand what signals you are currently sending versus what signals you intend to send. To close the gap between who you are and how you are perceived — not by changing who you are, but by ensuring that what you do communicates accurately. <strong>Perception management in service of truth is not manipulation. It is communication.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Your Reputation Was Built Whether You Tried or Not</h2>
+    <p class="section-sub">The only question is whether you were the architect or the bystander. And if you were the bystander, you almost certainly didn't like what got built.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #11</p>
+      <p>"Other people's perception of you is not an accurate record of who you are. It is a story assembled from incomplete data. The man who refuses to influence that story will not be judged accurately — he will be judged by default."</p>
+    </div>
+
+    <p>Reputation operates on a fundamental asymmetry: it takes years of consistent behavior to build a strong one and a single visible mistake to damage it severely. It is slow to accumulate and fast to erode. It is heavily influenced by the most recent data and disproportionately shaped by a small number of high-stakes moments — the presentation that went wrong, the conflict that became public, the promise that wasn't kept, the time you came through when no one expected it.</p>
+    <p>Most men have multiple reputations simultaneously — one at work, one with close friends, one with family, one online — and they are often radically different. The confident, decisive version your colleagues see may be invisible to your family. The warm, generous version your friends know may never appear in professional settings. <strong>Reputation is not singular and portable — it is contextual, fragmented, and often internally inconsistent.</strong></p>
+
+    <h3>The three reputation killers</h3>
+    <p><strong>Inconsistency</strong> — doing the same thing sometimes and differently other times, with no apparent principle governing the difference. People conclude they cannot rely on you, and reliability is the foundation of every form of trust.</p>
+    <p><strong>Invisibility</strong> — doing excellent work that no one relevant ever sees or hears about. In most environments, the person who does good work quietly loses ground to the person who does adequate work visibly. Visibility is not bragging — it is making sure your contributions are legible to the people who need to see them.</p>
+    <p><strong>Misalignment</strong> — sending signals that contradict your actual values. The man who says he values directness but avoids every difficult conversation. The man who claims to be reliable but chronically runs late. The gap between stated values and visible behavior is interpreted as either deception or self-delusion — neither of which strengthens a reputation.</p>
+
+    <div class="callout warning">
+      <strong>The passive reputation trap:</strong> The most common failure mode is not a public scandal or a dramatic mistake. It is simply never making a deliberate decision about what reputation you want and what actions would build it. Years pass. Opportunities don't materialize. Relationships stay shallow. Trust doesn't compound. And the cause is invisible: a reputation that was assembled by default rather than designed with intention.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Building It Deliberately</h2>
+    <p class="section-sub">Reputation is built the same way everything else worth building is built — with a clear target, deliberate actions, and sustained consistency over time. The frameworks below give you the architecture.</p>
+
+    <h3>1. Define the reputation before you try to build it</h3>
+    <p>Most men have never clearly articulated the reputation they want to have in each important context of their life. This means they have no standard against which to evaluate their behavior, no clarity about which signals matter most, and no way to know if they are making progress. The first move is the most basic: decide specifically what you want to be known for — and in which domain. "Good at my job" is not a reputation. "The person who fixes difficult problems and never creates drama doing it" is a reputation. Specificity is what makes it buildable.</p>
+
+    <h3>2. The signal gap: what you intend vs. what lands</h3>
+    <p>Every behavior sends a signal. The problem is that the signal you intend to send and the signal that is received are often different — sometimes radically so. The man who means to project confidence projects arrogance. The man who means to project humility projects insecurity. The man who means to project diligence projects anxiety. <strong>You are not judged by your intentions. You are judged by the interpretation of your observable behavior.</strong> Closing the signal gap requires genuine curiosity about how others actually experience you — not how you believe they should.</p>
+
+    <h3>3. Consistency as reputation capital</h3>
+    <p>The single most powerful reputation-building mechanism is behavioral consistency over time. Not exceptional moments — consistent behavior. The man who is reliably direct, reliably prepared, reliably calm under pressure becomes known for those things without any self-promotion at all. Reputation compounds the same way interest does: small, consistent deposits over a long time produce large results. And inconsistency — even occasional — destroys that compounding effect faster than it was built.</p>
+
+    <h3>4. Manage the narrative, not just the behavior</h3>
+    <p>Behavior produces raw data. Narrative determines how that data is interpreted. The same action — challenging a decision in a meeting, declining a request, taking credit for a successful outcome — can be perceived as courageous leadership or reckless insubordination depending entirely on how it is framed and who is framing it. This does not mean spinning the truth. It means taking responsibility for the interpretation of your behavior rather than assuming the best interpretation will occur automatically. <strong>If you do not frame your own actions, others will frame them for you — and they will not frame them in your favor.</strong></p>
+
+    <h3>5. Reputational recovery</h3>
+    <p>Reputation damage — from a genuine mistake, a misunderstanding, or someone else's narrative — is recoverable, but only through specific mechanism: acknowledgment, visible change, and sustained consistency over time. The common responses — denial, over-explanation, waiting for it to blow over — all extend the damage. Reputation responds to evidence. The evidence required is behavioral, sustained, and credible. <strong>The fastest path through a reputational problem is straight through it, not around it.</strong></p>
+
+    <div class="callout">
+      <strong>On authenticity vs. strategy:</strong> There is a false tension between being authentic and being strategic about reputation. Authenticity means behaving consistently with your actual values. Strategy means ensuring that behavior is visible, legible, and interpreted accurately. Both are necessary. The man who is authentic but invisible loses. The man who is strategic but hollow eventually loses. The man who does excellent work and ensures it is accurately understood wins — and this is not manipulation. It is mature communication.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">These questions require honest, specific answers grounded in your actual experience — not abstract agreement with the principles. Generic answers produce no insight.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">What is your current reputation in the environment that matters most to you professionally? Not what you hope it is or what you believe you deserve — what do you think people actually say about you when you are not in the room? What are you known for, specifically?</p>
+      <p class="card-hint">This requires you to step outside your own perspective. Think about actual feedback you've received, patterns in how people treat you, who seeks you out and who avoids you, what projects you get offered and what you're overlooked for. Evidence, not self-assessment.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The environment I'm assessing is... The feedback I've received that was hardest to hear was..."</p>
+        <p>"If I'm honest, I think the three things I'm most known for in this context are... and I'm less proud of..."</p>
+        <p>"The evidence for this — actual data, not what I hope is true — includes..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">Where is the largest gap between who you know yourself to be and how you believe you are perceived? What caused that gap — deliberate choices you made, behaviors you haven't examined, something someone else built without your input? Is the gap getting larger or smaller over time?</p>
+      <p class="card-hint">Perception gaps are usually caused by one of three things: invisible good behavior (doing the right things but never where others can see), visible inconsistent behavior (sometimes behaving contrary to your stated values), or inherited narrative (a label from the past that no longer fits but still circulates). Which is yours?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The area where the perception gap is largest is... The version of me I know exists but rarely shows up publicly is..."</p>
+        <p>"The cause of this gap is... The specific behaviors or patterns that created it are..."</p>
+        <p>"Evidence that the gap is getting larger/smaller: I've noticed that people..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">Name one person in your life who has an exceptionally strong reputation — someone who is genuinely trusted, respected, and sought out. What, specifically, do they do that creates that? Not the abstract qualities — the specific, observable behaviors and habits that produce the reputation. What would it cost you to replicate those things?</p>
+      <p class="card-hint">Reputation study is one of the fastest learning shortcuts available. The person you admire has already run the experiment. Analyze it. Not their personality or their talent — their repeatable behaviors. The thing they consistently do. The thing they never do. How they handle failure in public. How they handle success. The patterns are there if you look for them.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The person is... The specific behaviors I've observed that build their reputation are..."</p>
+        <p>"The thing they consistently do that I don't is... The thing they never do that I sometimes do is..."</p>
+        <p>"The cost to me of replicating this would be... What I'm actually protecting by not doing it is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">What is the one behavioral inconsistency that most undermines your reputation — the thing you do (or don't do) that contradicts the identity you want to be known for? What would need to change, specifically, for that inconsistency to disappear? What is stopping you from making that change?</p>
+      <p class="card-hint">Inconsistency is the most credibility-corrosive force in reputation. One incidence of unreliability undoes multiple acts of reliability. One avoidance of a hard conversation undoes many acts of directness. The question is not "do I have an inconsistency" — everyone does. The question is which one costs you the most and why you haven't addressed it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The inconsistency that most undermines my reputation is... I want to be known as... but I sometimes..."</p>
+        <p>"What would need to change for this inconsistency to disappear is... What's stopping me is..."</p>
+        <p>"The real cost of this inconsistency — in opportunities, trust, relationships — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">If you were to design the reputation you want to have in three years' time — in your most important professional context and your most important personal context — what would it be? What would people say about you specifically? What three to five behaviors, done consistently, would build that reputation over time?</p>
+      <p class="card-hint">This is the architectural question. Not "what kind of person do I want to be" in the abstract — what specific reputation, in specific contexts, with specific people. And then the reverse-engineering: what observable, repeatable behavior would produce that reputation if done consistently over three years? Be specific enough that you could measure whether you're doing it.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"In three years, in my professional context, I want to be known as... The specific things people would say are..."</p>
+        <p>"In three years, in my personal life, I want to be known as... The specific things people who know me well would say are..."</p>
+        <p>"The three behaviors that would most reliably build this reputation if done consistently are..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- REPUTATION AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">Exercise One</p>
+    <h2>The Reputation Audit</h2>
+    <p class="section-sub">Map your current reputation across five key contexts. For each one: what is your current reputation, what do you want it to be, and what is the gap. The audit produces the target. The target produces the plan.</p>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <p class="card-title">Context-by-Context Audit</p>
+      </div>
+      <p class="card-hint" style="margin-bottom: 20px;">Work through each context. Be honest about the current state — this is not a performance, it's a diagnostic. The more accurate the audit, the more actionable the result.</p>
+
+      <div class="rep-tabs" id="rep-tabs"></div>
+      <div id="rep-panels"></div>
+    </div>
+  </section>
+
+  <!-- PERCEPTION GAP ANALYSIS -->
+  <section class="section" id="exercise">
+    <p class="section-tag">Exercise Two</p>
+    <h2>The Perception Gap Analysis</h2>
+    <p class="section-sub">A structured diagnostic for identifying the gap between how you see yourself and how you are most likely perceived — and building a targeted action plan to close it.</p>
+
+    <div id="gap-steps"></div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">Belief Install</p>
+    <h2>The Belief This Module Installs</h2>
+    <p class="section-sub">Read this aloud. Write it in your own words. Sit with it. Beliefs are installed through repetition and reflection, not passive reading.</p>
+
+    <div class="belief-display" id="belief-text">
+      "My reputation is an asset I build deliberately, not a report card I receive. I manage what I can control — my behavior, my consistency, my communication — and I do not abandon that responsibility to chance or other people's narratives."
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Belief Reinforcement — check in each day you reflected on this belief</p>
+      <div class="day-grid" id="belief-day-grid"></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Write the belief in your own words</p>
+      <textarea class="journal-area" id="belief-version" placeholder="Rewrite the belief in language that resonates with you specifically..." rows="4" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">What would change if you fully lived this belief?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="What specifically would you do differently? What would you stop doing? What conversations would you have that you currently avoid?" rows="5" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Signal Audit</h2>
+    <p class="section-sub">Seven days of deliberate signal mapping — noticing the gap between what you intend to communicate and what you actually communicate.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">The Challenge</p>
+      <p>For seven days, after every significant interaction — a meeting, a difficult conversation, a decision made publicly — pause and ask: What signal did I intend to send? What signal do I think actually landed? What evidence do I have? Then write it down. One observation per day is enough. What you notice will permanently change how you show up.</p>
+    </div>
+
+    <p>You are not trying to perform differently this week. You are trying to observe more accurately. The goal is data collection, not behavior change — though behavior change tends to follow automatically when you see clearly what you're actually broadcasting versus what you believe you're broadcasting.</p>
+    <p>Pay particular attention to: how you behave when you're stressed or pressed for time (this is when your actual defaults are most visible), how you respond to being challenged in front of others, how you give and receive credit, and how you communicate when you don't know the answer.</p>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Daily Signal Log (one observation per day)</p>
+      <textarea class="journal-area" id="challenge-log" placeholder="Day 1: The interaction was... I intended to signal... What I think actually landed was... I noticed this because..." rows="12" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself honestly on each dimension. These scores feed your Forge Score for this module. There are no correct answers — only honest ones.</p>
+
+    <div id="assessment-items"></div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score-display">—</div>
+      <div class="result-label">Module Self-Assessment Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Recommended Reading</p>
+    <h2>Go Deeper</h2>
+    <p class="section-sub">Four books that form the intellectual foundation behind this module. Each rewards a second reading.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Reputation: A Network Interpretation — David Wank</div>
+        <div class="resource-desc">A rigorous analysis of how reputation is actually formed and propagated through social networks. Essential for understanding why reputation is not simply a function of merit.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Influence — Robert Cialdini</div>
+        <div class="resource-desc">The foundational text on how perception shapes behavior. Understanding the psychology of influence is the prerequisite for understanding how reputation operates on others' decisions.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The 48 Laws of Power — Robert Greene</div>
+        <div class="resource-desc">A historical case study in reputation management, perception, and the mechanics of how social standing is built and destroyed. Read it as a diagnostic, not a manual.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">How to Win Friends and Influence People — Dale Carnegie</div>
+        <div class="resource-desc">Still the clearest practical guide to the behavioral foundations of strong interpersonal reputation. The principles have not aged. The examples are dated; the framework is not.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- COMPLETE -->
+<section id="complete-section">
+  <div class="forge-score-display">
+    <div class="forge-score-number" id="forge-score-display">—</div>
+    <div class="forge-score-label">Forge Score</div>
+  </div>
+  <h2 class="complete-title">Module 11 Complete</h2>
+  <p class="complete-sub">You have mapped your reputation across five contexts and built a plan to close the most critical gaps. The gap between who you are and how you are perceived narrows with every deliberate action.</p>
+  <button class="btn-complete" id="complete-btn" onclick="toggleComplete()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    Mark Module Complete
+  </button>
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportPDF()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export PDF
+    </button>
+    <button class="btn-export" onclick="exportTXT()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download .txt
+    </button>
+    <a href="index.html" class="btn-secondary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Course
+    </a>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'tfm_m11';
+
+  const TEXT_FIELDS = ['r1','r2','r3','r4','r5','belief-version','belief-journal','challenge-log'];
+
+  const REP_CONTEXTS = [
+    {
+      name: 'Professional',
+      desc: 'Your workplace, career, clients, or professional peers.',
+      p_current: 'What is your current reputation here? What are you known for — specifically?',
+      p_desired: 'What do you want to be known for in this context in three years?',
+      p_gap: 'What is the most significant gap between current and desired? What is causing it?',
+      p_action: 'What three specific behaviors, done consistently, would close this gap?'
+    },
+    {
+      name: 'Social',
+      desc: 'Your broader social circle — friends, community, peers you interact with regularly.',
+      p_current: 'What is your current reputation here? What do people know you for in this context?',
+      p_desired: 'What do you want to be known for in this social context?',
+      p_gap: 'Where is the most significant gap? What specific behavior is causing it?',
+      p_action: 'What specific changes in your behavior would shift how you are perceived here?'
+    },
+    {
+      name: 'Inner Circle',
+      desc: 'Your closest relationships — the five to ten people who know you best.',
+      p_current: 'What is your reputation with the people who know you most deeply? What do they see that others don\'t?',
+      p_desired: 'What do you want the people closest to you to say about you?',
+      p_gap: 'What is the gap? What are you like with the people who see you unfiltered that you wouldn\'t want broadcast more widely?',
+      p_action: 'What would change if you brought the same deliberateness to your closest relationships as to your professional ones?'
+    },
+    {
+      name: 'Online / Public',
+      desc: 'Your digital presence — what exists when someone searches your name or finds your profiles.',
+      p_current: 'What does your current online presence communicate? What impression does someone get who doesn\'t know you?',
+      p_desired: 'What should someone learn about you from your digital footprint? What impression is worth building?',
+      p_gap: 'What is the gap between current and desired digital reputation? What is missing or wrong?',
+      p_action: 'What are two to three concrete steps to close this gap — additions, deletions, or changes?'
+    },
+    {
+      name: 'New Encounters',
+      desc: 'First impressions — what you communicate to people meeting you for the first time.',
+      p_current: 'What is the dominant impression you make on people who meet you for the first time? What do you think they conclude?',
+      p_desired: 'What do you want someone to know about you from a single meeting? What matters most to communicate early?',
+      p_gap: 'What is the gap? What do you sometimes communicate in first impressions that does not reflect who you are?',
+      p_action: 'What one change to your first-impression behavior would most close this gap?'
+    }
+  ];
+
+  const GAP_STEPS = [
+    {
+      num: '01', label: 'Identify the Critical Context',
+      fields: [
+        { id: 'gap-context', label: 'Which context has the most consequential perception gap right now?', ph: 'Name the specific context and why it matters most at this point in your life...' },
+        { id: 'gap-stake', label: 'What is at stake if the gap remains? What has it already cost you?', ph: 'Be specific — opportunities missed, relationships damaged, trust not extended...' }
+      ]
+    },
+    {
+      num: '02', label: 'Map the Signal Gap',
+      fields: [
+        { id: 'gap-intend', label: 'What do you intend to communicate in this context?', ph: 'The impression you believe you are creating — your intentions, the values you think come through...' },
+        { id: 'gap-land', label: 'What do you think actually lands? What is the received signal?', ph: 'Based on evidence — feedback, how people treat you, patterns you\'ve noticed — what do others actually experience?' }
+      ]
+    },
+    {
+      num: '03', label: 'Diagnose the Cause',
+      fields: [
+        { id: 'gap-cause', label: 'What specific behaviors or patterns are causing the gap?', ph: 'Not "I\'m not good at communication" — which specific behaviors, when, with whom, in what situations...' },
+        { id: 'gap-fear', label: 'What are you protecting by maintaining these behaviors? What would you risk by changing them?', ph: 'Fear of conflict, fear of vulnerability, comfort, habit — what is the actual cost of change you\'ve been avoiding?' }
+      ]
+    },
+    {
+      num: '04', label: 'Design the Correction',
+      fields: [
+        { id: 'gap-change', label: 'What three specific behaviors, if changed, would most directly close the gap?', ph: 'Observable, specific, measurable behaviors — not "be more confident" but "stop apologizing before stating opinions in meetings"...' },
+        { id: 'gap-timeline', label: 'What does success look like in 90 days? What evidence would tell you the gap is closing?', ph: 'Concrete signals — specific feedback, specific changes in how people interact with you, measurable outcomes...' }
+      ]
+    },
+    {
+      num: '05', label: 'Commit to the First Step',
+      fields: [
+        { id: 'gap-first', label: 'What is the single most important first action — in the next seven days?', ph: 'One specific, doable thing. Not the full plan — the first step that makes the rest more likely...' },
+        { id: 'gap-review', label: 'When and how will you review your progress? Who, if anyone, will hold you accountable?', ph: 'A specific date, a specific question you\'ll ask yourself, and optionally a specific person...' }
+      ]
+    }
+  ];
+
+  const ASSESSMENT_ITEMS = [
+    "I can accurately describe my current reputation in my most important professional context — with evidence, not just self-assessment.",
+    "I have identified the most significant gap between how I see myself and how I am likely perceived, and I understand what is causing it.",
+    "I have named the behavioral inconsistency that most undermines my reputation and I have a specific plan to address it.",
+    "I have mapped my desired reputation in my most important contexts and identified the specific behaviors that would build it.",
+    "I have completed the Reputation Audit across all five contexts with genuine honesty.",
+    "I have worked through the Perception Gap Analysis and have a clear first action to close my most critical gap."
+  ];
+
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let state = {
+    marks: {},
+    repAudit: Array.from({length: 5}, () => ({ current: '', desired: '', gap: '', action: '' })),
+    gapFields: {},
+    beliefDays: Array(7).fill(false),
+    scores: {},
+    complete: false
+  };
+
+  let saveTimer = null;
+  function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function autoSave(key, value) {
+    state[key] = value;
+    clearTimeout(saveTimer);
+    const ind = document.getElementById(key + '-saved');
+    if (ind) ind.classList.remove('show');
+    saveTimer = setTimeout(() => {
+      save();
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+    }, 600);
+  }
+
+  function updateCharCount(ta) {
+    const id = ta.id + '-count';
+    const el = document.getElementById(id);
+    if (el) el.textContent = ta.value.length + ' characters';
+  }
+
+  function toggleStarter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.querySelector('svg').style.transform = box.classList.contains('open') ? 'rotate(45deg)' : '';
+  }
+
+  /* ===== REPUTATION AUDIT ===== */
+  function buildRepPanels() {
+    const tabsEl = document.getElementById('rep-tabs');
+    const panelsEl = document.getElementById('rep-panels');
+    tabsEl.innerHTML = '';
+    panelsEl.innerHTML = '';
+    REP_CONTEXTS.forEach((ctx, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'rep-tab' + (i === 0 ? ' active' : '');
+      tab.innerHTML = ctx.name + '<span class="tab-dot"></span>';
+      tab.onclick = () => switchRep(i);
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = 'rep-panel' + (i === 0 ? ' active' : '');
+      panel.id = 'rep-panel-' + i;
+      panel.innerHTML = `<p style="font-size:0.85rem;color:var(--security-gray);margin-bottom:18px;font-style:italic;">${ctx.desc}</p>` +
+        ['current','desired','gap','action'].map(f => `
+          <div class="rep-field">
+            <label>${ctx['p_'+f]}</label>
+            <textarea rows="3" placeholder="Your answer..." oninput="updateRepField(${i},'${f}',this.value)">${state.repAudit[i][f]||''}</textarea>
+          </div>`).join('');
+      panelsEl.appendChild(panel);
+
+      const fields = panel.querySelectorAll('textarea');
+      fields.forEach((ta, fi) => {
+        const keys = ['current','desired','gap','action'];
+        ta.oninput = function() { updateRepField(i, keys[fi], this.value); };
+      });
+    });
+    updateRepTabDots();
+  }
+
+  function switchRep(idx) {
+    document.querySelectorAll('.rep-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.rep-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  }
+
+  function updateRepField(ctxIdx, field, value) {
+    state.repAudit[ctxIdx][field] = value;
+    save();
+    updateRepTabDots();
+    updateProgress();
+  }
+
+  function updateRepTabDots() {
+    document.querySelectorAll('.rep-tab').forEach((tab, i) => {
+      const data = state.repAudit[i];
+      const filled = data.current || data.desired || data.gap || data.action;
+      tab.classList.toggle('filled', !!filled);
+    });
+  }
+
+  /* ===== PERCEPTION GAP ===== */
+  function buildGapSteps() {
+    const container = document.getElementById('gap-steps');
+    container.innerHTML = '';
+    GAP_STEPS.forEach(step => {
+      const div = document.createElement('div');
+      div.className = 'gap-step';
+      div.innerHTML = `
+        <div class="gap-step-header">
+          <span class="gap-step-num">${step.num}</span>
+          <span class="gap-step-label">${step.label}</span>
+        </div>
+        <div class="gap-step-body">
+          ${step.fields.map(f => `
+            <div class="gap-field">
+              <label>${f.label}</label>
+              <textarea id="${f.id}" rows="3" placeholder="${f.ph}"></textarea>
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta) {
+          ta.oninput = function() {
+            state.gapFields[f.id] = this.value;
+            save();
+            updateProgress();
+          };
+        }
+      });
+    });
+  }
+
+  /* ===== BELIEF DAYS ===== */
+  function buildBeliefGrid() {
+    const grid = document.getElementById('belief-day-grid');
+    grid.innerHTML = '';
+    DAYS.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check${state.beliefDays[i]?' checked':''}" onclick="toggleBeliefDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleBeliefDay(idx, el) {
+    state.beliefDays[idx] = !state.beliefDays[idx];
+    el.classList.toggle('checked', state.beliefDays[idx]);
+    save(); updateProgress();
+  }
+
+  /* ===== ASSESSMENT ===== */
+  function buildAssessment() {
+    const container = document.getElementById('assessment-items');
+    container.innerHTML = '';
+    ASSESSMENT_ITEMS.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'assessment-item';
+      div.innerHTML = `
+        <div class="assessment-text">${text}</div>
+        <div class="score-buttons">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn${state.scores[i]===n?' selected':''}" onclick="setScore(${i},${n},this)">${n}</button>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function setScore(idx, val, btn) {
+    state.scores[idx] = val;
+    btn.closest('.score-buttons').querySelectorAll('.score-btn').forEach((b,i) => b.classList.toggle('selected', i+1===val));
+    save(); updateProgress(); updateAssessmentResult();
+  }
+
+  function updateAssessmentResult() {
+    const keys = Object.keys(state.scores);
+    if (keys.length < ASSESSMENT_ITEMS.length) return;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    const pct = Math.round((avg/5)*100);
+    document.getElementById('result-score-display').textContent = pct + '%';
+    const msgs = [
+      [0,40,'This module has surfaced significant gaps. Revisit the Reputation Audit and be more specific about what you want and what needs to change. The clarity will come with more honesty.'],
+      [40,65,'Solid foundation. You have identified the gaps that matter most. The next step is converting the audit into a consistent behavioral commitment over the next 90 days.'],
+      [65,85,'Strong awareness and a clear plan. Your challenge now is execution — specifically, the behavioral inconsistencies you named. Those are the leverage points.'],
+      [85,101,'Exceptional clarity. You understand your reputation landscape and have a precise plan to build it deliberately. Your Forge Score reflects a man who sees himself accurately.']
+    ];
+    const [,, msg] = msgs.find(([lo,hi]) => pct >= lo && pct < hi);
+    document.getElementById('result-message').textContent = msg;
+    document.getElementById('assessment-result').classList.add('show');
+  }
+
+  /* ===== PROGRESS ===== */
+  function calcProgress() {
+    let points = 0, total = 0;
+
+    TEXT_FIELDS.forEach(id => {
+      total += 2;
+      const v = state[id] || '';
+      if (v.length > 50) points += 2;
+      else if (v.length > 0) points += 1;
+    });
+
+    ['hook','hardtruth','lesson'].forEach(k => { total += 1; if (state.marks[k]) points += 1; });
+
+    state.repAudit.forEach(ctx => {
+      total += 4;
+      ['current','desired','gap','action'].forEach(f => { if ((ctx[f]||'').length > 30) points += 1; });
+    });
+
+    GAP_STEPS.forEach(step => {
+      step.fields.forEach(f => {
+        total += 1;
+        if ((state.gapFields[f.id]||'').length > 30) points += 1;
+      });
+    });
+
+    const beliefChecked = state.beliefDays.filter(Boolean).length;
+    total += 7; points += beliefChecked;
+
+    return Math.min(100, Math.round((points / total) * 100));
+  }
+
+  function calcForgeScore() {
+    const progress = calcProgress();
+    const scoreKeys = Object.keys(state.scores);
+    if (scoreKeys.length === 0) return progress;
+    const avgScore = scoreKeys.reduce((s,k) => s + state.scores[k], 0) / scoreKeys.length;
+    const selfPct = Math.round((avgScore / 5) * 100);
+    return Math.round(progress * 0.6 + selfPct * 0.4);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    const forge = calcForgeScore();
+    document.getElementById('forge-score-display').textContent = forge + '%';
+
+    const allTextDone = TEXT_FIELDS.every(id => (state[id]||'').length > 50);
+    const allMarksDone = ['hook','hardtruth','lesson'].every(k => state.marks[k]);
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      if (sec === 'reflection') item.classList.toggle('done', allTextDone);
+      if (sec === 'hook') item.classList.toggle('done', !!state.marks.hook);
+      if (sec === 'hard-truth') item.classList.toggle('done', !!state.marks.hardtruth);
+      if (sec === 'lesson') item.classList.toggle('done', !!state.marks.lesson);
+    });
+  }
+
+  /* ===== COMPLETE ===== */
+  function toggleComplete() {
+    state.complete = !state.complete;
+    const btn = document.getElementById('complete-btn');
+    if (state.complete) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mark Module Complete';
+    }
+    save();
+  }
+
+  /* ===== EXPORT ===== */
+  function exportPDF() { window.print(); }
+
+  function exportTXT() {
+    let txt = 'THE FORGED MAN — MODULE 11: REPUTATION, PERCEPTION & REALITY\n';
+    txt += '='.repeat(60) + '\n\n';
+    const labels = { r1:'Q1 Current Reputation', r2:'Q2 Perception Gap', r3:'Q3 Reputation Study', r4:'Q4 Inconsistency', r5:'Q5 Desired Reputation', 'belief-version':'Belief (Own Words)', 'belief-journal':'Belief Reflection', 'challenge-log':'Signal Log' };
+    TEXT_FIELDS.forEach(id => {
+      const val = state[id] || '';
+      if (val.trim()) { txt += (labels[id] || id).toUpperCase() + '\n' + '-'.repeat(40) + '\n' + val.trim() + '\n\n'; }
+    });
+    txt += 'REPUTATION AUDIT\n' + '-'.repeat(40) + '\n';
+    REP_CONTEXTS.forEach((ctx, i) => {
+      txt += `\n${ctx.name.toUpperCase()}\n`;
+      ['current','desired','gap','action'].forEach(f => {
+        if (state.repAudit[i][f]) txt += `  ${f.toUpperCase()}: ${state.repAudit[i][f]}\n`;
+      });
+    });
+    txt += '\nPERCEPTION GAP ANALYSIS\n' + '-'.repeat(40) + '\n';
+    GAP_STEPS.forEach(step => {
+      txt += `\n${step.num}. ${step.label}\n`;
+      step.fields.forEach(f => {
+        const v = state.gapFields[f.id] || '';
+        if (v) txt += `  ${f.label}\n  ${v}\n`;
+      });
+    });
+    const blob = new Blob([txt], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-11-reputation.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const sections = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  }
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  }
+
+  /* ===== MARK READ ===== */
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) {
+        this.classList.add('read');
+        this.querySelector('span').textContent = 'Read';
+      } else {
+        this.classList.remove('read');
+        this.querySelector('span').textContent = 'Mark as read';
+      }
+      save(); updateProgress();
+    });
+  });
+
+  /* ===== MOBILE MENU ===== */
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  /* ===== INIT ===== */
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(state, parsed);
+        if (!state.repAudit || state.repAudit.length !== 5) state.repAudit = Array.from({length:5}, () => ({current:'',desired:'',gap:'',action:''}));
+        if (!state.beliefDays || state.beliefDays.length !== 7) state.beliefDays = Array(7).fill(false);
+        if (!state.gapFields) state.gapFields = {};
+        if (!state.scores) state.scores = {};
+      } catch(e) {}
+    }
+
+    buildRepPanels();
+    buildGapSteps();
+    buildBeliefGrid();
+    buildAssessment();
+
+    // Restore text fields
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) { el.value = state[id]; updateCharCount(el); }
+    });
+
+    // Restore gap fields after buildGapSteps
+    GAP_STEPS.forEach(step => {
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta && state.gapFields[f.id]) ta.value = state.gapFields[f.id];
+      });
+    });
+
+    // Restore mark-read buttons
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) {
+        btn.classList.add('read');
+        btn.querySelector('span').textContent = 'Read';
+      }
+    });
+
+    // Restore complete button
+    if (state.complete) {
+      const btn = document.getElementById('complete-btn');
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    }
+
+    // Restore assessment scores
+    if (Object.keys(state.scores).length > 0) updateAssessmentResult();
+
+    updateProgress();
+    initScrollSpy();
+    initScrollAnimations();
+  });
+</script>
+</body>
+</html>
