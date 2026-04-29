@@ -441,7 +441,7 @@
       </div>
       <div class="progress-divider"></div>
       <div class="progress-bar-wrap">
-        <div class="progress-bar-label">Overall Progress</div>
+        <div class="progress-bar-label">Overall Progress <span id="overall-pct" style="color:var(--gold-foil);font-weight:700;margin-left:8px;">0%</span></div>
         <div class="progress-bar-track">
           <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
         </div>
@@ -837,6 +837,7 @@
     document.getElementById('stat-progress').textContent  = inProgressCount;
     const overallPct = Math.round((completeCount / 16) * 100);
     document.getElementById('overall-bar').style.width    = overallPct + '%';
+    document.getElementById('overall-pct').textContent    = overallPct + '%';
   }
 
   // ===== SCROLL ANIMATIONS =====
