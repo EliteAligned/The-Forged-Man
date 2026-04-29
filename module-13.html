@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 13: Money, Independence & Leverage — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '13'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== LEVERAGE AUDIT TABS ===== */
+    .lev-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .lev-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .lev-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .lev-tab:hover:not(.active) { color: var(--deep-vault); }
+    .lev-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .lev-tab.filled .tab-dot { opacity: 1; }
+    .lev-panel { display: none; padding: 24px 0 0; }
+    .lev-panel.active { display: block; }
+    .lev-field { margin-bottom: 16px; }
+    .lev-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .lev-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .lev-field textarea:focus { border-color: var(--banknote-green); }
+    .lev-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== FREEDOM DESIGN ===== */
+    .fd-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .fd-step-header { padding: 14px 20px; background: rgba(11,107,77,0.03); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .fd-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(11,107,77,0.2); line-height: 1; flex-shrink: 0; }
+    .fd-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .fd-step-body { padding: 20px; }
+    .fd-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .fd-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .fd-field textarea:focus { border-color: var(--banknote-green); }
+    .fd-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .lev-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .lev-field textarea, .fd-field textarea { display: none; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .lev-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 13 — Money, Independence & Leverage</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Building Leverage</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Leverage Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Freedom Design</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 13 of 16 — Pillar IV: Power</p>
+    <h1>Money, Independence <span>& Leverage</span></h1>
+    <p class="hero-tagline">"Financial dependence is not just an economic condition. It is a constraint on every decision you will ever make."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>2 planning exercises</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>What Money Is Actually For</h2>
+    <p class="section-sub">Most men treat money as the goal. The men who build real power treat it as a tool — specifically, the tool that purchases independence.</p>
+
+    <p>The standard approach to money is to earn more of it, spend most of it, and hope the remainder accumulates into something that eventually provides security. This approach produces men who are perpetually dependent — on their employer, on their clients, on economic conditions they cannot control — no matter how much they earn. The size of the income doesn't solve the dependency problem. Only the structure of the finances does.</p>
+    <p>Money in this context is not about consumption. It is not about status signaling or lifestyle. It is about one thing: <strong>the ability to say no.</strong> No to the job you hate but can't leave. No to the client who mistreats you but you can't fire. No to the compromise that costs you dignity because you can't afford to hold the line. Financial independence — even partial, even preliminary — is what makes genuine choice possible in every other domain of your life.</p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>The second function of money — beyond independence — is leverage. Money is not the only form of leverage available, but it is the one that converts most reliably into other forms. Capital buys time. Time buys skill. Skill builds reputation. Reputation creates opportunity. Opportunity generates more capital. The man who understands this chain and designs his financial life to accelerate it is playing a fundamentally different game from the man optimizing for monthly income and consumption.</p>
+    <p>This module does not teach you investment theory or tax strategy. It teaches you to think about money the way men who build real power think about it — as a tool for purchasing freedom and amplifying every other form of leverage you possess. <strong>That reframe alone is worth more than most financial advice you will ever read.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>If You Need the Job, You Don't Have Leverage</h2>
+    <p class="section-sub">Financial need is a constraint that operates quietly in the background of every decision you make. You may not notice it — but the people who employ you, pay you, or depend on your need absolutely do.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #13</p>
+      <p>"The man who cannot afford to walk away from a situation is not negotiating from strength — he is managing decline. Real leverage in any relationship, professional or personal, begins with the genuine ability to exit."</p>
+    </div>
+
+    <p>This truth is uncomfortable because it is absolute. It does not matter how skilled you are, how indispensable you believe yourself to be, how well-liked you are in an organization. If leaving is not a real option — if the financial consequences are genuinely prohibitive — then your negotiating position is weak, full stop. Not weak in some situations. Weak structurally, in all situations, including the ones that feel fine right now.</p>
+    <p>The evidence is visible in ordinary life. The man who cannot leave his job tolerates things he would not tolerate if he could. The man who cannot afford to lose a client accepts behavior from that client he would refuse from any other. The man in financial precarity makes decisions — about relationships, about his values, about what he is willing to accept — that are not fully his own, because the constraint of financial need is silently shaping them. <strong>Financial dependence is not neutral. It is a slow erosion of agency in every area it touches.</strong></p>
+
+    <h3>The consumption trap</h3>
+    <p>The specific mechanism by which most men end up financially trapped is not insufficient income — it is lifestyle expansion that consumes every income increase as it arrives. The raise that produces a better car and a bigger mortgage. The bonus that produces a holiday rather than a year of runway. Each individual consumption decision is defensible. The cumulative pattern is a treadmill that runs faster as income grows, leaving the man exactly as dependent at £150k as he was at £50k, with higher monthly obligations and the same absence of genuine choice.</p>
+
+    <div class="callout warning">
+      <strong>The hedonic adaptation problem:</strong> The lifestyle you are living now felt aspirational at some earlier point. The lifestyle you are aspiring to will feel ordinary within eighteen months of achieving it. This is not a moral failing — it is a well-documented feature of human psychology. The implication is that the pursuit of lifestyle as the goal of financial success is a race with no finish line. The alternative goal — purchasing specific freedoms rather than expanding consumption — is one that actually terminates.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Five Frameworks for Building Leverage</h2>
+    <p class="section-sub">Money is one of four forms of leverage available to any man. Understanding all four — and how they interact — is what separates accumulation from architecture.</p>
+
+    <h3>1. The four levers</h3>
+    <p>Naval Ravikant's framework is the most useful map of leverage available: <strong>Labour</strong> (other people working for you), <strong>Capital</strong> (money working for you), <strong>Code</strong> (software working for you at zero marginal cost), and <strong>Media</strong> (content working for you at zero marginal cost). Most men have access only to labour leverage — selling their own time. The man who builds a second lever, then a third, achieves a qualitative shift in what is possible. The first lever to add almost always comes from the same source: freeing time through financial discipline so it can be invested in building the next lever. <strong>This is why financial independence is the gateway to all other forms of leverage — not just a financial goal.</strong></p>
+
+    <h3>2. The freedom number</h3>
+    <p>Financial independence is not an abstract aspiration. It is a specific number — the monthly cost of your actual life, multiplied by some multiple that covers a defined period. Calculate yours. Not the lifestyle you might want — the life you actually live. Not the aspirational number — the real one. The gap between your current financial position and that number is the project. Having a specific number converts a vague aspiration into an engineering problem, and engineering problems can be solved. <strong>Most men avoid calculating their freedom number because the gap is uncomfortable to see. That discomfort is exactly why they should look.</strong></p>
+
+    <h3>3. Income vs. wealth</h3>
+    <p>Income is what you earn. Wealth is what you keep and put to work. Many high-income men have negative or minimal wealth because income expands to meet the lifestyle it supports. Wealth is built by the consistent, disciplined gap between income and expenditure — not in dramatic moments of sacrifice but as a structural feature of how finances are managed over time. The principle is simple: every income increase should first be used to widen the gap, not to expand the lifestyle. <strong>The wealth gap — the percentage of income that does not get consumed — is the single most important financial variable for a man who wants independence.</strong></p>
+
+    <h3>4. Asymmetric bets and optionality</h3>
+    <p>Nassim Taleb's concept of optionality applies directly to how a man should think about his career and finances. An option has limited downside and potentially unlimited upside. The man who structures his life to maintain options — who does not over-commit capital, who avoids dependencies with high exit costs, who preserves the ability to pivot — has a structural advantage over the man who has optimized for maximum short-term return at the cost of all flexibility. <strong>Do not give up options for income. Give up income to purchase options — then use those options to compound.</strong></p>
+
+    <h3>5. The dependence audit</h3>
+    <p>Real leverage requires mapping your current dependencies honestly. Who do you need? What would you do if your single largest income source disappeared tomorrow? How many months of expenses do you have in liquid reserves? What would it cost you to change jobs, lose a client, or exit your current role? <strong>Every dependency is a constraint. The purpose of building financial independence is to systematically reduce the number of constraints that operate on your decisions.</strong> The man who has no genuinely costly dependencies makes decisions that look completely different from the man who does.</p>
+
+    <div class="callout">
+      <strong>On wealth and values:</strong> This module is not an argument for greed, hoarding, or the pursuit of wealth as an end in itself. It is an argument for financial independence as a prerequisite for living by your actual values rather than by your financial constraints. The man who is financially dependent makes compromises not because he lacks values but because he lacks options. Building the options is what makes the values real. Money in service of freedom is a deeply ethical pursuit.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Specific, honest, named. Not theoretical agreement — your actual situation, your actual numbers, your actual constraints.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">Where is financial dependence currently shaping your decisions in ways you would change if you had genuine independence? Name the specific situation — the job you tolerate, the client you can't fire, the compromise you keep making. What is that dependence actually costing you, beyond money?</p>
+      <p class="card-hint">The most honest version of this answer will be uncomfortable. The purpose is not to generate shame but to make the invisible cost of financial dependence visible, so you can make a deliberate decision about what to do about it. Generic answers produce no action. Name the specific thing you would do differently if you had twelve months of expenses in the bank.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The situation where financial dependence is most shaping my decisions right now is..."</p>
+        <p>"If I had twelve months of expenses in reserve, the first thing I would do differently is..."</p>
+        <p>"The non-financial cost of this dependence — in my time, dignity, agency, or values — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">What is your current wealth gap — the percentage of your income that is not consumed? What is your current runway — how many months could you sustain your actual lifestyle with no income? Be honest with the numbers. What do those numbers tell you about where you actually stand?</p>
+      <p class="card-hint">If you don't know these numbers, calculating them is the most valuable thing you will do in this module. The wealth gap (income minus expenditure, as a percentage of income) and the runway (liquid savings divided by monthly expenditure) are the two most important financial metrics for a man building independence — not net worth, not gross income.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"My current monthly income is approximately... My monthly expenditure is approximately... My wealth gap is therefore..."</p>
+        <p>"My liquid savings are approximately... My monthly runway is therefore..."</p>
+        <p>"What these numbers tell me about where I actually stand is... The gap I most need to close is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">Beyond your primary income, what leverage do you currently have — labour, capital, code, or media? If you are entirely dependent on selling your own time, what is one lever you could begin building in the next twelve months? What would it require — specifically — and what is stopping you from starting?</p>
+      <p class="card-hint">Most men have never seriously considered this question because they are fully occupied managing their primary income. That is by design — not a conspiracy, but a structural feature of employee economics. The question is whether you are willing to invest some portion of your time and capital into building something that works when you don't. One small secondary lever, built over three to five years, changes everything.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"My current leverage beyond selling my own time is... (be specific about what works when I'm not working)"</p>
+        <p>"The lever I could most realistically begin building in the next twelve months is... What it would require is..."</p>
+        <p>"What is actually stopping me from starting is... The real obstacle, not the stated one, is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">Where in your financial life has lifestyle expansion consumed income gains that could have been used to build independence? Look at your last three to five years — where did salary increases, bonuses, or windfalls go? If those same resources had been directed differently, where would you be now?</p>
+      <p class="card-hint">This is not a guilt exercise — it is a pattern recognition exercise. The lifestyle expansion trap is almost universal and almost invisible while it is happening. The purpose of seeing it clearly is not to reverse it but to interrupt it going forward. The question is: next time income increases, what will you do with the first 20% before lifestyle expansion claims it?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"Looking at the last three to five years, income increases or windfalls that I didn't build with include..."</p>
+        <p>"If that capital had been redirected to building independence instead, I would now have..."</p>
+        <p>"The rule I will apply to the next income increase is... specifically, the first X% will go to..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">What is your freedom number — the monthly cost of your actual life — and what would full financial independence look like for you specifically? Not an abstract aspiration, but a concrete target: what amount, by what date, producing what monthly income, would allow you to make every significant life decision without financial constraint as a factor?</p>
+      <p class="card-hint">Define "independence" for your own life, not a generic standard. For some men it is six months of expenses. For others it is a portfolio generating passive income. The definition matters less than the specificity — because a specific target can be planned for, and a plan can be executed. Vague aspiration produces nothing. A number with a timeline produces action.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"My actual monthly cost of living is approximately... My freedom number (the capital or income that would make financial constraint irrelevant) is..."</p>
+        <p>"Full financial independence for me would mean... The specific target is... The timeline I'm committing to is..."</p>
+        <p>"The gap between where I am now and that target is... The most important single change that would close that gap fastest is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- LEVERAGE AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">Exercise One</p>
+    <h2>The Leverage Audit</h2>
+    <p class="section-sub">Map your current leverage across five dimensions. The audit reveals where you stand, where you are most vulnerable, and where the highest-value investments of your time and capital lie.</p>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <p class="card-title">Current Leverage Mapping</p>
+      </div>
+      <p class="card-hint" style="margin-bottom: 20px;">Work through each dimension. Be specific and honest — this is a diagnostic, not a performance. The more accurate the audit, the more useful the plan it produces.</p>
+
+      <div class="lev-tabs" id="lev-tabs"></div>
+      <div id="lev-panels"></div>
+    </div>
+  </section>
+
+  <!-- FREEDOM DESIGN -->
+  <section class="section" id="exercise">
+    <p class="section-tag">Exercise Two</p>
+    <h2>The Freedom Design</h2>
+    <p class="section-sub">A structured five-step process for defining your specific independence target and building a concrete plan to reach it. Use your real numbers — not aspirational ones.</p>
+
+    <div id="fd-steps"></div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">Belief Install</p>
+    <h2>The Belief This Module Installs</h2>
+    <p class="section-sub">Read this aloud. Write it in your own words. Sit with it. Beliefs are installed through repetition and reflection, not passive reading.</p>
+
+    <div class="belief-display" id="belief-text">
+      "I build financial independence not because I am greedy, but because I refuse to let money make my decisions. Every pound saved is a future choice preserved. I am building the conditions for a life that is genuinely mine."
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Belief Reinforcement — check in each day you reflected on this belief</p>
+      <div class="day-grid" id="belief-day-grid"></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Write the belief in your own words</p>
+      <textarea class="journal-area" id="belief-version" placeholder="Rewrite the belief in language that resonates with you specifically..." rows="4" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">What would change if you fully lived this belief?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="What decisions would look different? What would you stop buying? What would you start building? What dependency would you begin dismantling?" rows="5" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Independence Audit Week</h2>
+    <p class="section-sub">Seven days of financial clarity. Not changes — just seeing what is actually there.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">The Challenge</p>
+      <p>This week, calculate three numbers you may not currently know with precision: your actual monthly expenditure (what you really spend, not what you think), your current runway in months, and your wealth gap as a percentage of income. Then identify one financial dependency — one person, institution, or income source you currently cannot afford to lose — and name the specific cost of that dependency. Write it all down.</p>
+    </div>
+
+    <p>The goal is not to feel bad about the numbers. The goal is to make them visible, because invisible numbers cannot be changed. Most men have a vague anxiety about their financial position rather than a specific, accurate picture of it. The anxiety is harder to act on than the numbers. Replace the anxiety with data — then the data becomes actionable.</p>
+    <p>If you find the numbers are better than you feared: good. Now you have a real baseline to build from. If you find they are worse than you admitted to yourself: also good. Now you have an accurate map rather than a comfortable fiction. Either way, clarity is the asset.</p>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">The Three Numbers + One Dependency</p>
+      <textarea class="journal-area" id="challenge-log" placeholder="Monthly expenditure (actual): £...&#10;Current runway: ... months&#10;Wealth gap: ...% of income&#10;&#10;The financial dependency with the highest cost to my agency: ...&#10;What that dependency is costing me beyond money: ..." rows="12" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself honestly on each dimension. These scores feed your Forge Score for this module.</p>
+
+    <div id="assessment-items"></div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score-display">—</div>
+      <div class="result-label">Module Self-Assessment Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Recommended Reading</p>
+    <h2>Go Deeper</h2>
+    <p class="section-sub">Four books that form the intellectual foundation behind this module. Each approaches the problem of financial independence from a different angle.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The Psychology of Money — Morgan Housel</div>
+        <div class="resource-desc">The best modern book on how money actually works in human lives — not as a technical problem but as a psychological and behavioral one. Essential for understanding why smart people make consistently poor financial decisions.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Antifragile — Nassim Taleb</div>
+        <div class="resource-desc">The philosophical foundation for optionality thinking — how to structure your financial and professional life to benefit from uncertainty rather than be destroyed by it. The barbell strategy and the concept of optionality are directly applicable here.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Die With Zero — Bill Perkins</div>
+        <div class="resource-desc">A useful counter-weight to pure accumulation thinking. Makes the case for optimizing for experiences and freedom at specific life stages rather than maximizing the number on the final balance sheet. Forces clarity about what money is actually for.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The Millionaire Fastlane — MJ DeMarco</div>
+        <div class="resource-desc">A blunt dissection of why slow accumulation via employment rarely produces independence, and what the structural alternative looks like. Best read critically — the tone is aggressive but the systems analysis is sharp.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- COMPLETE -->
+<section id="complete-section">
+  <div class="forge-score-display">
+    <div class="forge-score-number" id="forge-score-display">—</div>
+    <div class="forge-score-label">Forge Score</div>
+  </div>
+  <h2 class="complete-title">Module 13 Complete</h2>
+  <p class="complete-sub">Pillar IV: Power is complete. You now have frameworks for seeing the world clearly, managing your reputation, navigating conflict, and building the financial independence that makes every other kind of freedom possible.</p>
+  <button class="btn-complete" id="complete-btn" onclick="toggleComplete()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    Mark Module Complete
+  </button>
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportPDF()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export PDF
+    </button>
+    <button class="btn-export" onclick="exportTXT()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download .txt
+    </button>
+    <a href="index.html" class="btn-secondary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Course
+    </a>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'tfm_m13';
+
+  const TEXT_FIELDS = ['r1','r2','r3','r4','r5','belief-version','belief-journal','challenge-log'];
+
+  const LEVERAGE_DIMS = [
+    {
+      name: 'Labour',
+      desc: 'Other people working toward your goals — employees, contractors, partners, collaborators.',
+      p_current: 'Do you currently have any labour leverage — people whose work amplifies your output? What does it look like?',
+      p_gap: 'What would you need to build to have meaningful labour leverage? What prevents you currently?',
+      p_action: 'What is the first step toward building this lever? What would you need to hire or delegate first?',
+      p_risk: 'What is the cost of continuing to rely entirely on your own labour? What ceiling does that create?'
+    },
+    {
+      name: 'Capital',
+      desc: 'Money working for you — investments, ownership, assets that generate returns without your time.',
+      p_current: 'What capital leverage do you currently have? Investments, equity, ownership that generates return?',
+      p_gap: 'What is your current wealth gap (% of income saved/invested)? Is it enough to build meaningful capital leverage?',
+      p_action: 'What specific capital allocation change would most improve your position in the next twelve months?',
+      p_risk: 'What is the cost of your current capital structure? What risk does your current dependence on income create?'
+    },
+    {
+      name: 'Code / Systems',
+      desc: 'Tools, automation, software, or systems that work without your ongoing time input.',
+      p_current: 'Do you have any systems, tools, or automation that produce output without your direct time? What?',
+      p_gap: 'Where in your work or business could systems replace your direct involvement? What would need to be built?',
+      p_action: 'What is one process you could systematize or automate in the next 90 days to reclaim time?',
+      p_risk: 'How much of your current output is purely dependent on your direct time? What happens when you stop?'
+    },
+    {
+      name: 'Media / Reputation',
+      desc: 'Content, ideas, or reputation working for you — attracting opportunities without active effort.',
+      p_current: 'Does your current reputation or any content you have created attract opportunities without active outreach?',
+      p_gap: 'What reputation, platform, or body of work would most change the quality of inbound opportunities you receive?',
+      p_action: 'What is one specific action that would begin building this lever — something you could start in the next 30 days?',
+      p_risk: 'What is the opportunity cost of having no media leverage? What opportunities are you not receiving because you are invisible?'
+    },
+    {
+      name: 'Independence Score',
+      desc: 'An honest overall assessment of your current leverage position and your trajectory.',
+      p_current: 'Looking across all four levers — honestly, how much of your current output depends on your direct time? What percentage is leveraged?',
+      p_gap: 'What is the single most important lever you are missing? Why has it not been built yet?',
+      p_action: 'In twelve months, what specific change in your leverage position are you committing to? What does success look like?',
+      p_risk: 'What is the real risk of your current leverage position — what happens to your income, independence, and options if your primary income source disappears tomorrow?'
+    }
+  ];
+
+  const FD_STEPS = [
+    {
+      num: '01', label: 'Calculate Your Freedom Number',
+      fields: [
+        { id: 'fd-monthly', label: 'What is your actual monthly expenditure? (Everything — housing, food, transport, subscriptions, lifestyle)', ph: 'Be specific and honest. Underestimating this number produces a useless target...' },
+        { id: 'fd-number', label: 'What is your freedom number — the capital or monthly passive income that would make financial constraint irrelevant?', ph: 'For capital: monthly spend × 300 (25× annual) gives a standard independence figure. Adjust for your actual definition of independence...' }
+      ]
+    },
+    {
+      num: '02', label: 'Map the Gap',
+      fields: [
+        { id: 'fd-position', label: 'Where are you now? (Liquid savings, investments, income-generating assets, existing passive income)', ph: 'Current actual position — not what you hope it is. Specific numbers if possible...' },
+        { id: 'fd-gap', label: 'What is the gap between your current position and your freedom number? How long at your current savings rate?', ph: 'The math: gap ÷ current annual saving rate = years at current pace. Is that acceptable? What would need to change?' }
+      ]
+    },
+    {
+      num: '03', label: 'Identify the High-Leverage Moves',
+      fields: [
+        { id: 'fd-income', label: 'What is the most realistic way to significantly increase your income in the next two years? Promotion, business, skill premium, new role?', ph: 'Specific and realistic — not "start a business" but what business, what skill, what specific income increase...' },
+        { id: 'fd-gap-close', label: 'What expenditure, if cut or redirected, would most accelerate your independence without destroying your quality of life?', ph: 'Not asceticism — strategic subtraction. What are you paying for that is not producing proportionate value or freedom?' }
+      ]
+    },
+    {
+      num: '04', label: 'Define the Milestones',
+      fields: [
+        { id: 'fd-m1', label: 'What is your 12-month target? (Specific number — runway, wealth gap %, savings milestone)', ph: 'A specific, measurable number you can hit in twelve months if you execute on your plan...' },
+        { id: 'fd-m2', label: 'What is your 3-year target? What does your financial position look like if you execute consistently for three years?', ph: 'Runway extended to X months? First secondary lever built? Specific passive income figure? Name the target...' }
+      ]
+    },
+    {
+      num: '05', label: 'Commit to the System',
+      fields: [
+        { id: 'fd-rule', label: 'What is your standing rule for the next income increase? What percentage is automatically directed to independence before lifestyle?', ph: 'A specific percentage or amount that is non-negotiable — automated if possible. This is the system, not the goal...' },
+        { id: 'fd-review', label: 'When and how will you review your financial position? What would cause you to adjust the plan?', ph: 'A specific date and a specific question: am I on track? What would constitute being off track, and what would you do?' }
+      ]
+    }
+  ];
+
+  const ASSESSMENT_ITEMS = [
+    "I have calculated my actual monthly expenditure, my runway, and my wealth gap with real numbers.",
+    "I have identified the specific situation where financial dependence is most constraining my decisions.",
+    "I understand my current leverage position across all four levers and know which is most underdeveloped.",
+    "I have defined my freedom number and understand the gap between my current position and that target.",
+    "I have completed the Freedom Design with specific, realistic targets and a standing rule for future income increases.",
+    "I have identified the lifestyle expansion pattern that has most slowed my path to independence."
+  ];
+
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let state = {
+    marks: {},
+    leverageAudit: Array.from({length: 5}, () => ({ current: '', gap: '', action: '', risk: '' })),
+    fdFields: {},
+    beliefDays: Array(7).fill(false),
+    scores: {},
+    complete: false
+  };
+
+  let saveTimer = null;
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function autoSave(key, value) {
+    state[key] = value;
+    clearTimeout(saveTimer);
+    const ind = document.getElementById(key + '-saved');
+    if (ind) ind.classList.remove('show');
+    saveTimer = setTimeout(() => {
+      save();
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+    }, 600);
+  }
+
+  function updateCharCount(ta) {
+    const el = document.getElementById(ta.id + '-count');
+    if (el) el.textContent = ta.value.length + ' characters';
+  }
+
+  function toggleStarter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.querySelector('svg').style.transform = box.classList.contains('open') ? 'rotate(45deg)' : '';
+  }
+
+  /* ===== LEVERAGE AUDIT ===== */
+  function buildLeveragePanels() {
+    const tabsEl = document.getElementById('lev-tabs');
+    const panelsEl = document.getElementById('lev-panels');
+    tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    LEVERAGE_DIMS.forEach((dim, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'lev-tab' + (i === 0 ? ' active' : '');
+      tab.innerHTML = dim.name + '<span class="tab-dot"></span>';
+      tab.onclick = () => switchLev(i);
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = 'lev-panel' + (i === 0 ? ' active' : '');
+      panel.id = 'lev-panel-' + i;
+      panel.innerHTML = `<p style="font-size:0.85rem;color:var(--security-gray);margin-bottom:18px;font-style:italic;">${dim.desc}</p>` +
+        ['current','gap','action','risk'].map(f => `
+          <div class="lev-field">
+            <label>${dim['p_'+f]}</label>
+            <textarea rows="3" placeholder="Your answer...">${state.leverageAudit[i][f]||''}</textarea>
+          </div>`).join('');
+      panelsEl.appendChild(panel);
+
+      const keys = ['current','gap','action','risk'];
+      panel.querySelectorAll('textarea').forEach((ta, fi) => {
+        ta.oninput = function() { updateLevField(i, keys[fi], this.value); };
+      });
+    });
+    updateLevTabDots();
+  }
+
+  function switchLev(idx) {
+    document.querySelectorAll('.lev-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.lev-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  }
+
+  function updateLevField(dimIdx, field, value) {
+    state.leverageAudit[dimIdx][field] = value;
+    save(); updateLevTabDots(); updateProgress();
+  }
+
+  function updateLevTabDots() {
+    document.querySelectorAll('.lev-tab').forEach((tab, i) => {
+      const d = state.leverageAudit[i];
+      tab.classList.toggle('filled', !!(d.current || d.gap || d.action || d.risk));
+    });
+  }
+
+  /* ===== FREEDOM DESIGN ===== */
+  function buildFDSteps() {
+    const container = document.getElementById('fd-steps');
+    container.innerHTML = '';
+    FD_STEPS.forEach(step => {
+      const div = document.createElement('div');
+      div.className = 'fd-step';
+      div.innerHTML = `
+        <div class="fd-step-header">
+          <span class="fd-step-num">${step.num}</span>
+          <span class="fd-step-label">${step.label}</span>
+        </div>
+        <div class="fd-step-body">
+          ${step.fields.map(f => `
+            <div class="fd-field">
+              <label>${f.label}</label>
+              <textarea id="${f.id}" rows="3" placeholder="${f.ph}"></textarea>
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta) ta.oninput = function() { state.fdFields[f.id] = this.value; save(); updateProgress(); };
+      });
+    });
+  }
+
+  /* ===== BELIEF DAYS ===== */
+  function buildBeliefGrid() {
+    const grid = document.getElementById('belief-day-grid');
+    grid.innerHTML = '';
+    DAYS.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check${state.beliefDays[i]?' checked':''}" onclick="toggleBeliefDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleBeliefDay(idx, el) {
+    state.beliefDays[idx] = !state.beliefDays[idx];
+    el.classList.toggle('checked', state.beliefDays[idx]);
+    save(); updateProgress();
+  }
+
+  /* ===== ASSESSMENT ===== */
+  function buildAssessment() {
+    const container = document.getElementById('assessment-items');
+    container.innerHTML = '';
+    ASSESSMENT_ITEMS.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'assessment-item';
+      div.innerHTML = `
+        <div class="assessment-text">${text}</div>
+        <div class="score-buttons">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn${state.scores[i]===n?' selected':''}" onclick="setScore(${i},${n},this)">${n}</button>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function setScore(idx, val, btn) {
+    state.scores[idx] = val;
+    btn.closest('.score-buttons').querySelectorAll('.score-btn').forEach((b,i) => b.classList.toggle('selected', i+1===val));
+    save(); updateProgress(); updateAssessmentResult();
+  }
+
+  function updateAssessmentResult() {
+    const keys = Object.keys(state.scores);
+    if (keys.length < ASSESSMENT_ITEMS.length) return;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    const pct = Math.round((avg/5)*100);
+    document.getElementById('result-score-display').textContent = pct + '%';
+    const msgs = [
+      [0,40,'This module has surfaced significant financial blind spots. Start with the three numbers from the challenge — that clarity alone is worth more than most financial advice. Then build the Freedom Design.'],
+      [40,65,'Solid foundation. You have the clarity you lacked before. Now the priority is the system — specifically, a standing rule for future income increases that runs automatically without willpower.'],
+      [65,85,'Strong awareness and a concrete plan. The single most important thing now is executing the plan consistently enough for long enough that compounding does the work.'],
+      [85,101,'Exceptional clarity. You have mapped your leverage position accurately, defined a concrete freedom number, and have a system to reach it. This is what financial architecture looks like.']
+    ];
+    const [,, msg] = msgs.find(([lo,hi]) => pct >= lo && pct < hi);
+    document.getElementById('result-message').textContent = msg;
+    document.getElementById('assessment-result').classList.add('show');
+  }
+
+  /* ===== PROGRESS ===== */
+  function calcProgress() {
+    let points = 0, total = 0;
+    TEXT_FIELDS.forEach(id => {
+      total += 2;
+      const v = state[id] || '';
+      if (v.length > 50) points += 2; else if (v.length > 0) points += 1;
+    });
+    ['hook','hardtruth','lesson'].forEach(k => { total++; if (state.marks[k]) points++; });
+    state.leverageAudit.forEach(dim => {
+      total += 4;
+      ['current','gap','action','risk'].forEach(f => { if ((dim[f]||'').length > 30) points++; });
+    });
+    FD_STEPS.forEach(step => step.fields.forEach(f => {
+      total++;
+      if ((state.fdFields[f.id]||'').length > 30) points++;
+    }));
+    total += 7; points += state.beliefDays.filter(Boolean).length;
+    return Math.min(100, Math.round((points / total) * 100));
+  }
+
+  function calcForgeScore() {
+    const progress = calcProgress();
+    const keys = Object.keys(state.scores);
+    if (!keys.length) return progress;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    return Math.round(progress * 0.6 + (avg/5)*100 * 0.4);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score-display').textContent = calcForgeScore() + '%';
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      if (sec === 'hook') item.classList.toggle('done', !!state.marks.hook);
+      if (sec === 'hard-truth') item.classList.toggle('done', !!state.marks.hardtruth);
+      if (sec === 'lesson') item.classList.toggle('done', !!state.marks.lesson);
+      if (sec === 'reflection') item.classList.toggle('done', TEXT_FIELDS.slice(0,5).every(id => (state[id]||'').length > 50));
+    });
+  }
+
+  /* ===== COMPLETE ===== */
+  function toggleComplete() {
+    state.complete = !state.complete;
+    const btn = document.getElementById('complete-btn');
+    if (state.complete) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mark Module Complete';
+    }
+    save();
+  }
+
+  /* ===== EXPORT ===== */
+  function exportPDF() { window.print(); }
+
+  function exportTXT() {
+    let txt = 'THE FORGED MAN — MODULE 13: MONEY, INDEPENDENCE & LEVERAGE\n' + '='.repeat(60) + '\n\n';
+    const labels = { r1:'Q1 Financial Dependence', r2:'Q2 The Numbers', r3:'Q3 Current Leverage', r4:'Q4 Consumption Trap', r5:'Q5 Freedom Number', 'belief-version':'Belief (Own Words)', 'belief-journal':'Belief Reflection', 'challenge-log':'Independence Audit' };
+    TEXT_FIELDS.forEach(id => {
+      const val = state[id] || '';
+      if (val.trim()) txt += (labels[id]||id).toUpperCase() + '\n' + '-'.repeat(40) + '\n' + val.trim() + '\n\n';
+    });
+    txt += 'LEVERAGE AUDIT\n' + '-'.repeat(40) + '\n';
+    LEVERAGE_DIMS.forEach((dim, i) => {
+      txt += `\n${dim.name.toUpperCase()}\n`;
+      ['current','gap','action','risk'].forEach(f => { if (state.leverageAudit[i][f]) txt += `  ${f.toUpperCase()}: ${state.leverageAudit[i][f]}\n`; });
+    });
+    txt += '\nFREEDOM DESIGN\n' + '-'.repeat(40) + '\n';
+    FD_STEPS.forEach(step => {
+      txt += `\n${step.num}. ${step.label}\n`;
+      step.fields.forEach(f => { const v = state.fdFields[f.id]||''; if (v) txt += `  ${f.label}\n  ${v}\n`; });
+    });
+    const blob = new Blob([txt], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-13-money.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  }
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  }
+
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) { this.classList.add('read'); this.querySelector('span').textContent = 'Read'; }
+      else { this.classList.remove('read'); this.querySelector('span').textContent = 'Mark as read'; }
+      save(); updateProgress();
+    });
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(state, parsed);
+        if (!state.leverageAudit || state.leverageAudit.length !== 5) state.leverageAudit = Array.from({length:5}, () => ({current:'',gap:'',action:'',risk:''}));
+        if (!state.beliefDays || state.beliefDays.length !== 7) state.beliefDays = Array(7).fill(false);
+        if (!state.fdFields) state.fdFields = {};
+        if (!state.scores) state.scores = {};
+      } catch(e) {}
+    }
+
+    buildLeveragePanels();
+    buildFDSteps();
+    buildBeliefGrid();
+    buildAssessment();
+
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) { el.value = state[id]; updateCharCount(el); }
+    });
+
+    FD_STEPS.forEach(step => step.fields.forEach(f => {
+      const ta = document.getElementById(f.id);
+      if (ta && state.fdFields[f.id]) ta.value = state.fdFields[f.id];
+    }));
+
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) { btn.classList.add('read'); btn.querySelector('span').textContent = 'Read'; }
+    });
+
+    if (state.complete) {
+      const btn = document.getElementById('complete-btn');
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    }
+
+    if (Object.keys(state.scores).length > 0) updateAssessmentResult();
+
+    updateProgress();
+    initScrollSpy();
+    initScrollAnimations();
+  });
+</script>
+</body>
+</html>
