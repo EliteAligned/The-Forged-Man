@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 16: The Forged Man — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '16'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--gold-foil); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--gold-foil); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--gold-foil); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .callout.gold { background: rgba(212,175,55,0.06); border-color: rgba(212,175,55,0.3); border-left-color: var(--gold-foil); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--gold-foil); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== PILLAR REVIEW TABS ===== */
+    .pillar-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .pillar-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .pillar-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .pillar-tab:hover:not(.active) { color: var(--deep-vault); }
+    .pillar-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .pillar-tab.filled .tab-dot { opacity: 1; }
+    .pillar-panel { display: none; padding: 24px 0 0; }
+    .pillar-panel.active { display: block; }
+    .pillar-field { margin-bottom: 16px; }
+    .pillar-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .pillar-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .pillar-field textarea:focus { border-color: var(--banknote-green); }
+    .pillar-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== LIFE COVENANT ===== */
+    .cov-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .cov-step-header { padding: 14px 20px; background: rgba(212,175,55,0.04); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .cov-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(212,175,55,0.3); line-height: 1; flex-shrink: 0; }
+    .cov-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-foil-dark); }
+    .cov-step-body { padding: 20px; }
+    .cov-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .cov-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .cov-field textarea:focus { border-color: var(--banknote-green); }
+    .cov-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== COVENANT DISPLAY ===== */
+    .covenant-display { margin: 32px 0; padding: 36px 40px; background: var(--deep-vault); border: 1px solid rgba(212,175,55,0.3); position: relative; }
+    .covenant-display::before { content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 1px solid rgba(212,175,55,0.15); pointer-events: none; }
+    .covenant-display-label { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 20px; }
+    .covenant-display-text { font-family: var(--font-display); font-size: 1.1rem; font-weight: 400; font-style: italic; color: var(--paper-white); line-height: 1.65; }
+    .covenant-display-text.empty { color: rgba(247,245,239,0.25); font-size: 0.9rem; }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--gold-foil); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.4); color: var(--gold-foil-dark); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    /* ===== COURSE COMPLETE SECTION ===== */
+    #complete-section { padding: 100px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; position: relative; overflow: hidden; }
+    #complete-section::before { content: 'TFM'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-family: var(--font-display); font-size: 20rem; font-weight: 700; color: rgba(212,175,55,0.03); line-height: 1; pointer-events: none; user-select: none; }
+    .course-complete-badge { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(212,175,55,0.4); padding: 8px 20px; margin-bottom: 40px; }
+    .course-complete-badge-text { font-family: var(--font-body); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-foil); }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-title span { color: var(--gold-foil); }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 48px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); margin-top: 12px; }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .pillars-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin: 32px 0; }
+    .pillar-chip { padding: 16px 8px; background: var(--deep-vault); text-align: center; }
+    .pillar-chip-num { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .pillar-chip-name { font-family: var(--font-body); font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(247,245,239,0.45); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .pillar-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero, #complete-section { background: var(--deep-vault) !important; }
+      .journal-area, .pillar-field textarea, .cov-field textarea { display: none; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .pillar-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+      .covenant-display { background: #f0f0f0 !important; border: 1px solid #ccc !important; }
+      .covenant-display-text { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+      .pillars-row { grid-template-columns: repeat(5, 1fr); gap: 2px; }
+      .pillar-chip-num { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 16 — The Forged Man</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> The Synthesis</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Final Reflection</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> Pillar Integration Review</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Life Covenant</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Final Challenge</a>
+  <div class="nav-section-label">Completion</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 16 of 16 — The Capstone</p>
+    <h1>The <span>Forged</span> Man</h1>
+    <p class="hero-tagline">"Steel is not forged once. It is forged again and again — until it holds its shape under any pressure."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>6–8 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 final reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Pillar Review + Life Covenant</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Final Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>What the Work Was For</h2>
+    <p class="section-sub">Fifteen modules. Five pillars. The question this final module asks is not what you have learned — it is what you have become.</p>
+
+    <p>Most men consume content about becoming better without ever registering a genuine change in how they live. They finish a book and feel inspired. They take a course and feel motivated. Then the weeks pass and the feeling fades, and the life that preceded the content reasserts itself as if nothing had been introduced. The content was absorbed without displacing anything. <strong>Information entered. Identity remained untouched.</strong></p>
+    <p>This course was designed with a different purpose. The premise behind every module — every hard truth, every reflection question, every system exercise, every belief install — was that real change happens at the level of identity, not information. That a man who has genuinely rebuilt his understanding of who he is, what he stands for, and what he is responsible for, does not need to be motivated to act. The action follows naturally from the identity. <strong>The Forged Man does not try to be disciplined. He is disciplined. He does not try to be honest. He is honest. The behavior is downstream of who he has decided to be.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <div class="pillars-row">
+      <div class="pillar-chip"><div class="pillar-chip-num">I</div><div class="pillar-chip-name">Identity</div></div>
+      <div class="pillar-chip"><div class="pillar-chip-num">II</div><div class="pillar-chip-name">Mind</div></div>
+      <div class="pillar-chip"><div class="pillar-chip-num">III</div><div class="pillar-chip-name">Discipline</div></div>
+      <div class="pillar-chip"><div class="pillar-chip-num">IV</div><div class="pillar-chip-name">Power</div></div>
+      <div class="pillar-chip"><div class="pillar-chip-num">V</div><div class="pillar-chip-name">Legacy</div></div>
+    </div>
+
+    <p>These five pillars are not five separate categories of self-improvement. They are five dimensions of a single integrated architecture. The man who has done the identity work knows what he stands for — and that knowledge shapes every decision in every other pillar. The man who has mastered his mind is capable of the discipline that execution demands. The man who has built power has the resources and leverage that make legacy possible. <strong>The pillars are mutually reinforcing. You cannot build one permanently without the others. And when all five are in motion — that is a man who has been genuinely forged.</strong></p>
+    <p>This module is about consolidation, integration, and commitment. You have done significant work. The question is whether that work lands as a permanent change to how you operate, or whether it gradually fades as the context of the course recedes. This module is designed to make the former more likely — through a review of what you have genuinely won, an honest accounting of what remains, and a written covenant with yourself about the man you have decided to be going forward.</p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>The Work Is Never Finished. That Is the Point.</h2>
+    <p class="section-sub">Completion is not an arrival. It is the establishment of a standard that the rest of your life will be measured against.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #16</p>
+      <p>"Finishing this course does not make you the Forged Man. It makes you a man who has been shown the path. The Forged Man is what you become — or don't become — through the ten thousand decisions that follow from here. The most dangerous moment in any transformation is the one right after the work ends."</p>
+    </div>
+
+    <p>The psychology of completion works against transformation. When a man finishes something significant — a course, a program, a challenge — the brain registers a reward. The marker is checked. The sense of accomplishment is real. And the very neurological signal that was meant to reinforce the behavior has the paradoxical effect of licensing its absence. <em>I've done the work. I earned this rest.</em> And the rest becomes permanent.</p>
+    <p>The men who undergo genuine, lasting transformation do not treat the end of a course as a completion. They treat it as a baseline. <strong>What they have understood and articulated becomes the standard they are obligated to maintain — not because someone is watching, but because they have put it in writing, made it explicit, committed to it with the seriousness it deserves.</strong> The covenant they have made with themselves is the mechanism that makes the insight outlast the motivation.</p>
+
+    <h3>The accountability gap</h3>
+    <p>Most men have no external accountability for who they are becoming. Their employer holds them accountable for output. Their partner holds them accountable for behavior in the relationship. No one holds them accountable for their character development — for whether they are becoming more honest, more courageous, more reliable, more integrated. This is the gap that inner commitment must fill. <strong>The Forged Man is his own harshest, most honest examiner — not because he is self-critical, but because he holds himself to the standard he has articulated, and he measures against it regularly.</strong></p>
+
+    <div class="callout warning">
+      <strong>The identity theft of comfort:</strong> The greatest threat to the man you have decided to become is not catastrophic failure — it is gradual, comfortable drift. The environment reasserts its defaults. The urgent crowds out the important. The conversations you stopped having slowly resume. The standard you raised quietly lowers. Not through any single decision, but through a hundred small ones. The only defence is a regular, honest return to the covenant — asking: am I the man I said I would be? And if not, why not?
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Synthesis</p>
+    <h2>What Integration Looks Like</h2>
+    <p class="section-sub">Five observations on what distinguishes the man who has been genuinely forged from the man who has merely consumed the material.</p>
+
+    <h3>1. He knows who he is — without needing to prove it</h3>
+    <p>The man with a solid identity does not perform it. He does not require external validation of his worth, his competence, or his standing. He does not need to dominate conversations, escalate conflicts to demonstrate strength, or shrink in the presence of confident men. He is anchored — not by arrogance, but by genuine clarity about what he values, what he stands for, and what he will not compromise. <strong>This groundedness is the most visible marker of the forged man. You notice it as stillness — not passivity, but presence without anxiety.</strong></p>
+
+    <h3>2. He manages his mind rather than being managed by it</h3>
+    <p>He is not at the mercy of his emotional states or the quality of his thinking on any given day. He has built reliable systems — for reflection, for identifying cognitive distortion, for recovering from setbacks without catastrophizing. He does not confuse his thoughts with reality. He knows that the narrative he tells himself about events is separate from the events themselves, and that narrative is a variable he controls. <strong>He uses his mind as a tool — the highest-leverage tool he possesses — rather than being used by it.</strong></p>
+
+    <h3>3. His word is an asset</h3>
+    <p>What the forged man says, he does. Not perfectly — he is human, and he misjudges his capacity, and life produces genuine obstacles. But when he commits, he means it. When he cannot deliver, he says so directly and early, not after the fact. When he fails to keep a commitment, he acknowledges it without rationalisation. <strong>Over time, this consistency computes as something rare and extremely valuable: a man whose word means something. In every dimension of life — professional, personal, relational — this is a compounding advantage.</strong></p>
+
+    <h3>4. He builds rather than consumes</h3>
+    <p>The forged man's orientation to time, energy, and resources is fundamentally generative. He is building something — a business, a body of expertise, a family, a reputation, a financial position — not merely consuming experiences, status, or comfort. He has a mission that gives shape to his choices and a framework for evaluating where his resources should go. <strong>This orientation towards building — towards leaving the world more capable, more structured, more provisioned than he found it — is the behavioural signature of legacy in real time.</strong></p>
+
+    <h3>5. The people around him become more capable</h3>
+    <p>The final test of the forged man is not his personal achievements or his internal development — it is his effect on others. The men, women, and children who spend significant time around him: are they better equipped to face their own lives because of the contact? Does his presence raise the standard of the environments he inhabits? Does he transfer what he knows? Does he hold the people he leads to a higher standard because he genuinely believes in what they can become? <strong>The man whose influence on others is negligible has kept his forging entirely to himself. The man whose influence compounds through the people around him — that is the forged man in full.</strong></p>
+
+    <div class="callout gold">
+      <strong>On the ongoing practice:</strong> The work you have done in this course is not a one-time event. The most effective use of what you have built here is a regular return — not to consume the material again, but to measure yourself against it. Once a quarter, revisit your covenant. Once a year, revisit your pillar reviews. Ask: has my reality moved toward or away from what I said I intended? What has the last period of my life demonstrated about my actual priorities and actual identity — as distinct from the ones I articulated here? Use this course as a mirror, not a trophy.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Final Reflection</h2>
+    <p class="section-sub">Five questions that span the full arc of the course. Take the time these deserve — they are the most consequential writing you will do here.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">Who were you when you started this course — specifically, not generally? What was your relationship with your identity, your mind, your discipline, your power, and your sense of purpose? And who are you now? Name the real shifts, however small. Name also what has not shifted, even though you hoped it would.</p>
+      <p class="card-hint">This question requires an honest before-and-after — not a performance of transformation for the sake of feeling good about completing the course, but a genuine accounting of what has changed and what remains. The gaps you name here are more valuable than the wins you claim. They are your work for the next phase.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"When I started this course, I was a man who... Now I am a man who..."</p>
+        <p>"The shift I am most confident is real — not just felt, but evidenced in my behavior — is..."</p>
+        <p>"The thing I hoped would change but honestly has not is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="8" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">Across all five pillars, which one has produced the most concrete, demonstrable change in your daily behavior — and why? Which pillar has produced the least? Be specific about what changed and what evidence supports your claim. Evidence means observable behavior, not internal states.</p>
+      <p class="card-hint">The pillar that produced the most change is likely the one where you had the most honest self-confrontation, not necessarily the one that felt most comfortable or interesting. The pillar with least change is where you met the most resistance — and resistance in a self-development context is a reliable marker of where the most important work remains.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The pillar that produced the most real change was... The behavioral evidence is..."</p>
+        <p>"The pillar that produced the least change was... The honest reason is..."</p>
+        <p>"What the least-changed pillar is telling me about my next phase of work is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="8" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">What is the single belief about yourself — not about the world, about yourself — that has most clearly shifted over the course of this work? Write the old belief exactly as it operated in your thinking. Write the new one. Then name the evidence in your recent behavior that the new belief is actually running, not just stated.</p>
+      <p class="card-hint">The beliefs most worth naming are the ones that were operating beneath the level of explicit thought — the assumptions about your capacity, your worth, your right to lead, your permission to want what you want. The shift from an old limiting belief to a new empowering one is only real when it shows up in behavior. The test is not "do I believe it?" but "do I act as if I believe it?"</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The old belief was: [specific, as it actually operated, not softened]. The new belief is: [specific, not vague]."</p>
+        <p>"The behavioral evidence that the new belief is actually running — not just stated — is..."</p>
+        <p>"The areas where the old belief is still occasionally running despite my new stated belief are..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="8" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">What are the three non-negotiable habits or practices — one from any pillar each, or all from the same if that is honest — that you are committing to for the next twelve months? Not aspirational habits. Not new habits you are going to try. Habits you have already started and are prepared to treat as non-negotiable anchors of how you operate.</p>
+      <p class="card-hint">The most durable behavioral changes from a course like this are not the most ambitious ones — they are the ones that are simple, specific, and already partially embodied. A habit you have practiced three times is closer to permanent than a habit you have planned to start twenty times. This question is asking for your evidence-based commitments, not your wish list.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The three non-negotiable practices I am committing to are: [1], [2], [3]."</p>
+        <p>"The evidence that each one is already partly in place — not just planned — is..."</p>
+        <p>"The specific condition under which I am most at risk of abandoning each of these is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="8" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">In ten years, assuming you live as the man you have described in this course rather than the man you were when you started, what is different? Not what you have — what you are. Who is around you? What have you built? What have you transferred? What does a man who knew you when you started, and knows you then, say about the change?</p>
+      <p class="card-hint">This is the long-view question. Most men have a detailed picture of what they want in ten years and almost no picture of who they want to be. The man who knows who he is becoming has a compass the man who only knows what he wants does not. This question asks you to paint the character portrait — the identity, the relationships, the contribution — not the asset statement.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"In ten years, the man I am — not what I have — is described as..."</p>
+        <p>"The relationships I have in ten years that I do not have today are..."</p>
+        <p>"What a man who knew me at the start of this course and knows me in ten years says about the change is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="8" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- PILLAR INTEGRATION REVIEW -->
+  <section class="section" id="system">
+    <p class="section-tag">Your Work</p>
+    <h2>Pillar Integration Review</h2>
+    <p class="section-sub">For each pillar, name what you have genuinely won, what gap remains, the non-negotiable habit you are keeping, and the next concrete move.</p>
+
+    <div class="pillar-tabs" id="pillar-tabs"></div>
+    <div id="pillar-panels"></div>
+  </section>
+
+  <!-- THE LIFE COVENANT -->
+  <section class="section" id="exercise">
+    <p class="section-tag">Your Work</p>
+    <h2>The Life Covenant</h2>
+    <p class="section-sub">A written covenant with yourself — not a goal list, not a vision board statement, but a binding commitment to the man you have decided to be. It should be specific enough to measure against and honest enough to cost you something to write.</p>
+
+    <div class="callout gold">
+      <strong>What a covenant is:</strong> A covenant is not a resolution. Resolutions are made easily and broken without consequence. A covenant is a binding commitment — the kind that changes how you see yourself when you break it, not just how you feel. Writing it forces clarity. Naming it to yourself makes it real. Returning to it regularly makes it durable. This is the most important thing you will write in this course.
+    </div>
+
+    <div id="cov-steps"></div>
+
+    <div class="covenant-display">
+      <p class="covenant-display-label">Your Life Covenant</p>
+      <p class="covenant-display-text empty" id="covenant-display-text">Complete Step 5 to see your covenant here...</p>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">Belief Install</p>
+    <h2>The Capstone Belief</h2>
+    <p class="section-sub">The belief that synthesises the full course — not a comfort, but a commitment.</p>
+
+    <div class="belief-display">
+      "I am not a finished product. I am a man in the process of becoming — deliberately, consistently, and without apology. I know who I am. I know what I stand for. I know what I am building. And I hold myself to the standard I have articulated, not because someone requires it of me, but because I require it of me."
+    </div>
+
+    <h3>Make it yours</h3>
+    <p>Rewrite the belief in your own voice — not as a paraphrase, but as the exact language that would be most true and most potent for you. The version that makes you sit up straighter when you read it back.</p>
+    <textarea class="journal-area" id="belief-version" placeholder="Write the belief in your own words..." rows="5" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+    <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+
+    <div class="day-tracker mt-6">
+      <p class="day-tracker-label">7-Day Belief Practice — Read your version each morning, then ask: am I living as this man today?</p>
+      <div class="day-grid" id="belief-day-grid"></div>
+    </div>
+
+    <h3>Belief reflection</h3>
+    <p>After practising the belief for at least three days: what is it displacing? What old operating assumption is this belief replacing in practice — not in theory? Where is the friction?</p>
+    <textarea class="journal-area" id="belief-journal" placeholder="What is this belief actually displacing in your day-to-day thinking and behavior..." rows="5" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+    <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Final Challenge</p>
+    <h2>The Covenant Review: 90 Days From Now</h2>
+    <p class="section-sub">The final challenge is not a one-week exercise. It is a standing practice.</p>
+
+    <p>Schedule — right now, before you close this module — a recurring calendar event 90 days from today titled "Covenant Review." The agenda for that session is this: return to your Life Covenant and your Pillar Integration Review. Read what you wrote. Ask three questions with complete honesty:</p>
+
+    <div class="callout">
+      <strong>The three covenant review questions:</strong><br><br>
+      1. <strong>What has my behavior over the last 90 days demonstrated about my actual priorities and identity — as distinct from the ones I stated here?</strong> Where are the gaps between what I committed to and what I did?<br><br>
+      2. <strong>What have I genuinely built in the last 90 days that I would not have built as the man I was before this course?</strong> Name specific evidence, not feelings.<br><br>
+      3. <strong>What is the single most important adjustment — to belief, habit, or commitment — that the last 90 days are telling me I need to make?</strong> Not ten adjustments. One.
+    </div>
+
+    <p>This is the mechanism by which the course becomes a practice rather than an event. The first review will be hard — you will find gaps between your commitment and your behavior. This is not failure; it is information. The second review will be easier — you will have adjusted. By the third or fourth review, the covenant is no longer something you are trying to live up to. It is simply who you are.</p>
+
+    <h3>Log your commitment</h3>
+    <p>Before you move on: write down the specific date and time you have scheduled your first Covenant Review, and what you expect the most challenging gap to be when you arrive at that session.</p>
+    <textarea class="journal-area" id="challenge-log" placeholder="Date of first Covenant Review: [date]&#10;Time: [time]&#10;The gap I expect to find: ..." rows="6" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+    <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+  </section>
+
+  <!-- SELF-ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Completion</p>
+    <h2>Final Self-Assessment</h2>
+    <p class="section-sub">Score each statement 1 (not yet true) to 5 (demonstrably true in your behavior). Be honest — this assessment is for you, not for the record.</p>
+
+    <div id="assessment-items"></div>
+    <div class="assessment-result" id="assessment-result">
+      <p class="result-score" id="result-score-display">—</p>
+      <p class="result-label">Course Completion Score</p>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Going Further</p>
+    <h2>The Essential Library</h2>
+    <p class="section-sub">Five books — one for each pillar — that represent the highest-leverage reading for the man who has completed this course and wants to go deeper in the area of greatest remaining work.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Pillar I</span>
+      <div>
+        <p class="resource-title">Man's Search for Meaning — Viktor Frankl</p>
+        <p class="resource-desc">The foundational text on identity under pressure. Frankl's argument that meaning is chosen, not given — even in the worst conditions imaginable — is the most rigorous articulation of what it means to be the author of your own identity. Read if your deepest remaining work is in values, purpose, and the foundation of who you are.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Pillar II</span>
+      <div>
+        <p class="resource-title">Thinking, Fast and Slow — Daniel Kahneman</p>
+        <p class="resource-desc">The most comprehensive account of how human cognition actually works — the biases, the shortcuts, the predictable failures of intuition. A man who has done the mind pillar work and wants the deepest available understanding of what he is managing when he manages his thinking. Demanding but essential.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Pillar III</span>
+      <div>
+        <p class="resource-title">Atomic Habits — James Clear</p>
+        <p class="resource-desc">The most practical systems-level account of how habits form, persist, and change. Where this course addressed discipline philosophically and strategically, Clear addresses it mechanistically — the four laws, the habit loop, the identity-behavior feedback cycle. The best follow-on for the man whose discipline architecture needs structural refinement.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Pillar IV</span>
+      <div>
+        <p class="resource-title">The Psychology of Money — Morgan Housel</p>
+        <p class="resource-desc">The clearest account of how humans actually behave around money and why — the emotional, psychological, and behavioural patterns that determine financial outcomes more than any technical knowledge. Essential for the man whose power pillar work surfaced a broken relationship with money, wealth, and financial independence.</p>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Pillar V</span>
+      <div>
+        <p class="resource-title">The Second Mountain — David Brooks</p>
+        <p class="resource-desc">Brooks' most mature work on the distinction between the first mountain of achievement and the second mountain of commitment — to relationships, vocation, community, and a philosophy of life that transcends personal success. The best available articulation of what legacy actually means for a man who has already achieved competence in his external life.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- COURSE COMPLETE -->
+<section id="complete-section">
+  <div class="course-complete-badge">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--gold-foil)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span class="course-complete-badge-text">Course Complete — The Forged Man</span>
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--gold-foil)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+  </div>
+  <div class="forge-score-display">
+    <div class="forge-score-number" id="forge-score-display">—</div>
+    <div class="forge-score-label">Your Forge Score</div>
+  </div>
+  <h2 class="complete-title">You Have Done the <span>Work</span></h2>
+  <p class="complete-sub">Sixteen modules. Five pillars. One covenant. What comes next is not the end of the course — it is the beginning of the practice. The man you described in that covenant: go be him.</p>
+  <button class="btn-complete" id="complete-btn" onclick="toggleComplete()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    Mark Course Complete
+  </button>
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportPDF()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export PDF
+    </button>
+    <button class="btn-export" onclick="exportTXT()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export TXT
+    </button>
+  </div>
+  <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08);">
+    <a href="index.html" class="btn-secondary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Course Dashboard
+    </a>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'tfm_m16';
+  const TEXT_FIELDS = ['r1','r2','r3','r4','r5','belief-version','belief-journal','challenge-log'];
+
+  const PILLAR_DIMS = [
+    {
+      name: 'Identity',
+      desc: 'Modules 1–3: Foundation, values, character — who you are at the core.',
+      p_won: 'What have you genuinely won in this pillar? What is different about your sense of identity — behaviorally, not aspirationally?',
+      p_gap: 'What is the most significant remaining gap? Where does your behavior still not match the identity you have articulated?',
+      p_habit: 'What is the one non-negotiable practice from this pillar you are keeping — the one that most directly supports the identity you described?',
+      p_next: 'What is the single most important next move in this pillar? Specific action, not vague intention.'
+    },
+    {
+      name: 'Mind',
+      desc: 'Modules 4–6: Thinking, beliefs, emotional mastery — what you do with what happens.',
+      p_won: 'What mental pattern or belief has genuinely shifted? Name the old version and the new one — and the evidence that the shift is real.',
+      p_gap: 'Where does your thinking still work against you? What pattern — avoidance, catastrophising, confirmation bias — is still costing you most?',
+      p_habit: 'What is the practice that most directly maintains your mental operating standards? The one that, if you dropped it, would be most felt?',
+      p_next: 'What is the most important next move in building a more capable, more honest mind? Concrete and datable.'
+    },
+    {
+      name: 'Discipline',
+      desc: 'Modules 7–9: Systems, standards, reliability — the gap between knowing and doing.',
+      p_won: 'What system or standard has genuinely been installed? What can you now do consistently that you could not before — and what is the evidence?',
+      p_gap: 'Where does the gap between your stated standard and your actual behavior remain widest? What are you still tolerating that you committed not to?',
+      p_habit: 'What is the anchor habit — the practice whose presence most reliably predicts whether you are operating at your standard or below it?',
+      p_next: 'What is the single most important discipline adjustment in the next 30 days? The one that would produce the most downstream improvement.'
+    },
+    {
+      name: 'Power',
+      desc: 'Modules 10–13: Influence, money, resources, leverage — the capacity to act at scale.',
+      p_won: 'What concrete move toward greater capacity, influence, or independence has been made? Evidence: a decision taken, a system built, a dependency reduced.',
+      p_gap: 'Where is your external power most limited relative to what you need to execute your mission? What specific gap costs you most?',
+      p_habit: 'What is the practice that most directly builds your capacity over time — the compounding action that, if consistent, produces the most leverage?',
+      p_next: 'What is the highest-leverage next move in your power architecture? Specific, with a date attached.'
+    },
+    {
+      name: 'Legacy',
+      desc: 'Modules 14–16: Mission, leadership, mentorship — what you leave behind.',
+      p_won: 'What clarity about your mission, your contribution, or your impact have you won? How has the way you think about your life changed?',
+      p_gap: 'What is the most significant gap between your stated mission and how you are actually spending your time and attention right now?',
+      p_habit: 'What is the one practice that most directly builds toward the legacy you described — the one that, practiced consistently, produces compound contribution over time?',
+      p_next: 'What is the first concrete legacy action — for this week, not eventually? A conversation, a commitment, a transfer of something you know.'
+    }
+  ];
+
+  const COV_STEPS = [
+    {
+      num: '01', label: 'Who I Am',
+      fields: [
+        { id: 'cov-identity', label: 'State your core identity — not your roles, your character. The man you have decided to be, at the level of values and way of operating.', ph: 'I am a man who... [values, character traits, standards — specific and owned, not aspirational]' },
+        { id: 'cov-nonneg', label: 'Name the three things about how you operate that are non-negotiable — standards you will not compromise regardless of circumstance.', ph: 'The three things I will not compromise: [1], [2], [3] — because...' }
+      ]
+    },
+    {
+      num: '02', label: 'What I Am Building',
+      fields: [
+        { id: 'cov-mission', label: 'State your mission in one or two sentences — what you are building, and why it matters.', ph: 'My mission is to... The reason this matters — to me and beyond me — is...' },
+        { id: 'cov-build', label: 'In the next 12 months, what are the three most important things you are building? Concrete, specific, measurable.', ph: 'In the next 12 months I am building: [1], [2], [3]' }
+      ]
+    },
+    {
+      num: '03', label: 'What I Am Responsible For',
+      fields: [
+        { id: 'cov-responsible', label: 'Name the people and things you are genuinely responsible for — not by obligation but by deliberate choice. The weight you are accepting.', ph: 'I am responsible for: [people, outcomes, environments] — and I accept this responsibility without condition...' },
+        { id: 'cov-standard', label: 'What standard are you committing to hold — for yourself first, and for the environments you inhabit? Be specific about what "good enough" is not.', ph: 'The standard I hold is... I will not accept less than... in myself. The behaviors I am committing to are...' }
+      ]
+    },
+    {
+      num: '04', label: 'What I Will Not Do',
+      fields: [
+        { id: 'cov-not', label: 'What behaviors, patterns, or defaults are you formally decommissioning? Name them specifically — the ones that most cost you and the people around you.', ph: 'I am formally decommissioning: [specific behaviors — avoidance patterns, tolerance of what should not be tolerated, dishonest habits]...' },
+        { id: 'cov-boundaries', label: 'What will you no longer accept — from yourself, and if necessary, from others — that you have previously tolerated?', ph: 'I will no longer tolerate in myself: ... I will no longer accept from others: ...' }
+      ]
+    },
+    {
+      num: '05', label: 'The Covenant Statement',
+      fields: [
+        { id: 'cov-statement', label: 'Write your Life Covenant as a single, complete statement — as if you were writing it to be read at the end of your life. Integrate what you have written above into one continuous commitment.', ph: 'I, [your name], covenant to be a man who... who builds... who is responsible for... who does not... This is who I am. This is what I am building. This is the standard I hold myself to — not as an aspiration, but as a commitment.' }
+      ]
+    }
+  ];
+
+  const ASSESSMENT_ITEMS = [
+    "I can state, without hesitation, who I am at the level of values and character — and my recent behavior is consistent with that statement.",
+    "I have identified the belief that most limited me before this course and I have genuine behavioral evidence that it has been replaced.",
+    "I have built at least one system — for discipline, for mind management, or for accountability — that is now operational and producing results.",
+    "I have taken at least one concrete action toward greater independence, influence, or leverage that I would not have taken before this course.",
+    "I have written a Life Covenant that is honest, specific, and that I am prepared to return to every quarter as a standard to measure against.",
+    "I have named the man or men I am committing to develop — and I have taken or scheduled the first concrete step of that commitment."
+  ];
+
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let state = {
+    marks: {},
+    pillarReview: Array.from({length: 5}, () => ({ won: '', gap: '', habit: '', next: '' })),
+    covFields: {},
+    beliefDays: Array(7).fill(false),
+    scores: {},
+    complete: false
+  };
+
+  let saveTimer = null;
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function autoSave(key, value) {
+    state[key] = value;
+    clearTimeout(saveTimer);
+    const ind = document.getElementById(key + '-saved');
+    if (ind) ind.classList.remove('show');
+    saveTimer = setTimeout(() => {
+      save();
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+    }, 600);
+  }
+
+  function updateCharCount(ta) {
+    const el = document.getElementById(ta.id + '-count');
+    if (el) el.textContent = ta.value.length + ' characters';
+  }
+
+  function toggleStarter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.querySelector('svg').style.transform = box.classList.contains('open') ? 'rotate(45deg)' : '';
+  }
+
+  /* ===== PILLAR REVIEW ===== */
+  function buildPillarPanels() {
+    const tabsEl = document.getElementById('pillar-tabs');
+    const panelsEl = document.getElementById('pillar-panels');
+    tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    PILLAR_DIMS.forEach((dim, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'pillar-tab' + (i === 0 ? ' active' : '');
+      tab.innerHTML = dim.name + '<span class="tab-dot"></span>';
+      tab.onclick = () => switchPillar(i);
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = 'pillar-panel' + (i === 0 ? ' active' : '');
+      panel.id = 'pillar-panel-' + i;
+      panel.innerHTML = `<p style="font-size:0.85rem;color:var(--security-gray);margin-bottom:18px;font-style:italic;">${dim.desc}</p>` +
+        ['won','gap','habit','next'].map(f => `
+          <div class="pillar-field">
+            <label>${dim['p_'+f]}</label>
+            <textarea rows="3" placeholder="Your answer...">${state.pillarReview[i][f]||''}</textarea>
+          </div>`).join('');
+      panelsEl.appendChild(panel);
+
+      const keys = ['won','gap','habit','next'];
+      panel.querySelectorAll('textarea').forEach((ta, fi) => {
+        ta.oninput = function() { updatePillarField(i, keys[fi], this.value); };
+      });
+    });
+    updatePillarTabDots();
+  }
+
+  function switchPillar(idx) {
+    document.querySelectorAll('.pillar-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.pillar-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  }
+
+  function updatePillarField(dimIdx, field, value) {
+    state.pillarReview[dimIdx][field] = value;
+    save(); updatePillarTabDots(); updateProgress();
+  }
+
+  function updatePillarTabDots() {
+    document.querySelectorAll('.pillar-tab').forEach((tab, i) => {
+      const d = state.pillarReview[i];
+      tab.classList.toggle('filled', !!(d.won || d.gap || d.habit || d.next));
+    });
+  }
+
+  /* ===== LIFE COVENANT ===== */
+  function buildCovSteps() {
+    const container = document.getElementById('cov-steps');
+    container.innerHTML = '';
+    COV_STEPS.forEach(step => {
+      const div = document.createElement('div');
+      div.className = 'cov-step';
+      div.innerHTML = `
+        <div class="cov-step-header">
+          <span class="cov-step-num">${step.num}</span>
+          <span class="cov-step-label">${step.label}</span>
+        </div>
+        <div class="cov-step-body">
+          ${step.fields.map(f => `
+            <div class="cov-field">
+              <label>${f.label}</label>
+              <textarea id="${f.id}" rows="4" placeholder="${f.ph}"></textarea>
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta) {
+          ta.oninput = function() {
+            state.covFields[f.id] = this.value;
+            save(); updateProgress();
+            if (f.id === 'cov-statement') updateCovenantDisplay(this.value);
+          };
+        }
+      });
+    });
+  }
+
+  function updateCovenantDisplay(text) {
+    const el = document.getElementById('covenant-display-text');
+    if (text.trim()) {
+      el.textContent = text.trim();
+      el.classList.remove('empty');
+    } else {
+      el.textContent = 'Complete Step 5 to see your covenant here...';
+      el.classList.add('empty');
+    }
+  }
+
+  /* ===== BELIEF DAYS ===== */
+  function buildBeliefGrid() {
+    const grid = document.getElementById('belief-day-grid');
+    grid.innerHTML = '';
+    DAYS.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check${state.beliefDays[i]?' checked':''}" onclick="toggleBeliefDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleBeliefDay(idx, el) {
+    state.beliefDays[idx] = !state.beliefDays[idx];
+    el.classList.toggle('checked', state.beliefDays[idx]);
+    save(); updateProgress();
+  }
+
+  /* ===== ASSESSMENT ===== */
+  function buildAssessment() {
+    const container = document.getElementById('assessment-items');
+    container.innerHTML = '';
+    ASSESSMENT_ITEMS.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'assessment-item';
+      div.innerHTML = `
+        <div class="assessment-text">${text}</div>
+        <div class="score-buttons">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn${state.scores[i]===n?' selected':''}" onclick="setScore(${i},${n},this)">${n}</button>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function setScore(idx, val, btn) {
+    state.scores[idx] = val;
+    btn.closest('.score-buttons').querySelectorAll('.score-btn').forEach((b,i) => b.classList.toggle('selected', i+1===val));
+    save(); updateProgress(); updateAssessmentResult();
+  }
+
+  function updateAssessmentResult() {
+    const keys = Object.keys(state.scores);
+    if (keys.length < ASSESSMENT_ITEMS.length) return;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    const pct = Math.round((avg/5)*100);
+    document.getElementById('result-score-display').textContent = pct + '%';
+    const msgs = [
+      [0,40,'There is a significant gap between what you have understood and what you have embodied. This is not failure — it is an honest baseline. Return to the pillar with the widest gap and commit to one concrete change this week.'],
+      [40,65,'Solid foundation. The insights have landed in some areas and are still surface-level in others. Your covenant is the most important thing to return to — the gap between it and your current behavior is the work.'],
+      [65,85,'Strong embodiment. You have moved the practice from understanding to behavior in most areas. The remaining gaps are the ones that require courage more than information — you know what to do. Do it.'],
+      [85,101,'Exceptional. You have done the work this course was designed to produce. The covenant is real, the practice is established, and the architecture is in place. The Forged Man is not an achievement. He is a daily commitment. You know that now.']
+    ];
+    const [,, msg] = msgs.find(([lo,hi]) => pct >= lo && pct < hi);
+    document.getElementById('result-message').textContent = msg;
+    document.getElementById('assessment-result').classList.add('show');
+  }
+
+  /* ===== PROGRESS ===== */
+  function calcProgress() {
+    let points = 0, total = 0;
+    TEXT_FIELDS.forEach(id => {
+      total += 2;
+      const v = state[id] || '';
+      if (v.length > 50) points += 2; else if (v.length > 0) points += 1;
+    });
+    ['hook','hardtruth','lesson'].forEach(k => { total++; if (state.marks[k]) points++; });
+    state.pillarReview.forEach(dim => {
+      total += 4;
+      ['won','gap','habit','next'].forEach(f => { if ((dim[f]||'').length > 30) points++; });
+    });
+    COV_STEPS.forEach(step => step.fields.forEach(f => {
+      total++;
+      if ((state.covFields[f.id]||'').length > 30) points++;
+    }));
+    total += 7; points += state.beliefDays.filter(Boolean).length;
+    return Math.min(100, Math.round((points / total) * 100));
+  }
+
+  function calcForgeScore() {
+    const progress = calcProgress();
+    const keys = Object.keys(state.scores);
+    if (!keys.length) return progress;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    return Math.round(progress * 0.6 + (avg/5)*100 * 0.4);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score-display').textContent = calcForgeScore() + '%';
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      if (sec === 'hook') item.classList.toggle('done', !!state.marks.hook);
+      if (sec === 'hard-truth') item.classList.toggle('done', !!state.marks.hardtruth);
+      if (sec === 'lesson') item.classList.toggle('done', !!state.marks.lesson);
+      if (sec === 'reflection') item.classList.toggle('done', TEXT_FIELDS.slice(0,5).every(id => (state[id]||'').length > 50));
+    });
+  }
+
+  /* ===== COMPLETE ===== */
+  function toggleComplete() {
+    state.complete = !state.complete;
+    const btn = document.getElementById('complete-btn');
+    if (state.complete) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Course Complete';
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mark Course Complete';
+    }
+    save();
+  }
+
+  /* ===== EXPORT ===== */
+  function exportPDF() { window.print(); }
+
+  function exportTXT() {
+    let txt = 'THE FORGED MAN — MODULE 16: THE FORGED MAN (CAPSTONE)\n' + '='.repeat(60) + '\n\n';
+    const labels = {
+      r1:'Q1 Before & After', r2:'Q2 Pillar Analysis', r3:'Q3 Belief Shift',
+      r4:'Q4 Non-Negotiable Habits', r5:'Q5 Ten-Year Vision',
+      'belief-version':'Capstone Belief (Own Words)', 'belief-journal':'Belief Reflection',
+      'challenge-log':'Covenant Review Commitment'
+    };
+    TEXT_FIELDS.forEach(id => {
+      const val = state[id] || '';
+      if (val.trim()) txt += (labels[id]||id).toUpperCase() + '\n' + '-'.repeat(40) + '\n' + val.trim() + '\n\n';
+    });
+    txt += 'PILLAR INTEGRATION REVIEW\n' + '-'.repeat(40) + '\n';
+    PILLAR_DIMS.forEach((dim, i) => {
+      txt += `\n${dim.name.toUpperCase()}\n`;
+      ['won','gap','habit','next'].forEach(f => { if (state.pillarReview[i][f]) txt += `  ${f.toUpperCase()}: ${state.pillarReview[i][f]}\n`; });
+    });
+    txt += '\nLIFE COVENANT\n' + '-'.repeat(40) + '\n';
+    COV_STEPS.forEach(step => {
+      txt += `\n${step.num}. ${step.label}\n`;
+      step.fields.forEach(f => { const v = state.covFields[f.id]||''; if (v) txt += `  ${v}\n`; });
+    });
+    const blob = new Blob([txt], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-16-the-forged-man.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  }
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  }
+
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) { this.classList.add('read'); this.querySelector('span').textContent = 'Read'; }
+      else { this.classList.remove('read'); this.querySelector('span').textContent = 'Mark as read'; }
+      save(); updateProgress();
+    });
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(state, parsed);
+        if (!state.pillarReview || state.pillarReview.length !== 5) state.pillarReview = Array.from({length:5}, () => ({won:'',gap:'',habit:'',next:''}));
+        if (!state.beliefDays || state.beliefDays.length !== 7) state.beliefDays = Array(7).fill(false);
+        if (!state.covFields) state.covFields = {};
+        if (!state.scores) state.scores = {};
+      } catch(e) {}
+    }
+
+    buildPillarPanels();
+    buildCovSteps();
+    buildBeliefGrid();
+    buildAssessment();
+
+    /* Restore text fields */
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) {
+        el.value = state[id];
+        updateCharCount(el);
+      }
+    });
+
+    /* Restore cov step fields */
+    COV_STEPS.forEach(step => {
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta && state.covFields[f.id]) {
+          ta.value = state.covFields[f.id];
+          if (f.id === 'cov-statement') updateCovenantDisplay(ta.value);
+        }
+      });
+    });
+
+    /* Restore mark-read buttons */
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) {
+        btn.classList.add('read');
+        btn.querySelector('span').textContent = 'Read';
+      }
+    });
+
+    /* Restore complete button */
+    if (state.complete) {
+      const btn = document.getElementById('complete-btn');
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Course Complete';
+    }
+
+    if (Object.keys(state.scores).length >= ASSESSMENT_ITEMS.length) updateAssessmentResult();
+
+    updateProgress();
+    initScrollSpy();
+    initScrollAnimations();
+  });
+</script>
+</body>
+</html>

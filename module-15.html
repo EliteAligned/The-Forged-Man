@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 15: Leading Men — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '15'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== LEADERSHIP AUDIT TABS ===== */
+    .lead-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .lead-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .lead-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .lead-tab:hover:not(.active) { color: var(--deep-vault); }
+    .lead-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .lead-tab.filled .tab-dot { opacity: 1; }
+    .lead-panel { display: none; padding: 24px 0 0; }
+    .lead-panel.active { display: block; }
+    .lead-field { margin-bottom: 16px; }
+    .lead-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .lead-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .lead-field textarea:focus { border-color: var(--banknote-green); }
+    .lead-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== MENTORSHIP PLAN ===== */
+    .mp-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .mp-step-header { padding: 14px 20px; background: rgba(11,107,77,0.03); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .mp-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(11,107,77,0.2); line-height: 1; flex-shrink: 0; }
+    .mp-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .mp-step-body { padding: 20px; }
+    .mp-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .mp-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .mp-field textarea:focus { border-color: var(--banknote-green); }
+    .mp-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .lead-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .lead-field textarea, .mp-field textarea { display: none; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .lead-panel { display: block !important; }
+      .truth-block { background: #f0f0f0 !important; } .truth-block p { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 15 — Leading Men</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Leadership Craft</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Leadership Audit</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Mentorship Plan</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 15 of 16 — Pillar V: Legacy</p>
+    <h1>Leading <span>Men</span></h1>
+    <p class="hero-tagline">"The measure of a man's leadership is not what he achieves. It is what the men around him become."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Leadership Audit + Mentorship Plan</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Only Leadership That Matters</h2>
+    <p class="section-sub">The world has more content about leadership than it has actual leaders. The gap is not in theory. It is in the willingness to do the unglamorous, patient work that leadership actually requires.</p>
+
+    <p>Leadership is commonly discussed as a professional skill — something you develop for career advancement, to manage teams more effectively, to become more influential in organizations. This framing is not wrong, but it is small. The most important leadership a man does happens outside job titles and org charts: in how he shows up for the men in his family and inner circle, in whether he becomes someone younger men look to as a model, in whether the people who spend time with him leave those encounters stronger or the same.</p>
+    <p>The legacy dimension of leadership is the one most men never seriously consider. They think about what they want to achieve. They rarely ask: what will I have transferred? What will the men I influenced carry forward? What does a world look like where I have given my best — not to my own advancement, but to the development of the men around me? <strong>This is the dimension that determines whether a man's life has a ripple effect beyond his own timeline.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>This module is not about management technique or executive presence — those are covered elsewhere. It is about the deeper work: understanding what you actually communicate to men around you, whether you are the kind of man worth following, what it means to genuinely develop another person rather than just use their capability, and how to think about mentorship as a practice rather than a transaction.</p>
+    <p>The Forged Man leads. Not because he holds a title, but because of who he has become. <strong>Leadership is not a role. It is the natural consequence of being a man worth following — and that is what this entire course has been building toward.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>You Are Already Leading. The Question Is Where.</h2>
+    <p class="section-sub">Whether you consider yourself a leader or not, people around you are taking cues from your behavior. The only choice is whether you are conscious of what those cues communicate.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #15</p>
+      <p>"The men who say they are not leaders have simply decided not to take responsibility for the influence they already have. You are shaping the people around you constantly — through what you model, what you tolerate, what you reward, and what you ignore. This is not optional."</p>
+    </div>
+
+    <p>Every man in a family, in a workplace, in a social group is already leading in the behavioral sense — his actions communicate standards, his reactions set norms, his presence or absence shapes the emotional climate of those environments. The man who refuses the leadership frame does not escape this influence. He simply exercises it unconsciously, without intention, and often in ways he would not endorse if he examined them.</p>
+    <p>The most common failure mode is not bad leadership — it is absent leadership. The man who is present in body but absent in commitment. Who takes up space without contributing weight. Who is respected enough to set standards but doesn't. Whose potential influence is real but never deployed because he has not accepted responsibility for it. <strong>The absence of deliberate leadership is itself a leadership choice — and it is usually a bad one.</strong></p>
+
+    <h3>The mirror problem</h3>
+    <p>Men rarely see themselves as others see them in their leadership behavior. The manager who believes he is direct and decisive is experienced as abrasive and arbitrary. The father who believes he is a strong presence is experienced as emotionally unavailable. The mentor who believes he is developing his mentee is actually just using him as an audience. <strong>The gap between self-perception and the actual experience of the people you lead is the most important and least examined dimension of leadership.</strong> Closing it is uncomfortable — and essential.</p>
+
+    <div class="callout warning">
+      <strong>The authority trap:</strong> Many men conflate authority with leadership. Authority is positional — it comes from a title, a role, a formal relationship. Leadership is earned — it comes from demonstrated competence, integrity, genuine care for those you lead, and the willingness to do hard things. Men who rely on authority rather than building genuine leadership find that authority erodes in every environment where the people below them have any real choice about whether to follow. And ultimately, everyone has that choice.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Leadership Craft</h2>
+    <p class="section-sub">Five principles drawn from the best available evidence on what actually makes men worth following — not personality theory, not management technique, but the observable behaviors that produce genuine trust, development, and results.</p>
+
+    <h3>1. The standard you live is the standard you set</h3>
+    <p>Leadership culture is not created by what leaders say they value. It is created by what they demonstrably live. The leader who says he values honesty but avoids difficult conversations creates an environment where honesty is optional. The leader who says he values accountability but makes excuses for his own failures creates an environment where accountability is for others. The man who wants to build something — a team, a family, a community — must understand that he is the primary culture-formation force in it. <strong>What you model is what becomes normal. What you tolerate is what becomes acceptable. What you reward is what gets repeated.</strong></p>
+
+    <h3>2. Genuine development vs. extraction</h3>
+    <p>Most people who call themselves mentors are actually extractors — they use the mentee's time and capability, offer minimal investment in return, and confuse the transaction for development. Genuine development requires a specific commitment: understanding what the other person is trying to become, not just what you need them to do; investing in their growth even when it means they outgrow you; giving honest feedback rather than comfortable praise; having the hard conversation rather than the easy validation. <strong>The test of genuine development is whether the person you are leading is becoming more capable and more themselves — not more useful to you.</strong></p>
+
+    <h3>3. High standards and genuine care are not opposites</h3>
+    <p>The most effective leaders hold the highest standards and the most genuine care simultaneously — and never sacrifice either. The leader who is all care and no standards produces comfortable underperformance. The leader who is all standards and no care produces compliance without commitment, loyalty without depth. The synthesis — high standards because you genuinely believe in what the person can become, and genuine care that makes the standard feel like a gift rather than a demand — is the hardest thing to build and the most powerful when you do. <strong>The man who holds you to a high standard because he believes in you is the most influential person in most men's lives.</strong></p>
+
+    <h3>4. The courage dimension</h3>
+    <p>Leadership requires a specific form of courage that is distinct from physical bravery: the willingness to tell a man the truth about himself even when it will hurt, to hold a position under social pressure when you know you are right, to make unpopular decisions in service of what is genuinely right, to accept responsibility when things go wrong rather than distributing blame. Most men who fail at leadership do not fail from lack of competence or intelligence. They fail from a specific deficit of courage — the willingness to bear the short-term discomfort that good leadership consistently requires. <strong>The comfortable leader produces comfortable mediocrity. The courageous leader produces growth.</strong></p>
+
+    <h3>5. Mentorship as legacy</h3>
+    <p>Every man's influence on the world is multiplied by the men he develops. The knowledge, values, and capability he transfers to others continues after he is gone — modified, improved, passed forward. This is the actual mechanism of legacy: not monuments or reputation, but the living transmission of what you know and who you are into the next generation of men. Mentorship in this frame is not a career activity. It is a profound obligation — to transfer what you have learned, to save the next man some of the mistakes you made, to give him access to capabilities that took you years to develop. <strong>The man who hoards his knowledge and experience is not protecting his competitive advantage. He is ending his legacy at his own death.</strong></p>
+
+    <div class="callout">
+      <strong>On formal vs. informal leadership:</strong> Everything in this module applies regardless of whether you hold a formal leadership role. The most important leadership most men do is informal — in their families, their friendships, their communities. The father who leads his household well, the friend who models integrity under pressure, the experienced man who invests in the development of younger men — these forms of leadership produce outcomes that outlast any organizational role. Do not wait for a title. The opportunity is present now.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">Honest, specific, named. The leadership questions are among the most uncomfortable in this course — they require you to see yourself from the outside.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">What do the people you lead — formally or informally — actually experience when they are around you? Not what you intend to communicate, but what you think they genuinely experience. What is the emotional climate your presence creates? What standards do they think you actually hold, based on evidence rather than statements?</p>
+      <p class="card-hint">This question requires perspective-taking rather than self-assessment. Think about how specific people — a team member, a son, a younger friend — would answer if asked honestly: what is it like to be led by this man? What do I get from him? What do I not get? What would I change? The gap between what you believe you provide and what you think they would say is your primary leadership development target.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"If the people I lead were being honest, they would say the experience of being led by me is..."</p>
+        <p>"The standards I actually hold — based on what I tolerate and what I reward — are..."</p>
+        <p>"The gap between what I intend to provide as a leader and what I think I actually provide is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">Name the men who have most influenced your development — specifically what they did that mattered. Not the generic "believed in me" — the specific behaviors, the specific moments, the specific things they said or did that changed something in you. What can you learn from studying how they led you?</p>
+      <p class="card-hint">The leaders who shaped you most significantly are your primary data set for understanding what effective leadership looks like in practice. The specific things they did — not the personality traits but the repeatable behaviors — are the most actionable guide to what you should be doing for the men around you. Most of the time, the answer involves someone who held a high standard combined with genuine belief in your potential.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The man who most influenced my development was... The specific thing he did that mattered most was..."</p>
+        <p>"What made his leadership effective — the specific behaviors, not the personality — was..."</p>
+        <p>"What I am doing (or not doing) for the men around me that he did for me is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">Who in your current life — a son, a younger colleague, a mentee, a friend — is most in need of the kind of investment you received from the people who shaped you? What specifically do they need that you are positioned to provide? What is stopping you from providing it?</p>
+      <p class="card-hint">This question is about identifying the person who most needs what you have, not the person who would be most convenient or comfortable to invest in. The most important mentorship investment is usually the one that requires you to give something that costs you — time, honest feedback, sustained attention — not the one that lets you feel like a mentor without the actual work.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The person who most needs what I have to offer right now is... What they specifically need is..."</p>
+        <p>"I am positioned to provide this because... What is stopping me from providing it is..."</p>
+        <p>"If I invested in this person's development the way I wish someone had invested in mine, specifically what that would look like is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">Where are you currently tolerating a standard below what you actually believe in — in your team, your family, or your social environment? What are you accepting from others that you would not accept from yourself? What would change if you held the people around you to the same standard you hold yourself?</p>
+      <p class="card-hint">Tolerance of low standards is one of the most common and most costly leadership failures. It almost always comes from one of two sources: conflict avoidance (the hard conversation has been deferred) or misplaced kindness (tolerating mediocrity because confronting it feels unkind). Both are actually failures of care — the person being tolerated is not being given the feedback that would allow them to grow. Identify the specific instance most clearly.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The standard I am most consistently tolerating below what I actually believe in is... in this environment: ..."</p>
+        <p>"The reason I have been tolerating it is... The real cost of tolerating it — to them and to me — is..."</p>
+        <p>"What a leader who genuinely cared about this person's development would do is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">What knowledge, experience, or hard-won insight do you possess that would significantly benefit another man if you transferred it? What have you learned — at real cost — that someone earlier in the journey needs? What are you hoarding that should be passed on, and who specifically should receive it?</p>
+      <p class="card-hint">Every man in his thirties and beyond has accumulated insight that is genuinely valuable to men a decade behind him. The question is not whether you have something to transfer — you do. The question is whether you are doing it deliberately, to the people who would most benefit, in a form they can actually use. What did you most need at twenty-five that you now know? Who needs that now?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The hard-won insight I possess that would most benefit another man is..."</p>
+        <p>"What I most needed at an earlier point in my life that no one gave me is... Who needs that now is..."</p>
+        <p>"The specific thing I should transfer, to the specific person who needs it, in the next thirty days is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP AUDIT -->
+  <section class="section" id="system">
+    <p class="section-tag">Exercise One</p>
+    <h2>The Leadership Audit</h2>
+    <p class="section-sub">Map your leadership across five contexts. For each: what you currently provide, what is most missing, and the single most important change that would make you more worth following in that context.</p>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <p class="card-title">Context-by-Context Leadership Map</p>
+      </div>
+      <p class="card-hint" style="margin-bottom: 20px;">The most useful audit is the most honest one. Focus on what is actually true, not what you hope is true. The gap between those two things is where your development lives.</p>
+
+      <div class="lead-tabs" id="lead-tabs"></div>
+      <div id="lead-panels"></div>
+    </div>
+  </section>
+
+  <!-- MENTORSHIP PLAN -->
+  <section class="section" id="exercise">
+    <p class="section-tag">Exercise Two</p>
+    <h2>The Mentorship Plan</h2>
+    <p class="section-sub">Design a specific, deliberate mentorship investment — one person, a clear commitment, a concrete plan. Not a vague intention to be more helpful — a structured commitment to one person's development.</p>
+
+    <div id="mp-steps"></div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">Belief Install</p>
+    <h2>The Belief This Module Installs</h2>
+    <p class="section-sub">Read this aloud. Write it in your own words. Sit with it. Beliefs are installed through repetition and reflection, not passive reading.</p>
+
+    <div class="belief-display" id="belief-text">
+      "I lead not through authority but through who I am. The standard I live is the standard I set. The man I become is the greatest gift I can give to those who follow me."
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Belief Reinforcement — check in each day you reflected on this belief</p>
+      <div class="day-grid" id="belief-day-grid"></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Write the belief in your own words</p>
+      <textarea class="journal-area" id="belief-version" placeholder="Rewrite the belief in language that resonates with you specifically..." rows="4" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">What would change if you fully lived this belief?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="What standard would you raise? What conversation would you have? What investment in another man's development would you make that you have been delaying?" rows="5" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Investment Conversation</h2>
+    <p class="section-sub">One conversation this week that is entirely about another man's development — not your needs, your agenda, or your relationship. His growth.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">The Challenge</p>
+      <p>This week, have one conversation with a man in your life — a son, a mentee, a younger colleague, a friend — that is entirely structured around his development. Not advice giving when asked. Not a normal conversation where you occasionally drop wisdom. A deliberate, prepared conversation where you have thought about what he is trying to become, what is most limiting him, and what honest input from you would most move him forward. Then deliver that input clearly and with care.</p>
+    </div>
+
+    <p>Preparation is what separates this from a normal conversation. Before the conversation: think about what this man is actually trying to build. Think about what you have observed about his patterns — the ones that serve him and the ones that don't. Think about what you know that would genuinely help him at this stage, not what you feel like saying. Arrive with a question that opens the conversation, not a lecture that closes it.</p>
+    <p>After the conversation: document what you observed, what you said, how it landed, and what you will do differently next time. The feedback loop is how this practice improves.</p>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Preparation & Debrief</p>
+      <textarea class="journal-area" id="challenge-log" placeholder="Who: ...&#10;What I prepared — what he is trying to become, what I observed, what would help: ...&#10;&#10;How the conversation went: ...&#10;What I learned about leading this particular man: ...&#10;What I'll do differently next time: ..." rows="14" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself honestly on each dimension. These scores feed your Forge Score for this module.</p>
+
+    <div id="assessment-items"></div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score-display">—</div>
+      <div class="result-label">Module Self-Assessment Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Recommended Reading</p>
+    <h2>Go Deeper</h2>
+    <p class="section-sub">Four books that form the foundation behind this module — on leadership, development, and what it means to build something that outlasts you.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Extreme Ownership — Jocko Willink & Leif Babin</div>
+        <div class="resource-desc">The clearest available account of what the standard-and-accountability dimension of leadership looks like in practice. The principle of extreme ownership — the leader owns everything, no excuses, no blame — is the hardest and most important framework in this module.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Multipliers — Liz Wiseman</div>
+        <div class="resource-desc">The research-backed account of the difference between leaders who amplify the intelligence and capability of those around them versus those who diminish it. The distinction maps directly to genuine development vs. extraction in this module.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The Mentor Leader — Tony Dungy</div>
+        <div class="resource-desc">A practical framework for mentorship as the core of leadership — not strategy or tactics but the deliberate investment in the growth of others as the primary mechanism of leadership effectiveness and legacy.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Tribe — Sebastian Junger</div>
+        <div class="resource-desc">An anthropological examination of belonging, brotherhood, and what men give each other in genuine community. The deepest available account of why the men you build around you matter — and what you owe them.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- COMPLETE -->
+<section id="complete-section">
+  <div class="forge-score-display">
+    <div class="forge-score-number" id="forge-score-display">—</div>
+    <div class="forge-score-label">Forge Score</div>
+  </div>
+  <h2 class="complete-title">Module 15 Complete</h2>
+  <p class="complete-sub">One module remains. You have done the hardest work — the honest examination of who you are, what you lead, and what you owe the men around you. Module 16 is the integration.</p>
+  <button class="btn-complete" id="complete-btn" onclick="toggleComplete()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    Mark Module Complete
+  </button>
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportPDF()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export PDF
+    </button>
+    <button class="btn-export" onclick="exportTXT()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download .txt
+    </button>
+    <a href="index.html" class="btn-secondary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Course
+    </a>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'tfm_m15';
+  const TEXT_FIELDS = ['r1','r2','r3','r4','r5','belief-version','belief-journal','challenge-log'];
+
+  const LEAD_CONTEXTS = [
+    {
+      name: 'Family',
+      desc: 'Partner, children, siblings — the people who see you most unfiltered.',
+      p_current: 'What do you currently provide as a leader in your family? What standard are you setting by how you live?',
+      p_missing: 'What is most missing from your leadership in this context? What are you not providing that is needed?',
+      p_change: 'What single change would most improve your leadership in your family?',
+      p_invest: 'Who in your family most needs a deliberate investment from you right now? What would that look like?'
+    },
+    {
+      name: 'Professional',
+      desc: 'Team, colleagues, direct reports — the environment where most formal leadership happens.',
+      p_current: 'What do you currently provide professionally as a leader? What culture are you creating?',
+      p_missing: 'What standard are you not holding? Where are you tolerating mediocrity or avoiding hard conversations?',
+      p_change: 'What single change would most improve how the people you lead professionally experience your leadership?',
+      p_invest: 'Who on your professional team most needs genuine development investment from you? What specifically do they need?'
+    },
+    {
+      name: 'Social Circle',
+      desc: 'Close friends, peer group — the informal leadership that is most often invisible.',
+      p_current: 'What role do you play in your social circle? Are you someone others look to? What are you modeling?',
+      p_missing: 'Where could you be providing more — more honesty, more standard-setting, more direct feedback — that you currently are not?',
+      p_change: 'If you were more deliberate about your leadership in your social circle, what specifically would change?',
+      p_invest: 'Is there a friend who would benefit from the kind of honest input that only someone who genuinely cares about them could provide? What would you say?'
+    },
+    {
+      name: 'Community',
+      desc: 'Any broader community — religious, civic, professional body, neighbourhood — where you have presence.',
+      p_current: 'Do you have a leadership presence in any community beyond your immediate circle? What does it look like?',
+      p_missing: 'Where could you be contributing more — resources, skills, time, voice — that you are currently withholding?',
+      p_change: 'What one commitment to community leadership would most align with your mission and would be most needed?',
+      p_invest: 'Is there a younger man in your community who would benefit from investment you could provide? What specifically?'
+    },
+    {
+      name: 'Self',
+      desc: 'The leadership of your own life — the foundation all other leadership rests on.',
+      p_current: 'Are you currently leading yourself well? Are you the man you are asking others to be? Be specific.',
+      p_missing: 'Where is the gap between the standard you hold for others and the standard you hold for yourself? What are you tolerating in yourself that you would not tolerate in the people you lead?',
+      p_change: 'What single change in how you lead yourself would most improve your ability to lead others?',
+      p_invest: 'What does the best version of your self-leadership look like in the next twelve months?'
+    }
+  ];
+
+  const MP_STEPS = [
+    {
+      num: '01', label: 'Choose Your Person',
+      fields: [
+        { id: 'mp-who', label: 'Who are you committing to invest in? Name them specifically and explain why you chose this person.', ph: 'A son, a mentee, a younger colleague, a friend — the person who most needs what you have and whom you are positioned to help...' },
+        { id: 'mp-why', label: 'What is the case for this investment? Why this person, why now?', ph: 'What do you see in them that others might not? What opportunity exists right now that will not always be there?' }
+      ]
+    },
+    {
+      num: '02', label: 'Understand What They Need',
+      fields: [
+        { id: 'mp-need', label: 'What does this person most need to develop? What is limiting them most at this stage?', ph: 'Based on observation, not assumption — what pattern, belief, or capability gap is costing them most right now?' },
+        { id: 'mp-have', label: 'What do you specifically have — experience, skill, network, perspective — that addresses what they need?', ph: 'Not what you can generically offer — what you specifically have that matches specifically what they need...' }
+      ]
+    },
+    {
+      num: '03', label: 'Define the Commitment',
+      fields: [
+        { id: 'mp-commitment', label: 'What specific time and attention are you committing? How often, for how long, in what form?', ph: 'Monthly dinner, weekly call, quarterly review — specific, not vague. A commitment that can be honoured or broken...' },
+        { id: 'mp-duration', label: 'What is the duration of this commitment? What does a successful outcome look like at the end of it?', ph: 'Six months? A year? What specific progress in this person would tell you the investment was successful?' }
+      ]
+    },
+    {
+      num: '04', label: 'Design the Approach',
+      fields: [
+        { id: 'mp-method', label: 'How will you structure the investment? What will you do in your time together?', ph: 'Specific activities — skill transfer, problem-solving conversations, honest feedback sessions, shared experiences, book recommendations...' },
+        { id: 'mp-feedback', label: 'How will you give honest feedback? What is your approach when you need to say something hard?', ph: 'This is where most mentorship fails. How will you ensure the relationship stays honest rather than comfortable?' }
+      ]
+    },
+    {
+      num: '05', label: 'First Step',
+      fields: [
+        { id: 'mp-first', label: 'What is the first concrete action — this week — that begins this mentorship commitment?', ph: 'Not "reach out when convenient" — a specific action, a specific date, a specific opening move...' },
+        { id: 'mp-legacy', label: 'What do you hope this person carries forward from the investment you are about to make?', ph: 'Not what you want for yourself from the relationship — what you want for them. What do you hope they become, in part, because of you?' }
+      ]
+    }
+  ];
+
+  const ASSESSMENT_ITEMS = [
+    "I have an honest picture of what the people I lead actually experience — not what I intend, but what lands.",
+    "I have identified the man in my life who most needs genuine development investment and I have a specific plan to provide it.",
+    "I have named the standard I am tolerating below what I believe and I have a plan to address it.",
+    "I have completed the Leadership Audit across all five contexts with genuine honesty.",
+    "I have built a specific Mentorship Plan with a named person, a clear commitment, and a first concrete step.",
+    "I have identified the hard-won insight I possess that should be transferred and have a plan to do it."
+  ];
+
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let state = {
+    marks: {},
+    leadContexts: Array.from({length: 5}, () => ({ current: '', missing: '', change: '', invest: '' })),
+    mpFields: {},
+    beliefDays: Array(7).fill(false),
+    scores: {},
+    complete: false
+  };
+
+  let saveTimer = null;
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function autoSave(key, value) {
+    state[key] = value;
+    clearTimeout(saveTimer);
+    const ind = document.getElementById(key + '-saved');
+    if (ind) ind.classList.remove('show');
+    saveTimer = setTimeout(() => {
+      save();
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+    }, 600);
+  }
+
+  function updateCharCount(ta) {
+    const el = document.getElementById(ta.id + '-count');
+    if (el) el.textContent = ta.value.length + ' characters';
+  }
+
+  function toggleStarter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.querySelector('svg').style.transform = box.classList.contains('open') ? 'rotate(45deg)' : '';
+  }
+
+  /* ===== LEADERSHIP AUDIT ===== */
+  function buildLeadPanels() {
+    const tabsEl = document.getElementById('lead-tabs');
+    const panelsEl = document.getElementById('lead-panels');
+    tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    LEAD_CONTEXTS.forEach((ctx, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'lead-tab' + (i === 0 ? ' active' : '');
+      tab.innerHTML = ctx.name + '<span class="tab-dot"></span>';
+      tab.onclick = () => switchLead(i);
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = 'lead-panel' + (i === 0 ? ' active' : '');
+      panel.id = 'lead-panel-' + i;
+      panel.innerHTML = `<p style="font-size:0.85rem;color:var(--security-gray);margin-bottom:18px;font-style:italic;">${ctx.desc}</p>` +
+        ['current','missing','change','invest'].map(f => `
+          <div class="lead-field">
+            <label>${ctx['p_'+f]}</label>
+            <textarea rows="3" placeholder="Your answer...">${state.leadContexts[i][f]||''}</textarea>
+          </div>`).join('');
+      panelsEl.appendChild(panel);
+
+      const keys = ['current','missing','change','invest'];
+      panel.querySelectorAll('textarea').forEach((ta, fi) => {
+        ta.oninput = function() { updateLeadField(i, keys[fi], this.value); };
+      });
+    });
+    updateLeadTabDots();
+  }
+
+  function switchLead(idx) {
+    document.querySelectorAll('.lead-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.lead-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  }
+
+  function updateLeadField(ctxIdx, field, value) {
+    state.leadContexts[ctxIdx][field] = value;
+    save(); updateLeadTabDots(); updateProgress();
+  }
+
+  function updateLeadTabDots() {
+    document.querySelectorAll('.lead-tab').forEach((tab, i) => {
+      const d = state.leadContexts[i];
+      tab.classList.toggle('filled', !!(d.current || d.missing || d.change || d.invest));
+    });
+  }
+
+  /* ===== MENTORSHIP PLAN ===== */
+  function buildMPSteps() {
+    const container = document.getElementById('mp-steps');
+    container.innerHTML = '';
+    MP_STEPS.forEach(step => {
+      const div = document.createElement('div');
+      div.className = 'mp-step';
+      div.innerHTML = `
+        <div class="mp-step-header">
+          <span class="mp-step-num">${step.num}</span>
+          <span class="mp-step-label">${step.label}</span>
+        </div>
+        <div class="mp-step-body">
+          ${step.fields.map(f => `
+            <div class="mp-field">
+              <label>${f.label}</label>
+              <textarea id="${f.id}" rows="3" placeholder="${f.ph}"></textarea>
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta) ta.oninput = function() { state.mpFields[f.id] = this.value; save(); updateProgress(); };
+      });
+    });
+  }
+
+  /* ===== BELIEF DAYS ===== */
+  function buildBeliefGrid() {
+    const grid = document.getElementById('belief-day-grid');
+    grid.innerHTML = '';
+    DAYS.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check${state.beliefDays[i]?' checked':''}" onclick="toggleBeliefDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleBeliefDay(idx, el) {
+    state.beliefDays[idx] = !state.beliefDays[idx];
+    el.classList.toggle('checked', state.beliefDays[idx]);
+    save(); updateProgress();
+  }
+
+  /* ===== ASSESSMENT ===== */
+  function buildAssessment() {
+    const container = document.getElementById('assessment-items');
+    container.innerHTML = '';
+    ASSESSMENT_ITEMS.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'assessment-item';
+      div.innerHTML = `
+        <div class="assessment-text">${text}</div>
+        <div class="score-buttons">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn${state.scores[i]===n?' selected':''}" onclick="setScore(${i},${n},this)">${n}</button>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function setScore(idx, val, btn) {
+    state.scores[idx] = val;
+    btn.closest('.score-buttons').querySelectorAll('.score-btn').forEach((b,i) => b.classList.toggle('selected', i+1===val));
+    save(); updateProgress(); updateAssessmentResult();
+  }
+
+  function updateAssessmentResult() {
+    const keys = Object.keys(state.scores);
+    if (keys.length < ASSESSMENT_ITEMS.length) return;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    const pct = Math.round((avg/5)*100);
+    document.getElementById('result-score-display').textContent = pct + '%';
+    const msgs = [
+      [0,40,'This module has opened a significant gap between where you are and the leader you could be. Start with the investment conversation — one person, one deliberate conversation. The rest can follow from there.'],
+      [40,65,'Solid foundation. You have identified the most important gaps and have a mentorship plan. The test now is execution — specifically, the first step you have committed to this week.'],
+      [65,85,'Strong work. You lead well in most contexts and you have a clear plan for the areas where you do not. The mentorship investment you have designed could be one of the most significant things you do this year.'],
+      [85,101,'Exceptional. You are already operating as the kind of leader this module describes, and you have a specific plan to deepen that. One module to go.']
+    ];
+    const [,, msg] = msgs.find(([lo,hi]) => pct >= lo && pct < hi);
+    document.getElementById('result-message').textContent = msg;
+    document.getElementById('assessment-result').classList.add('show');
+  }
+
+  /* ===== PROGRESS ===== */
+  function calcProgress() {
+    let points = 0, total = 0;
+    TEXT_FIELDS.forEach(id => {
+      total += 2;
+      const v = state[id] || '';
+      if (v.length > 50) points += 2; else if (v.length > 0) points += 1;
+    });
+    ['hook','hardtruth','lesson'].forEach(k => { total++; if (state.marks[k]) points++; });
+    state.leadContexts.forEach(ctx => {
+      total += 4;
+      ['current','missing','change','invest'].forEach(f => { if ((ctx[f]||'').length > 30) points++; });
+    });
+    MP_STEPS.forEach(step => step.fields.forEach(f => {
+      total++;
+      if ((state.mpFields[f.id]||'').length > 30) points++;
+    }));
+    total += 7; points += state.beliefDays.filter(Boolean).length;
+    return Math.min(100, Math.round((points / total) * 100));
+  }
+
+  function calcForgeScore() {
+    const progress = calcProgress();
+    const keys = Object.keys(state.scores);
+    if (!keys.length) return progress;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    return Math.round(progress * 0.6 + (avg/5)*100 * 0.4);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score-display').textContent = calcForgeScore() + '%';
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      if (sec === 'hook') item.classList.toggle('done', !!state.marks.hook);
+      if (sec === 'hard-truth') item.classList.toggle('done', !!state.marks.hardtruth);
+      if (sec === 'lesson') item.classList.toggle('done', !!state.marks.lesson);
+      if (sec === 'reflection') item.classList.toggle('done', TEXT_FIELDS.slice(0,5).every(id => (state[id]||'').length > 50));
+    });
+  }
+
+  /* ===== COMPLETE ===== */
+  function toggleComplete() {
+    state.complete = !state.complete;
+    const btn = document.getElementById('complete-btn');
+    if (state.complete) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mark Module Complete';
+    }
+    save();
+  }
+
+  /* ===== EXPORT ===== */
+  function exportPDF() { window.print(); }
+
+  function exportTXT() {
+    let txt = 'THE FORGED MAN — MODULE 15: LEADING MEN\n' + '='.repeat(60) + '\n\n';
+    const labels = { r1:'Q1 What I Provide', r2:'Q2 Men Who Shaped Me', r3:'Q3 Who Needs Investment', r4:'Q4 Standard I Tolerate', r5:'Q5 What to Transfer', 'belief-version':'Belief (Own Words)', 'belief-journal':'Belief Reflection', 'challenge-log':'Investment Conversation' };
+    TEXT_FIELDS.forEach(id => {
+      const val = state[id] || '';
+      if (val.trim()) txt += (labels[id]||id).toUpperCase() + '\n' + '-'.repeat(40) + '\n' + val.trim() + '\n\n';
+    });
+    txt += 'LEADERSHIP AUDIT\n' + '-'.repeat(40) + '\n';
+    LEAD_CONTEXTS.forEach((ctx, i) => {
+      txt += `\n${ctx.name.toUpperCase()}\n`;
+      ['current','missing','change','invest'].forEach(f => { if (state.leadContexts[i][f]) txt += `  ${f.toUpperCase()}: ${state.leadContexts[i][f]}\n`; });
+    });
+    txt += '\nMENTORSHIP PLAN\n' + '-'.repeat(40) + '\n';
+    MP_STEPS.forEach(step => {
+      txt += `\n${step.num}. ${step.label}\n`;
+      step.fields.forEach(f => { const v = state.mpFields[f.id]||''; if (v) txt += `  ${f.label}\n  ${v}\n`; });
+    });
+    const blob = new Blob([txt], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-15-leading-men.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  }
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  }
+
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) { this.classList.add('read'); this.querySelector('span').textContent = 'Read'; }
+      else { this.classList.remove('read'); this.querySelector('span').textContent = 'Mark as read'; }
+      save(); updateProgress();
+    });
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(state, parsed);
+        if (!state.leadContexts || state.leadContexts.length !== 5) state.leadContexts = Array.from({length:5}, () => ({current:'',missing:'',change:'',invest:''}));
+        if (!state.beliefDays || state.beliefDays.length !== 7) state.beliefDays = Array(7).fill(false);
+        if (!state.mpFields) state.mpFields = {};
+        if (!state.scores) state.scores = {};
+      } catch(e) {}
+    }
+
+    buildLeadPanels();
+    buildMPSteps();
+    buildBeliefGrid();
+    buildAssessment();
+
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) { el.value = state[id]; updateCharCount(el); }
+    });
+
+    MP_STEPS.forEach(step => step.fields.forEach(f => {
+      const ta = document.getElementById(f.id);
+      if (ta && state.mpFields[f.id]) ta.value = state.mpFields[f.id];
+    }));
+
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) { btn.classList.add('read'); btn.querySelector('span').textContent = 'Read'; }
+    });
+
+    if (state.complete) {
+      const btn = document.getElementById('complete-btn');
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    }
+
+    if (Object.keys(state.scores).length > 0) updateAssessmentResult();
+
+    updateProgress();
+    initScrollSpy();
+    initScrollAnimations();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 14: Mission vs. Goals — The Forged Man</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper-white:    #F7F5EF;
+      --mint-tint:      #E6F4EE;
+      --mint-dark:      #D4EAE0;
+      --banknote-green: #0B6B4D;
+      --green-hover:    #085A3F;
+      --green-light:    #0D7A58;
+      --deep-vault:     #0A0F0D;
+      --security-gray:  #8A9490;
+      --sg-border:      rgba(138,148,144,0.35);
+      --sg-light:       rgba(138,148,144,0.2);
+      --gold-foil:      #D4AF37;
+      --gold-foil-dark: #B8941E;
+      --red:            #6B2B2B;
+      --font-display:   'Fraunces', Georgia, serif;
+      --font-body:      'DM Sans', system-ui, sans-serif;
+      --sidebar-w:      260px;
+      --header-h:       60px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper-white); color: var(--deep-vault); font-family: var(--font-body); font-size: 16px; line-height: 1.75; min-height: 100vh; overflow-x: hidden; }
+
+    #top-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--deep-vault); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px; }
+    #top-header .back-link { display: flex; align-items: center; gap: 6px; color: var(--security-gray); font-size: 0.75rem; font-family: var(--font-body); text-decoration: none; flex-shrink: 0; transition: color 0.2s; }
+    #top-header .back-link:hover { color: var(--paper-white); }
+    #top-header .course-label { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; color: var(--paper-white); white-space: nowrap; }
+    #top-header .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+    #top-header .module-label { font-size: 0.78rem; color: var(--security-gray); white-space: nowrap; font-family: var(--font-body); }
+    #progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+    #progress-bar-track { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    #progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-hover), var(--banknote-green)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+    #progress-pct { font-size: 0.75rem; color: var(--gold-foil); font-weight: 600; min-width: 36px; text-align: right; font-family: var(--font-body); }
+    #menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 6px; color: var(--security-gray); flex-shrink: 0; }
+
+    #sidebar { position: fixed; top: var(--header-h); left: 0; width: var(--sidebar-w); height: calc(100vh - var(--header-h)); background: var(--paper-white); border-right: 1px solid var(--sg-border); overflow-y: auto; padding: 24px 0; z-index: 90; transition: transform 0.3s ease; }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 2px; }
+    .nav-section-label { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--security-gray); padding: 0 20px 8px; margin-top: 16px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent; text-decoration: none; color: var(--security-gray); font-size: 0.82rem; font-family: var(--font-body); }
+    .nav-item:hover { background: var(--mint-tint); color: var(--deep-vault); }
+    .nav-item.active { background: rgba(11,107,77,0.08); border-left-color: var(--banknote-green); color: var(--banknote-green); }
+    .nav-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--sg-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .nav-item.done .nav-dot { background: var(--banknote-green); border-color: var(--banknote-green); }
+    .nav-item.done .nav-dot::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
+    .nav-item.active .nav-dot { border-color: var(--banknote-green); background: rgba(11,107,77,0.15); }
+
+    #main { margin-left: var(--sidebar-w); margin-top: var(--header-h); min-height: calc(100vh - var(--header-h)); }
+
+    .section { padding: 72px 64px; max-width: 860px; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .section.visible { opacity: 1; transform: translateY(0); }
+    .section + .section { border-top: 1px solid var(--sg-border); }
+
+    #hero { padding: 96px 64px 80px; background: var(--deep-vault); position: relative; overflow: hidden; opacity: 1; transform: none; }
+    #hero::before { content: '14'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 14rem; font-weight: 700; color: rgba(247,245,239,0.03); line-height: 1; user-select: none; pointer-events: none; }
+    .module-tag { font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 16px; }
+    #hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.05; color: var(--paper-white); margin-bottom: 16px; }
+    #hero h1 span { color: var(--banknote-green); }
+    .hero-tagline { font-size: 1.05rem; color: rgba(247,245,239,0.55); font-style: italic; margin-bottom: 40px; font-family: var(--font-display); }
+    .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 40px; }
+    .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(247,245,239,0.45); }
+    .hero-meta-item svg { color: var(--banknote-green); flex-shrink: 0; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 28px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: #BF9B28; transform: translateY(-1px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--security-gray); font-size: 0.82rem; font-weight: 500; padding: 10px 0; border: none; cursor: pointer; transition: color 0.2s; text-decoration: none; font-family: var(--font-body); }
+    .btn-secondary:hover { color: var(--paper-white); }
+
+    .section-tag { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--banknote-green); margin-bottom: 10px; }
+    .section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--deep-vault); line-height: 1.15; margin-bottom: 8px; }
+    .section-sub { font-size: 0.9rem; color: var(--security-gray); font-style: italic; margin-bottom: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--sg-border); }
+    .section h3 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--banknote-green); margin: 32px 0 12px; }
+    .section p { margin-bottom: 16px; color: #2E3B36; font-size: 0.95rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section p strong { color: var(--deep-vault); font-weight: 600; }
+
+    .truth-block { margin: 32px 0; padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); }
+    .truth-block p { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--paper-white); line-height: 1.45; margin-bottom: 0; }
+    .truth-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 10px; font-weight: 600; font-family: var(--font-body); }
+    .callout { margin: 24px 0; padding: 20px 24px; background: var(--mint-tint); border: 1px solid var(--sg-border); border-left: 3px solid var(--banknote-green); font-size: 0.9rem; color: #2E3B36; }
+    .callout.warning { background: rgba(107,43,43,0.06); border-color: rgba(107,43,43,0.25); border-left-color: var(--red); }
+    .ornament { display: flex; align-items: center; gap: 16px; margin: 40px 0; }
+    .ornament-line { flex: 1; height: 1px; background: var(--sg-border); }
+    .ornament-diamond { width: 8px; height: 8px; background: var(--banknote-green); transform: rotate(45deg); flex-shrink: 0; }
+
+    .card { background: var(--paper-white); border: 1px solid var(--sg-border); padding: 28px; margin: 20px 0; position: relative; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+    .card-title { font-family: var(--font-body); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--banknote-green); }
+    .card-number { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: rgba(11,107,77,0.12); line-height: 1; flex-shrink: 0; }
+    .card-question { font-size: 1rem; font-weight: 500; color: var(--deep-vault); margin-bottom: 16px; line-height: 1.5; }
+    .card-hint { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 14px; line-height: 1.5; }
+
+    .journal-area { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; line-height: 1.65; padding: 16px; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .journal-area:focus { border-color: var(--banknote-green); }
+    .journal-area::placeholder { color: var(--security-gray); }
+    .field-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: 0.72rem; color: var(--security-gray); }
+    .save-indicator { font-size: 0.72rem; color: var(--banknote-green); opacity: 0; transition: opacity 0.3s; }
+    .save-indicator.show { opacity: 1; }
+
+    .starter-toggle { background: none; border: none; cursor: pointer; color: var(--banknote-green); font-size: 0.78rem; padding: 0; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; font-family: var(--font-body); opacity: 0.7; }
+    .starter-toggle:hover { opacity: 1; }
+    .starter-prompts { display: none; background: var(--mint-tint); border: 1px solid var(--sg-border); padding: 14px 16px; margin-bottom: 12px; }
+    .starter-prompts.open { display: block; }
+    .starter-prompts p { font-size: 0.82rem; color: var(--security-gray); margin-bottom: 6px; font-style: italic; }
+    .starter-prompts p:last-child { margin-bottom: 0; }
+
+    /* ===== MISSION ARCHITECTURE TABS ===== */
+    .arch-tabs { display: flex; border-bottom: 1px solid var(--sg-border); overflow-x: auto; }
+    .arch-tab { padding: 10px 18px; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--security-gray); cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+    .arch-tab.active { color: var(--banknote-green); border-bottom-color: var(--banknote-green); }
+    .arch-tab:hover:not(.active) { color: var(--deep-vault); }
+    .arch-tab .tab-dot { display: inline-block; width: 6px; height: 6px; background: var(--banknote-green); border-radius: 50%; margin-left: 6px; vertical-align: middle; opacity: 0; }
+    .arch-tab.filled .tab-dot { opacity: 1; }
+    .arch-panel { display: none; padding: 24px 0 0; }
+    .arch-panel.active { display: block; }
+    .arch-field { margin-bottom: 16px; }
+    .arch-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .arch-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; }
+    .arch-field textarea:focus { border-color: var(--banknote-green); }
+    .arch-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== MISSION STATEMENT BUILDER ===== */
+    .ms-step { border: 1px solid var(--sg-border); margin-bottom: 16px; }
+    .ms-step-header { padding: 14px 20px; background: rgba(11,107,77,0.03); border-bottom: 1px solid var(--sg-border); display: flex; align-items: center; gap: 12px; }
+    .ms-step-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: rgba(11,107,77,0.2); line-height: 1; flex-shrink: 0; }
+    .ms-step-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--banknote-green); }
+    .ms-step-body { padding: 20px; }
+    .ms-field label { display: block; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .ms-field textarea { width: 100%; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.88rem; padding: 11px 14px; outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 14px; }
+    .ms-field textarea:focus { border-color: var(--banknote-green); }
+    .ms-field textarea::placeholder { color: var(--security-gray); }
+
+    /* ===== MISSION STATEMENT DISPLAY ===== */
+    .mission-display { margin: 32px 0; padding: 32px 36px; background: var(--deep-vault); border-left: 4px solid var(--gold-foil); position: relative; }
+    .mission-display-label { font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-foil); margin-bottom: 12px; font-weight: 600; font-family: var(--font-body); }
+    .mission-display-text { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--paper-white); line-height: 1.55; }
+    .mission-display-text.empty { color: rgba(247,245,239,0.25); font-style: italic; font-weight: 400; }
+
+    /* ===== BELIEF / ASSESSMENT ===== */
+    .belief-display { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; line-height: 1.45; color: var(--paper-white); padding: 28px 32px; background: var(--deep-vault); border-left: 4px solid var(--banknote-green); margin-bottom: 24px; }
+    .day-tracker { margin: 24px 0; }
+    .day-tracker-label { font-family: var(--font-body); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--security-gray); margin-bottom: 14px; }
+    .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-item { text-align: center; }
+    .day-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--security-gray); margin-bottom: 6px; }
+    .day-check { width: 100%; aspect-ratio: 1; background: var(--paper-white); border: 1px solid var(--sg-border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; color: transparent; }
+    .day-check.checked { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .day-check:hover:not(.checked) { border-color: var(--security-gray); background: var(--mint-tint); }
+
+    .assessment-item { display: flex; align-items: flex-start; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--sg-border); }
+    .assessment-item:last-child { border-bottom: none; }
+    .assessment-text { flex: 1; font-size: 0.9rem; color: #2E3B36; padding-top: 6px; }
+    .score-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+    .score-btn { width: 36px; height: 36px; background: var(--paper-white); border: 1px solid var(--sg-border); color: var(--security-gray); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font-body); }
+    .score-btn:hover { border-color: var(--security-gray); color: var(--deep-vault); }
+    .score-btn.selected { background: var(--banknote-green); border-color: var(--banknote-green); color: var(--paper-white); }
+    .assessment-result { margin-top: 28px; padding: 28px 32px; background: var(--deep-vault); display: none; }
+    .assessment-result.show { display: block; }
+    .result-score { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--security-gray); margin-bottom: 14px; font-family: var(--font-body); }
+    .assessment-result .result-message { color: rgba(247,245,239,0.7); font-size: 0.9rem; }
+
+    .resource-item { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--sg-border); align-items: flex-start; }
+    .resource-item:last-child { border-bottom: none; }
+    .resource-tag { font-family: var(--font-body); font-size: 0.63rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 4px 10px; background: var(--mint-tint); border: 1px solid var(--banknote-green); color: var(--banknote-green); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .resource-title { font-weight: 600; font-size: 0.9rem; color: var(--deep-vault); margin-bottom: 2px; }
+    .resource-desc { font-size: 0.82rem; color: var(--security-gray); }
+
+    #complete-section { padding: 80px 64px; text-align: center; background: var(--deep-vault); opacity: 1; transform: none; }
+    .forge-score-display { margin-bottom: 40px; }
+    .forge-score-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--gold-foil); line-height: 1; margin-bottom: 4px; }
+    .forge-score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--security-gray); font-family: var(--font-body); }
+    .complete-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--paper-white); margin-bottom: 12px; }
+    .complete-sub { font-size: 0.95rem; color: rgba(247,245,239,0.5); margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .btn-complete { display: inline-flex; align-items: center; gap: 10px; background: var(--gold-foil); color: var(--deep-vault); font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 40px; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-complete:hover { background: #BF9B28; }
+    .btn-complete.completed { background: var(--banknote-green); color: var(--paper-white); }
+    #complete-section .btn-secondary { color: var(--security-gray); }
+    #complete-section .btn-secondary:hover { color: var(--paper-white); }
+
+    .export-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+    .btn-export { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid rgba(247,245,239,0.2); color: rgba(247,245,239,0.6); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 10px 20px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+    .btn-export:hover { border-color: var(--gold-foil); color: var(--gold-foil); }
+
+    .mark-read-btn { display: flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--sg-border); color: var(--security-gray); font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; padding: 9px 16px; cursor: pointer; transition: all 0.2s; margin-top: 32px; }
+    .mark-read-btn:hover { border-color: var(--banknote-green); color: var(--banknote-green); }
+    .mark-read-btn.read { background: rgba(11,107,77,0.08); border-color: var(--banknote-green); color: var(--banknote-green); }
+
+    .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--paper-white); } ::-webkit-scrollbar-thumb { background: var(--sg-border); border-radius: 3px; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #top-header, #sidebar, .mark-read-btn, .btn-primary, .starter-toggle, .starter-prompts, .export-bar, .btn-complete, .btn-secondary, .score-buttons, .arch-tabs, .day-grid, .field-footer { display: none !important; }
+      #main { margin-left: 0 !important; margin-top: 0 !important; }
+      body { background: #fff; color: #0A0F0D; font-size: 11pt; }
+      .section, #hero, #complete-section { padding: 24px 32px !important; opacity: 1 !important; transform: none !important; page-break-inside: avoid; }
+      #hero { background: var(--deep-vault) !important; }
+      .journal-area, .arch-field textarea, .ms-field textarea { display: none; }
+      .card { border: 1px solid #ccc; padding: 16px; margin: 12px 0; page-break-inside: avoid; }
+      .arch-panel { display: block !important; }
+      .truth-block, .mission-display { background: #f0f0f0 !important; }
+      .truth-block p, .mission-display-text { color: #0A0F0D !important; }
+    }
+
+    @media (max-width: 768px) {
+      #menu-toggle { display: flex; }
+      #sidebar { transform: translateX(-100%); }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-left: 0; }
+      .section, #hero, #complete-section { padding: 48px 24px; }
+      #hero h1 { font-size: 2.2rem; }
+      .day-grid { gap: 4px; }
+      .assessment-item { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="top-header">
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Course
+  </a>
+  <div class="divider"></div>
+  <span class="course-label">The Forged Man</span>
+  <div class="divider"></div>
+  <span class="module-label">Module 14 — Mission vs. Goals</span>
+  <div id="progress-wrap">
+    <div id="progress-bar-track"><div id="progress-bar-fill"></div></div>
+    <span id="progress-pct">0%</span>
+  </div>
+  <button id="menu-toggle" aria-label="Toggle menu">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</header>
+
+<nav id="sidebar">
+  <div class="nav-section-label">Module Content</div>
+  <a class="nav-item active" href="#hook" data-section="hook"><span class="nav-dot"></span> Opening</a>
+  <a class="nav-item" href="#hard-truth" data-section="hard-truth"><span class="nav-dot"></span> The Hard Truth</a>
+  <a class="nav-item" href="#lesson" data-section="lesson"><span class="nav-dot"></span> Mission Architecture</a>
+  <div class="nav-section-label">Your Work</div>
+  <a class="nav-item" href="#reflection" data-section="reflection"><span class="nav-dot"></span> Reflection Questions</a>
+  <a class="nav-item" href="#system" data-section="system"><span class="nav-dot"></span> The Life Architecture</a>
+  <a class="nav-item" href="#exercise" data-section="exercise"><span class="nav-dot"></span> The Mission Statement</a>
+  <a class="nav-item" href="#belief" data-section="belief"><span class="nav-dot"></span> Belief Install</a>
+  <a class="nav-item" href="#challenge" data-section="challenge"><span class="nav-dot"></span> Weekly Challenge</a>
+  <div class="nav-section-label">Wrap Up</div>
+  <a class="nav-item" href="#assessment" data-section="assessment"><span class="nav-dot"></span> Self-Assessment</a>
+  <a class="nav-item" href="#resources" data-section="resources"><span class="nav-dot"></span> Resources</a>
+</nav>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section id="hero">
+    <p class="module-tag">Module 14 of 16 — Pillar V: Legacy</p>
+    <h1>Mission <span>vs. Goals</span></h1>
+    <p class="hero-tagline">"Goals are what you achieve. Mission is what you are for. Without the second, the first is just activity."</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>5–7 hours to complete</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>5 reflection questions</span></div>
+      <div class="hero-meta-item"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Mission Statement exercise</span></div>
+    </div>
+    <a href="#hook" class="btn-primary">Begin Module <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </section>
+
+  <!-- OPENING -->
+  <section class="section" id="hook">
+    <p class="section-tag">Opening</p>
+    <h2>The Difference That Changes Everything</h2>
+    <p class="section-sub">Most men are excellent at setting goals. The problem is that goals without a mission are just a list of things to acquire — and acquiring them produces less than you expected.</p>
+
+    <p>There is a well-documented phenomenon among high achievers: the moment of goal attainment is followed not by sustained satisfaction but by a brief spike of pleasure and then a return to baseline — often accompanied by a strange hollowness, a "is that it?" that is hard to explain and uncomfortable to admit. The man who spent three years pursuing a promotion gets it, feels the satisfaction for a week or two, and then finds himself in essentially the same psychological state he was in before, now simply chasing the next thing.</p>
+    <p>This is not weakness or ingratitude. It is a predictable consequence of living in goal-mode rather than mission-mode. Goals are terminal — they have endpoints. When you reach the endpoint, the organizing force disappears. <strong>Mission is directional rather than terminal. It does not end when you achieve something — it is the context within which every achievement has meaning.</strong></p>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line"></div></div>
+
+    <p>The question this module addresses is not whether to set goals — goals are essential, and this course has been full of them. The question is what the goals are in service of. What is the larger frame? What is the organizing principle that makes this goal worth pursuing and gives its attainment lasting meaning rather than momentary satisfaction?</p>
+    <p>Most men have never seriously asked this question. They have inherited a life direction from their environment — pursue professional success, achieve financial security, build a family — without examining whether these reflect their actual values or merely the defaults their culture handed them. <strong>The examined life is not a luxury. It is the prerequisite for doing anything that actually matters to you, as opposed to doing what was expected.</strong></p>
+
+    <button class="mark-read-btn" data-marks="hook">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- HARD TRUTH -->
+  <section class="section" id="hard-truth">
+    <p class="section-tag">The Hard Truth</p>
+    <h2>Most Men Are Living Someone Else's Life</h2>
+    <p class="section-sub">Not through coercion — through default. The life you are living was largely assembled from other people's expectations, cultural scripts, and unconsidered momentum. Very little of it was deliberately chosen.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">Hard Truth #14</p>
+      <p>"A man without a mission does not live without direction — he lives according to someone else's. The direction is provided by his employer, his culture, his family's expectations, or the ambient pressure of his social environment. None of these were chosen. All of them are real."</p>
+    </div>
+
+    <p>Consider the major decisions of your life — the career path you followed, the city you live in, the type of life you are building. How many of them were the result of genuine reflection and deliberate choice? How many were the result of following the path of least resistance, doing what was expected, pursuing what was available, or responding to opportunity without asking whether it served what you actually value?</p>
+    <p>This is not a condemnation. It is a description of how almost all human lives are lived. Social pressure, parental expectation, cultural default, and the sheer cognitive load of daily existence conspire to ensure that most men never pause long enough to ask the foundational question: <strong>what is this life actually for?</strong> Not what it is for according to their employer, their parents, or their social group — what it is for according to them.</p>
+
+    <h3>The deathbed test</h3>
+    <p>There is a thought experiment used in palliative care that cuts through the noise: when men near the end of their lives are asked what they regret, the answers are remarkably consistent. They do not regret working less. They do not regret failing to accumulate more. They regret not being more fully themselves — not pursuing what genuinely mattered to them, not expressing what they actually valued, spending too much time managing other people's expectations and too little time living their own convictions. <strong>The deathbed perspective is not morbid. It is clarifying. It cuts through the noise of immediate urgency and reveals what actually matters.</strong></p>
+
+    <div class="callout warning">
+      <strong>The achievement trap:</strong> The highest risk of goal-mode living is not failure — it is success. The man who successfully achieves goals that were never genuinely his own finds himself in a life that looks correct from the outside and feels wrong from the inside. He has everything he was supposed to want and not what he actually wants. Rebuilding from that position is harder than building the right thing from the beginning.
+    </div>
+
+    <button class="mark-read-btn" data-marks="hardtruth">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- LESSON -->
+  <section class="section" id="lesson">
+    <p class="section-tag">The Lesson</p>
+    <h2>Mission Architecture</h2>
+    <p class="section-sub">Mission is not found — it is built. Not in a single moment of clarity but through a specific process of excavation, articulation, and testing against the reality of your actual life.</p>
+
+    <h3>1. Mission vs. goals: the structural difference</h3>
+    <p>A goal is a discrete outcome with a finish line: revenue target, qualification achieved, relationship status, body composition. A mission is an ongoing direction: what you are fundamentally trying to create, contribute, or become over the span of your life. Goals nest inside missions — they are the specific milestones on a longer road. Without a mission, goals accumulate into a list. With a mission, they form a coherent arc. <strong>The mission is what makes sense of the goals and ensures that achieving them produces meaning rather than just completion.</strong></p>
+
+    <h3>2. Values as the foundation</h3>
+    <p>Mission is built on values — not the values you say you have, but the values you actually demonstrate through behavior when the cost is real. The values that show up under pressure. The things you will not compromise even when compromising would be convenient. These are worth identifying precisely, because your mission must be grounded in them to be authentic rather than aspirational. A mission that is not grounded in your actual values is a fantasy — it will not survive contact with the real demands of your life.</p>
+
+    <h3>3. The contribution question</h3>
+    <p>The most durable missions involve contribution — leaving something better than you found it, creating value for others, building something that continues after you. This is not selflessness. It is the observation that purely self-referential goals (I want to be rich, powerful, admired) are motivationally fragile — they depend on external validation that is never permanently satisfying. Contribution-anchored missions are motivationally durable because they provide meaning independent of whether the outcome produces admiration. <strong>The question is not what you want to have. It is what you want to have built and what you want to have contributed.</strong></p>
+
+    <h3>4. The time horizon problem</h3>
+    <p>Most men operate with an effective planning horizon of three to five years — roughly the span of a career move or major project. Mission requires a longer horizon: what is this life for over forty years? The longer horizon changes the decision calculus entirely. Choices that seem advantageous over three years look different over forty. Relationships and reputation, which compound slowly, become much more important. The temptation to trade long-term alignment for short-term advantage looks much less attractive. <strong>Mission thinking is long-horizon thinking. It is what allows a man to make decisions today that his future self will not regret.</strong></p>
+
+    <h3>5. Iteration, not revelation</h3>
+    <p>Mission is not typically discovered in a single epiphany. It is assembled gradually through experience, reflection, and the honest examination of what has and hasn't produced meaning in your actual life. The first version of your mission statement will be imprecise — that is correct. Refine it over time as you learn more about what you actually value, what genuinely engages you, and what kind of contribution you are uniquely positioned to make. <strong>A working draft of a mission beats no mission, and the process of articulating it is itself valuable regardless of how polished the result.</strong></p>
+
+    <div class="callout">
+      <strong>On finding your mission:</strong> The mission is usually already present — it is the thread you keep returning to, the problems you find yourself caring about even when no one rewards you for it, the kind of work that makes time disappear, the conversations you find endlessly energizing. The exercise in this module is not inventing something new. It is excavating what is already there and giving it clear enough form that it can actually guide decisions.
+    </div>
+
+    <button class="mark-read-btn" data-marks="lesson">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Mark as read</span>
+    </button>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="section" id="reflection">
+    <p class="section-tag">Your Work</p>
+    <h2>Deep Reflection</h2>
+    <p class="section-sub">These are the questions that require the most honesty. Do not answer what sounds right. Answer what is true — the harder version, not the comfortable one.</p>
+
+    <!-- Q1 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 01</p><span class="card-number">01</span></div>
+      <p class="card-question">Apply the deathbed test: looking back from the end of your life, what would you most regret not having done, built, or become? Not what you think you should regret — what you actually, honestly, would regret. What does that tell you about what genuinely matters to you?</p>
+      <p class="card-hint">This requires honesty that is uncomfortable because it often reveals a gap between the life you are building and the life you actually value. That discomfort is the data. The man who takes the question seriously often finds the answer has been clear for years — he has simply been avoiding it because acting on it would require difficult changes.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"If I were honest, the things I would most regret not having done are..."</p>
+        <p>"The life I am building vs. the life I would actually choose if I started from scratch would differ in these ways..."</p>
+        <p>"What this tells me about what genuinely matters to me — not what I've told myself matters — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r1" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r1', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r1-count">0 characters</span><span class="save-indicator" id="r1-saved">Saved</span></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 02</p><span class="card-number">02</span></div>
+      <p class="card-question">What are your actual, demonstrated values — the ones that show up under pressure, not the ones you list when asked? Think of three to five situations where you made a costly choice that revealed what you really prioritized. What do those choices tell you about what you genuinely value, as opposed to what you aspire to value?</p>
+      <p class="card-hint">The difference between stated values and demonstrated values is the most reliable diagnostic for self-deception. The man who says he values family but consistently chooses work over family is demonstrating his actual values. The man who says he values honesty but avoids every difficult conversation is demonstrating his actual values. Neither is condemned by this — but both are limited by not seeing it clearly.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"Three situations where I made a costly choice that revealed what I actually prioritize: ..."</p>
+        <p>"My demonstrated values — based on behavior, not aspiration — are..."</p>
+        <p>"The gap between my stated values and my demonstrated values is... What I will do about that is..."</p>
+      </div>
+      <textarea class="journal-area" id="r2" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r2', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r2-count">0 characters</span><span class="save-indicator" id="r2-saved">Saved</span></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 03</p><span class="card-number">03</span></div>
+      <p class="card-question">Where in your life do you already experience genuine mission — the sense that what you are doing matters beyond the immediate reward? What problems do you find yourself caring about even when no one is watching or rewarding you for it? What does that tell you about where your mission might already be taking shape?</p>
+      <p class="card-hint">Mission is almost always already present in some form — the thread you keep returning to, the energy that is present in some activities and absent in others, the problems that occupy your thinking without being required to. The exercise is not to invent a mission but to notice where one already exists in embryonic form. What are you drawn to when you have genuine choice?</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The activity or type of work where time disappears and I feel most fully engaged is..."</p>
+        <p>"The problems I find myself caring about even when no one rewards me for it are..."</p>
+        <p>"The thread that runs through the moments I have felt most alive and purposeful is..."</p>
+      </div>
+      <textarea class="journal-area" id="r3" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r3', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r3-count">0 characters</span><span class="save-indicator" id="r3-saved">Saved</span></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 04</p><span class="card-number">04</span></div>
+      <p class="card-question">What goals are you currently pursuing that you are not sure are genuinely yours? Goals that were set because of external pressure, comparison, or the desire to appear successful rather than because they reflect what you actually value? What would change if you stopped pursuing them?</p>
+      <p class="card-hint">Many men carry goals they have never examined — goals acquired from their parents, their social environment, or some earlier version of themselves who valued things they have since outgrown. These goals consume energy and attention without producing meaning when achieved. Identifying and releasing them is not failure — it is reclaiming capacity for what actually matters.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The goals I am currently pursuing that I suspect are not genuinely mine are..."</p>
+        <p>"They came from... (parents, peer comparison, social pressure, an earlier version of me that valued different things)"</p>
+        <p>"If I stopped pursuing them, what I would have capacity for instead is... What is stopping me from making that trade is..."</p>
+      </div>
+      <textarea class="journal-area" id="r4" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r4', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r4-count">0 characters</span><span class="save-indicator" id="r4-saved">Saved</span></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="card">
+      <div class="card-header"><p class="card-title">Question 05</p><span class="card-number">05</span></div>
+      <p class="card-question">What is the contribution you are uniquely positioned to make — the combination of your specific experience, skills, values, and perspective that nobody else has in quite the same configuration? Not what you could contribute generically, but what only you can contribute in the particular way that you can. Where does that lead?</p>
+      <p class="card-hint">This is the intersection of what you do well, what you care about, and what the world actually needs. The first part (what you do well) is usually clearer than you think. The second part (what you care about) has been the subject of this module. The third part requires looking outward at the problems worth solving rather than inward at your own preferences. The intersection is where durable mission lives.</p>
+      <button class="starter-toggle" onclick="toggleStarter(this)">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Need a prompt to get started?
+      </button>
+      <div class="starter-prompts">
+        <p>"The specific combination of experience, skills, and perspective I have that is genuinely unusual is..."</p>
+        <p>"The problem or domain where I could create value that most people couldn't in quite the same way is..."</p>
+        <p>"Where this points — the contribution I am uniquely positioned to make — is..."</p>
+      </div>
+      <textarea class="journal-area" id="r5" placeholder="Write your honest answer here..." rows="7" oninput="autoSave('r5', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="r5-count">0 characters</span><span class="save-indicator" id="r5-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- LIFE ARCHITECTURE -->
+  <section class="section" id="system">
+    <p class="section-tag">Exercise One</p>
+    <h2>The Life Architecture</h2>
+    <p class="section-sub">Map the five domains of your life against your mission. For each domain: what is currently true, what you want it to look like in ten years, and what is most misaligned with your values right now.</p>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <p class="card-title">Domain-by-Domain Architecture</p>
+      </div>
+      <p class="card-hint" style="margin-bottom: 20px;">Be honest about the current state — comfortable answers produce no insight. The purpose is alignment, not aspiration. Where are you building a life that reflects your actual values, and where are you not?</p>
+
+      <div class="arch-tabs" id="arch-tabs"></div>
+      <div id="arch-panels"></div>
+    </div>
+  </section>
+
+  <!-- MISSION STATEMENT -->
+  <section class="section" id="exercise">
+    <p class="section-tag">Exercise Two</p>
+    <h2>The Mission Statement</h2>
+    <p class="section-sub">Build a working draft of your personal mission statement through a structured five-step process. This is a draft — it will evolve. The goal is specificity, not perfection.</p>
+
+    <div id="ms-steps"></div>
+
+    <div class="mission-display" id="mission-display">
+      <div class="mission-display-label">Your Mission Statement — Working Draft</div>
+      <div class="mission-display-text empty" id="mission-display-text">Complete Step 5 to see your mission statement here.</div>
+    </div>
+  </section>
+
+  <!-- BELIEF INSTALL -->
+  <section class="section" id="belief">
+    <p class="section-tag">Belief Install</p>
+    <h2>The Belief This Module Installs</h2>
+    <p class="section-sub">Read this aloud. Write it in your own words. Sit with it. Beliefs are installed through repetition and reflection, not passive reading.</p>
+
+    <div class="belief-display" id="belief-text">
+      "I do not pursue goals blindly. I pursue them in service of a mission that is genuinely mine — not inherited, not performed, but chosen. My goals are milestones. My mission is the road."
+    </div>
+
+    <div class="day-tracker">
+      <p class="day-tracker-label">7-Day Belief Reinforcement — check in each day you reflected on this belief</p>
+      <div class="day-grid" id="belief-day-grid"></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Write the belief in your own words</p>
+      <textarea class="journal-area" id="belief-version" placeholder="Rewrite the belief in language that resonates with you specifically..." rows="4" oninput="autoSave('belief-version', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-version-count">0 characters</span><span class="save-indicator" id="belief-version-saved">Saved</span></div>
+    </div>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">What would change if you fully lived this belief?</p>
+      <textarea class="journal-area" id="belief-journal" placeholder="What goals would you drop? What would you start that you have been postponing? What would you stop apologizing for? What would you commit to that you have been hedging on?" rows="5" oninput="autoSave('belief-journal', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="belief-journal-count">0 characters</span><span class="save-indicator" id="belief-journal-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- CHALLENGE -->
+  <section class="section" id="challenge">
+    <p class="section-tag">Weekly Challenge</p>
+    <h2>The Eulogy Exercise</h2>
+    <p class="section-sub">Write two versions of your eulogy — the one that would be delivered if you died today, and the one you would want delivered if you lived your best life. Then close the gap.</p>
+
+    <div class="truth-block">
+      <p class="truth-label">The Challenge</p>
+      <p>Write the eulogy that would be delivered if you died today — honest, not flattering. Then write the eulogy you would want delivered — the life you would have lived, the man you would have become, the contribution you would have made. The gap between those two documents is your mission. The specific differences are your most important goals.</p>
+    </div>
+
+    <p>This exercise was developed in Stephen Covey's work and refined by a generation of leadership thinkers because it works. The eulogy frame cuts through noise — it eliminates the considerations of short-term convenience, social performance, and anxiety about what others think, leaving only what genuinely matters from the long perspective.</p>
+    <p>Write both versions honestly. The first version especially — the comfortable, flattering version produces no insight. You are looking for the gap, and you can only find it if you see where you actually are.</p>
+
+    <div class="mt-6">
+      <p style="font-size: 0.82rem; color: var(--security-gray); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;">Both Versions — The Current Eulogy & The Desired Eulogy</p>
+      <textarea class="journal-area" id="challenge-log" placeholder="VERSION 1 — If I died today, the honest eulogy would say...&#10;&#10;&#10;VERSION 2 — The eulogy I would want, if I live my best life...&#10;&#10;&#10;THE GAP — The specific differences between these two versions, and what they tell me..." rows="20" oninput="autoSave('challenge-log', this.value); updateCharCount(this)"></textarea>
+      <div class="field-footer"><span class="char-count" id="challenge-log-count">0 characters</span><span class="save-indicator" id="challenge-log-saved">Saved</span></div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="section" id="assessment">
+    <p class="section-tag">Wrap Up</p>
+    <h2>Self-Assessment</h2>
+    <p class="section-sub">Rate yourself honestly on each dimension. These scores feed your Forge Score for this module.</p>
+
+    <div id="assessment-items"></div>
+
+    <div class="assessment-result" id="assessment-result">
+      <div class="result-score" id="result-score-display">—</div>
+      <div class="result-label">Module Self-Assessment Score</div>
+      <p class="result-message" id="result-message"></p>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" id="resources">
+    <p class="section-tag">Recommended Reading</p>
+    <h2>Go Deeper</h2>
+    <p class="section-sub">Four books that address the question of mission, purpose, and meaning from different angles. Each one is worth reading slowly.</p>
+
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Man's Search for Meaning — Viktor Frankl</div>
+        <div class="resource-desc">The foundational text on meaning as the primary human motivation. Frankl's logotherapy framework — developed in a concentration camp — provides the deepest available account of what mission is, where it comes from, and why it is indispensable.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The 7 Habits of Highly Effective People — Stephen Covey</div>
+        <div class="resource-desc">Habit 2 ("Begin with the end in mind") and the eulogy exercise in this module originate here. The full framework for principle-centred living is the most practical available guide to building a life around genuine values rather than reactive urgency.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">Ikigai — Héctor García & Francesc Miralles</div>
+        <div class="resource-desc">The Japanese concept of ikigai — the intersection of what you love, what you are good at, what the world needs, and what you can be paid for — is the most accessible framework for the contribution question at the heart of mission.</div>
+      </div>
+    </div>
+    <div class="resource-item">
+      <span class="resource-tag">Book</span>
+      <div>
+        <div class="resource-title">The Second Mountain — David Brooks</div>
+        <div class="resource-desc">A meditation on the transition from achievement-focused living to contribution-focused living. Brooks's distinction between first-mountain (résumé virtues) and second-mountain (eulogy virtues) maps directly to the mission vs. goals distinction in this module.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- COMPLETE -->
+<section id="complete-section">
+  <div class="forge-score-display">
+    <div class="forge-score-number" id="forge-score-display">—</div>
+    <div class="forge-score-label">Forge Score</div>
+  </div>
+  <h2 class="complete-title">Module 14 Complete</h2>
+  <p class="complete-sub">You have a working mission statement. It will evolve — but now you have a frame. Your goals have a context. The question "is this worth my time?" now has an answer beyond instinct.</p>
+  <button class="btn-complete" id="complete-btn" onclick="toggleComplete()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    Mark Module Complete
+  </button>
+  <div class="export-bar">
+    <button class="btn-export" onclick="exportPDF()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Export PDF
+    </button>
+    <button class="btn-export" onclick="exportTXT()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download .txt
+    </button>
+    <a href="index.html" class="btn-secondary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Course
+    </a>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'tfm_m14';
+
+  const TEXT_FIELDS = ['r1','r2','r3','r4','r5','belief-version','belief-journal','challenge-log'];
+
+  const LIFE_DOMAINS = [
+    {
+      name: 'Work',
+      desc: 'Career, vocation, professional contribution — how you spend the majority of your waking hours.',
+      p_current: 'What is your work life actually like right now? Not the version you present to others — the real texture of it.',
+      p_ten: 'What do you want your work life to look like in ten years? What are you building toward?',
+      p_align: 'Where is your work most misaligned with your values? What are you tolerating that you would not choose?',
+      p_action: 'What is the one change that would most align your work with your mission?'
+    },
+    {
+      name: 'Relationships',
+      desc: 'Partner, family, close friendships — the people who matter most to you.',
+      p_current: 'What is the actual state of your most important relationships? Honest, not performed.',
+      p_ten: 'What do you want these relationships to look like in ten years? What kind of man do you want to be in them?',
+      p_align: 'Where are your relationships most misaligned with your values? What are you neglecting or compromising?',
+      p_action: 'What is the one investment in relationships that would most align this domain with your mission?'
+    },
+    {
+      name: 'Health',
+      desc: 'Physical and mental wellbeing — your body and mind as the foundation everything else is built on.',
+      p_current: 'What is the honest state of your physical and mental health right now?',
+      p_ten: 'What do you want your health to look like in ten years? What baseline of capability do you want to maintain?',
+      p_align: 'Where are your health behaviors most misaligned with what you say you value? What are you not doing that you know you should?',
+      p_action: 'What one change to your health practices would most support your mission over the next decade?'
+    },
+    {
+      name: 'Growth',
+      desc: 'Learning, development, becoming — the ongoing project of becoming more capable and wise.',
+      p_current: 'How deliberately are you growing right now? What are you actively learning? Where are you stagnating?',
+      p_ten: 'What do you want to know and be capable of in ten years that you are not now?',
+      p_align: 'Where is your growth most misaligned with your mission? What skills or knowledge would most serve what you are actually trying to build?',
+      p_action: 'What is the one learning investment that would most accelerate your mission in the next twelve months?'
+    },
+    {
+      name: 'Contribution',
+      desc: 'What you create, give, or leave behind — the mark your life makes beyond your own interests.',
+      p_current: 'What is your current contribution beyond your immediate circle? What are you creating or giving that will outlast you?',
+      p_ten: 'In ten years, what do you want to have contributed? What will exist or be different because of you?',
+      p_align: 'Where is the largest gap between your current contribution and the one you would be proud of? What are you not yet doing?',
+      p_action: 'What is the first step toward the contribution that is most central to your mission?'
+    }
+  ];
+
+  const MS_STEPS = [
+    {
+      num: '01', label: 'Your Core Values',
+      fields: [
+        { id: 'ms-values', label: 'Name your three to five demonstrated core values — not aspirational, demonstrated. What do you consistently choose when the cost is real?', ph: 'Not "honesty, family, growth" by default — what have you actually paid a price for? What have you refused to compromise?' }
+      ]
+    },
+    {
+      num: '02', label: 'Your Unique Contribution',
+      fields: [
+        { id: 'ms-contribution', label: 'What is the specific contribution you are uniquely positioned to make? The intersection of your skills, experience, and what you care about.', ph: 'Not what anyone could do — what you specifically can do, in the particular way you can do it, for the people or problems you most care about...' }
+      ]
+    },
+    {
+      num: '03', label: 'Who You Serve',
+      fields: [
+        { id: 'ms-who', label: 'Who are the people, communities, or domains you most want to create value for? Who does your contribution most directly serve?', ph: 'Specific — not "humanity" but which humans. Not "the world" but which part of it. The specificity of your answer determines the usefulness of your mission...' }
+      ]
+    },
+    {
+      num: '04', label: 'The Long Game',
+      fields: [
+        { id: 'ms-legacy', label: 'What do you want to have built, contributed, or set in motion by the end of your life? What is the long-horizon version of your mission?', ph: 'Not what you want to have achieved for yourself — what you want to have created for others, or left behind, or set in motion that continues after you...' }
+      ]
+    },
+    {
+      num: '05', label: 'Draft Your Mission Statement',
+      fields: [
+        { id: 'ms-draft', label: 'Write a one to three sentence mission statement integrating what you have surfaced in steps 1–4. It should be specific enough to guide decisions and clear enough to remember.', ph: 'Format: I [what you do / how you operate] in service of [who you serve / what you contribute] because [the values / the why]. Make it yours — not inspirational-poster language, but language that actually describes your life and your aim...' }
+      ]
+    }
+  ];
+
+  const ASSESSMENT_ITEMS = [
+    "I have applied the deathbed test honestly and have a clear picture of what I would genuinely regret.",
+    "I can distinguish between my stated values and my demonstrated values, and I know where the gap is largest.",
+    "I have identified goals I am pursuing that are not genuinely mine, and I have a plan to release or redirect them.",
+    "I have mapped all five life domains honestly and know where the most critical misalignment with my values lies.",
+    "I have completed a working draft of my mission statement that is specific enough to guide real decisions.",
+    "I have completed the eulogy exercise and identified the specific gap between who I am now and who I want to have been."
+  ];
+
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  let state = {
+    marks: {},
+    lifeDomains: Array.from({length: 5}, () => ({ current: '', ten: '', align: '', action: '' })),
+    msFields: {},
+    beliefDays: Array(7).fill(false),
+    scores: {},
+    complete: false
+  };
+
+  let saveTimer = null;
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function autoSave(key, value) {
+    state[key] = value;
+    clearTimeout(saveTimer);
+    const ind = document.getElementById(key + '-saved');
+    if (ind) ind.classList.remove('show');
+    saveTimer = setTimeout(() => {
+      save();
+      if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1800); }
+    }, 600);
+  }
+
+  function updateCharCount(ta) {
+    const el = document.getElementById(ta.id + '-count');
+    if (el) el.textContent = ta.value.length + ' characters';
+  }
+
+  function toggleStarter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.querySelector('svg').style.transform = box.classList.contains('open') ? 'rotate(45deg)' : '';
+  }
+
+  /* ===== LIFE ARCHITECTURE ===== */
+  function buildArchPanels() {
+    const tabsEl = document.getElementById('arch-tabs');
+    const panelsEl = document.getElementById('arch-panels');
+    tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    LIFE_DOMAINS.forEach((dom, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'arch-tab' + (i === 0 ? ' active' : '');
+      tab.innerHTML = dom.name + '<span class="tab-dot"></span>';
+      tab.onclick = () => switchArch(i);
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = 'arch-panel' + (i === 0 ? ' active' : '');
+      panel.id = 'arch-panel-' + i;
+      panel.innerHTML = `<p style="font-size:0.85rem;color:var(--security-gray);margin-bottom:18px;font-style:italic;">${dom.desc}</p>` +
+        ['current','ten','align','action'].map(f => `
+          <div class="arch-field">
+            <label>${dom['p_'+f]}</label>
+            <textarea rows="3" placeholder="Your answer...">${state.lifeDomains[i][f]||''}</textarea>
+          </div>`).join('');
+      panelsEl.appendChild(panel);
+
+      const keys = ['current','ten','align','action'];
+      panel.querySelectorAll('textarea').forEach((ta, fi) => {
+        ta.oninput = function() { updateArchField(i, keys[fi], this.value); };
+      });
+    });
+    updateArchTabDots();
+  }
+
+  function switchArch(idx) {
+    document.querySelectorAll('.arch-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.arch-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  }
+
+  function updateArchField(domIdx, field, value) {
+    state.lifeDomains[domIdx][field] = value;
+    save(); updateArchTabDots(); updateProgress();
+  }
+
+  function updateArchTabDots() {
+    document.querySelectorAll('.arch-tab').forEach((tab, i) => {
+      const d = state.lifeDomains[i];
+      tab.classList.toggle('filled', !!(d.current || d.ten || d.align || d.action));
+    });
+  }
+
+  /* ===== MISSION STATEMENT ===== */
+  function buildMSSteps() {
+    const container = document.getElementById('ms-steps');
+    container.innerHTML = '';
+    MS_STEPS.forEach(step => {
+      const div = document.createElement('div');
+      div.className = 'ms-step';
+      div.innerHTML = `
+        <div class="ms-step-header">
+          <span class="ms-step-num">${step.num}</span>
+          <span class="ms-step-label">${step.label}</span>
+        </div>
+        <div class="ms-step-body">
+          ${step.fields.map(f => `
+            <div class="ms-field">
+              <label>${f.label}</label>
+              <textarea id="${f.id}" rows="4" placeholder="${f.ph}"></textarea>
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+      step.fields.forEach(f => {
+        const ta = document.getElementById(f.id);
+        if (ta) ta.oninput = function() {
+          state.msFields[f.id] = this.value;
+          save(); updateProgress();
+          if (f.id === 'ms-draft') updateMissionDisplay(this.value);
+        };
+      });
+    });
+  }
+
+  function updateMissionDisplay(text) {
+    const el = document.getElementById('mission-display-text');
+    if (text.trim()) {
+      el.textContent = text.trim();
+      el.classList.remove('empty');
+    } else {
+      el.textContent = 'Complete Step 5 to see your mission statement here.';
+      el.classList.add('empty');
+    }
+  }
+
+  /* ===== BELIEF DAYS ===== */
+  function buildBeliefGrid() {
+    const grid = document.getElementById('belief-day-grid');
+    grid.innerHTML = '';
+    DAYS.forEach((day, i) => {
+      const item = document.createElement('div');
+      item.className = 'day-item';
+      item.innerHTML = `<div class="day-label">${day}</div><div class="day-check${state.beliefDays[i]?' checked':''}" onclick="toggleBeliefDay(${i},this)">✓</div>`;
+      grid.appendChild(item);
+    });
+  }
+
+  function toggleBeliefDay(idx, el) {
+    state.beliefDays[idx] = !state.beliefDays[idx];
+    el.classList.toggle('checked', state.beliefDays[idx]);
+    save(); updateProgress();
+  }
+
+  /* ===== ASSESSMENT ===== */
+  function buildAssessment() {
+    const container = document.getElementById('assessment-items');
+    container.innerHTML = '';
+    ASSESSMENT_ITEMS.forEach((text, i) => {
+      const div = document.createElement('div');
+      div.className = 'assessment-item';
+      div.innerHTML = `
+        <div class="assessment-text">${text}</div>
+        <div class="score-buttons">
+          ${[1,2,3,4,5].map(n => `<button class="score-btn${state.scores[i]===n?' selected':''}" onclick="setScore(${i},${n},this)">${n}</button>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function setScore(idx, val, btn) {
+    state.scores[idx] = val;
+    btn.closest('.score-buttons').querySelectorAll('.score-btn').forEach((b,i) => b.classList.toggle('selected', i+1===val));
+    save(); updateProgress(); updateAssessmentResult();
+  }
+
+  function updateAssessmentResult() {
+    const keys = Object.keys(state.scores);
+    if (keys.length < ASSESSMENT_ITEMS.length) return;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    const pct = Math.round((avg/5)*100);
+    document.getElementById('result-score-display').textContent = pct + '%';
+    const msgs = [
+      [0,40,'This module has opened a significant question. The fact that it is uncomfortable means the question is real. Return to the deathbed test — that is where the honest answer lives. The mission statement can wait until the values are clearer.'],
+      [40,65,'Solid foundation. You have named what genuinely matters and have a working draft. The test now is whether your daily decisions reflect it — that is the only meaningful measure of whether a mission is real.'],
+      [65,85,'Strong work. You have a mission that is specific enough to guide decisions and honest enough to be genuinely yours. The challenge now is living it consistently enough that it shapes who you become, not just what you achieve.'],
+      [85,101,'Exceptional clarity. You have done the hardest work in this course — the honest examination of what your life is actually for. What comes next is execution across the long horizon. This is where the Forged Man lives.']
+    ];
+    const [,, msg] = msgs.find(([lo,hi]) => pct >= lo && pct < hi);
+    document.getElementById('result-message').textContent = msg;
+    document.getElementById('assessment-result').classList.add('show');
+  }
+
+  /* ===== PROGRESS ===== */
+  function calcProgress() {
+    let points = 0, total = 0;
+    TEXT_FIELDS.forEach(id => {
+      total += 2;
+      const v = state[id] || '';
+      if (v.length > 50) points += 2; else if (v.length > 0) points += 1;
+    });
+    ['hook','hardtruth','lesson'].forEach(k => { total++; if (state.marks[k]) points++; });
+    state.lifeDomains.forEach(dom => {
+      total += 4;
+      ['current','ten','align','action'].forEach(f => { if ((dom[f]||'').length > 30) points++; });
+    });
+    MS_STEPS.forEach(step => step.fields.forEach(f => {
+      total++;
+      if ((state.msFields[f.id]||'').length > 30) points++;
+    }));
+    total += 7; points += state.beliefDays.filter(Boolean).length;
+    return Math.min(100, Math.round((points / total) * 100));
+  }
+
+  function calcForgeScore() {
+    const progress = calcProgress();
+    const keys = Object.keys(state.scores);
+    if (!keys.length) return progress;
+    const avg = keys.reduce((s,k) => s + state.scores[k], 0) / keys.length;
+    return Math.round(progress * 0.6 + (avg/5)*100 * 0.4);
+  }
+
+  function updateProgress() {
+    const pct = calcProgress();
+    document.getElementById('progress-bar-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('forge-score-display').textContent = calcForgeScore() + '%';
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const sec = item.dataset.section;
+      if (sec === 'hook') item.classList.toggle('done', !!state.marks.hook);
+      if (sec === 'hard-truth') item.classList.toggle('done', !!state.marks.hardtruth);
+      if (sec === 'lesson') item.classList.toggle('done', !!state.marks.lesson);
+      if (sec === 'reflection') item.classList.toggle('done', TEXT_FIELDS.slice(0,5).every(id => (state[id]||'').length > 50));
+    });
+  }
+
+  /* ===== COMPLETE ===== */
+  function toggleComplete() {
+    state.complete = !state.complete;
+    const btn = document.getElementById('complete-btn');
+    if (state.complete) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    } else {
+      btn.classList.remove('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mark Module Complete';
+    }
+    save();
+  }
+
+  /* ===== EXPORT ===== */
+  function exportPDF() { window.print(); }
+
+  function exportTXT() {
+    let txt = 'THE FORGED MAN — MODULE 14: MISSION VS. GOALS\n' + '='.repeat(60) + '\n\n';
+    const labels = { r1:'Q1 Deathbed Test', r2:'Q2 Demonstrated Values', r3:'Q3 Existing Mission Threads', r4:'Q4 Goals Not Mine', r5:'Q5 Unique Contribution', 'belief-version':'Belief (Own Words)', 'belief-journal':'Belief Reflection', 'challenge-log':'Eulogy Exercise' };
+    TEXT_FIELDS.forEach(id => {
+      const val = state[id] || '';
+      if (val.trim()) txt += (labels[id]||id).toUpperCase() + '\n' + '-'.repeat(40) + '\n' + val.trim() + '\n\n';
+    });
+    txt += 'LIFE ARCHITECTURE\n' + '-'.repeat(40) + '\n';
+    LIFE_DOMAINS.forEach((dom, i) => {
+      txt += `\n${dom.name.toUpperCase()}\n`;
+      ['current','ten','align','action'].forEach(f => { if (state.lifeDomains[i][f]) txt += `  ${f.toUpperCase()}: ${state.lifeDomains[i][f]}\n`; });
+    });
+    txt += '\nMISSION STATEMENT BUILDER\n' + '-'.repeat(40) + '\n';
+    MS_STEPS.forEach(step => {
+      txt += `\n${step.num}. ${step.label}\n`;
+      step.fields.forEach(f => { const v = state.msFields[f.id]||''; if (v) txt += `  ${v}\n`; });
+    });
+    const blob = new Blob([txt], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'module-14-mission.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ===== SCROLL SPY ===== */
+  function initScrollSpy() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.section === id || item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+  }
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+  }
+
+  document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.marks;
+      state.marks[key] = !state.marks[key];
+      if (state.marks[key]) { this.classList.add('read'); this.querySelector('span').textContent = 'Read'; }
+      else { this.classList.remove('read'); this.querySelector('span').textContent = 'Mark as read'; }
+      save(); updateProgress();
+    });
+  });
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        state = Object.assign(state, parsed);
+        if (!state.lifeDomains || state.lifeDomains.length !== 5) state.lifeDomains = Array.from({length:5}, () => ({current:'',ten:'',align:'',action:''}));
+        if (!state.beliefDays || state.beliefDays.length !== 7) state.beliefDays = Array(7).fill(false);
+        if (!state.msFields) state.msFields = {};
+        if (!state.scores) state.scores = {};
+      } catch(e) {}
+    }
+
+    buildArchPanels();
+    buildMSSteps();
+    buildBeliefGrid();
+    buildAssessment();
+
+    TEXT_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) { el.value = state[id]; updateCharCount(el); }
+    });
+
+    MS_STEPS.forEach(step => step.fields.forEach(f => {
+      const ta = document.getElementById(f.id);
+      if (ta && state.msFields[f.id]) {
+        ta.value = state.msFields[f.id];
+        if (f.id === 'ms-draft') updateMissionDisplay(ta.value);
+      }
+    }));
+
+    document.querySelectorAll('.mark-read-btn[data-marks]').forEach(btn => {
+      const key = btn.dataset.marks;
+      if (state.marks[key]) { btn.classList.add('read'); btn.querySelector('span').textContent = 'Read'; }
+    });
+
+    if (state.complete) {
+      const btn = document.getElementById('complete-btn');
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Module Complete';
+    }
+
+    if (Object.keys(state.scores).length > 0) updateAssessmentResult();
+
+    updateProgress();
+    initScrollSpy();
+    initScrollAnimations();
+  });
+</script>
+</body>
+</html>
